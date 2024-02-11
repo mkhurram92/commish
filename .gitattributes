@@ -1,0 +1,2 @@
+ss/s.sql filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text

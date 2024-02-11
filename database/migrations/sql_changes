@@ -1,0 +1,173 @@
+INSERT INTO `contact_role` (`id`, `name`, `created_at`, `updated_at`) VALUES (NULL, 'Director', '2021-07-02 17:27:25', '2021-07-02 17:27:25');
+
+INSERT INTO `states` (`id`, `name`, `deleted_at`, `created_at`, `updated_at`) VALUES (NULL, 'SA', NULL, NULL, NULL), (NULL, 'QLD', NULL, NULL, NULL);
+
+INSERT INTO `states` (`id`, `name`, `deleted_at`, `created_at`, `updated_at`) VALUES (NULL, 'NSW', NULL, NULL, NULL), (NULL, 'VIC', NULL, NULL, NULL), (NULL, 'WA', NULL, NULL, NULL), (NULL, 'TAS', NULL, NULL, NULL), (NULL, 'NT', NULL, NULL, NULL), (NULL, 'ACT', NULL, NULL, NULL);
+
+ALTER TABLE `contact_searches` CHANGE `search_for` `search_for` INT(255) NULL DEFAULT NULL;
+
+update contact_searches set search_for = 1;
+
+ALTER TABLE `contact_searches` ADD `apb` INT(11) NULL DEFAULT NULL AFTER `role`, ADD `abn` VARCHAR(255) NULL DEFAULT NULL AFTER `apb`;
+
+
+ALTER TABLE `contact_searches` ADD `reffered_by_existing_client` INT(11) NULL DEFAULT NULL AFTER `bsb`, ADD `refferor` INT(11) NULL DEFAULT NULL AFTER `reffered_by_existing_client`, ADD `refferor_relation_to_client` INT(11) NULL DEFAULT NULL AFTER `refferor`, ADD `refferor_note` TEXT NULL DEFAULT NULL AFTER `refferor_relation_to_client`;
+
+
+ALTER TABLE `contact_searches` CHANGE `general_mail_out` `general_mail_out` TINYINT(1) NULL DEFAULT NULL;
+
+ALTER TABLE `contact_searches` CHANGE `search_for` `search_for` TINYINT(1) NULL DEFAULT NULL;
+
+ALTER TABLE `contact_searches` ADD `deleted_at` TIMESTAMP NULL DEFAULT NULL AFTER `updated_at`, ADD `created_by` INT(11) NOT NULL AFTER `deleted_at`, ADD `last_updated_by` INT(11) NULL DEFAULT NULL AFTER `created_by`, ADD `deleted_by` INT(11) NULL DEFAULT NULL AFTER `last_updated_by`;
+
+
+ALTER TABLE `contact_searches` CHANGE `individual` `individual` TINYINT(1) NULL DEFAULT NULL;
+
+ALTER TABLE `contact_searches` CHANGE `apb` `abp` INT(11) NULL DEFAULT NULL;
+
+ALTER TABLE `contact_searches` CHANGE `client_industry` `client_industry` INT(11) NULL DEFAULT NULL;
+
+ALTER TABLE `contact_searches` CHANGE `state` `state` INT(11) NULL DEFAULT NULL, CHANGE `mail_state` `mail_state` INT(11) NULL DEFAULT NULL;
+
+ALTER TABLE `states` ADD `full_name` VARCHAR(255) NULL DEFAULT NULL AFTER `name`;
+
+
+UPDATE `states` SET `full_name` = 'South Australia' WHERE `states`.`id` = 1;
+UPDATE `states` SET `full_name` = 'Queensland' WHERE `states`.`id` = 2;
+UPDATE `states` SET `full_name` = 'New South Wales' WHERE `states`.`id` = 3;
+UPDATE `states` SET `full_name` = 'Victoria' WHERE `states`.`id` = 4;
+UPDATE `states` SET `full_name` = 'Western Australia' WHERE `states`.`id` = 5;
+UPDATE `states` SET `full_name` = 'Tasmania' WHERE `states`.`id` = 6;
+UPDATE `states` SET `full_name` = 'Northern Territory' WHERE `states`.`id` = 7;
+UPDATE `states` SET `full_name` = 'Australian Capital Territory' WHERE `states`.`id` = 8;
+
+
+update cities set state_id = 8 where state_name = 'Australian Capital Territory';
+update cities set state_id = 3 where state_name = 'New South Wales';
+update cities set state_id = 7 where state_name = 'Northern Territory';
+update cities set state_id = 2 where state_name = 'Queensland';
+update cities set state_id = 1 where state_name = 'South Australia';
+update cities set state_id = 1 where state_name = 'South Australia';
+update cities set state_id = 6 where state_name = 'Tasmania';
+update cities set state_id = 4 where state_name = 'Victoria';
+update cities set state_id = 5 where state_name = 'Western Australia';
+
+
+UPDATE `users` SET `password` = '$2y$10$fFAvJdXc.J6qSEeN4CscOebI0G/lk31HYKJTmjkvVTsisTWYRdS42' WHERE `users`.`id` = 1;
+UPDATE `users` SET `email` = 'admin@commish.com' WHERE `users`.`id` = 1;
+
+
+ALTER TABLE `contact_searches` CHANGE `city` `city` INT(11) NULL DEFAULT NULL;
+
+
+ALTER TABLE `brokers` ADD `parent_broker` INT(11) NOT NULL DEFAULT '0' AFTER `pincode`;
+
+
+INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Marleston',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Greenacres',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Athelstone',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Fulham Gardens',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Glenelg',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Seacliff',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Parafield',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Gulfview Heights',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Paradise',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Parafield Gardens',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Woodcroft',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Thorngate',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Hectorville',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Torrens Park',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Unley',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Felixstow',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Findon',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Christies Beach',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Ottoway',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Brunswick',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Croydon',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Salisbury East',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Newton',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Norwood',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Wayville',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Kent town',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Glandore',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Edwardstown',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Vale Park',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Salisbury',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Seacliff Park',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Perkside',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Adelaide Mail Centre',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('17A Edgeworth st',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Hillbank',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Longwood',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Kensington Gardens',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Magill North',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Blair Athol',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Blackwood',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Welland',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Modbury',1,'SA',now());INSERT INTO `cities`( `name`, `state_id`, `state_name` ,`created_at`) VALUES ('Smithfield',1,'SA',now());
+
+
+ALTER TABLE `broker_certifications` CHANGE `expiry_date` `expiry_date` DATETIME NOT NULL;
+ALTER TABLE `broker_certifications` CHANGE `expiry_date` `expiry_date` DATE NOT NULL;
+
+INSERT INTO `cities` (`id`, `name`, `latitude`, `longitude`, `state_id`, `state_name`, `deleted_at`, `created_at`, `updated_at`) VALUES (NULL, 'North Adelaide', NULL, NULL, '1', 'South Australia', NULL, NULL, NULL)
+INSERT INTO `cities` (`id`, `name`, `latitude`, `longitude`, `state_id`, `state_name`, `deleted_at`, `created_at`, `updated_at`) VALUES (NULL, 'Normanville', NULL, NULL, '1', 'South Australia', NULL, NULL, NULL);
+INSERT INTO `cities` (`id`, `name`, `latitude`, `longitude`, `state_id`, `state_name`, `deleted_at`, `created_at`, `updated_at`) VALUES (NULL, 'Kooringal', NULL, NULL, '3', 'New South Wales', NULL, NULL, NULL);
+INSERT INTO `cities` (`id`, `name`, `latitude`, `longitude`, `state_id`, `state_name`, `deleted_at`, `created_at`,
+`updated_at`) VALUES (NULL, 'Elwood', NULL, NULL, '4', 'Victoria', NULL, NULL, NULL);
+UPDATE `cities` SET `name` = 'O\'Hallaran Hill' WHERE `cities`.`id` = 2075;
+INSERT INTO `cities` (`id`, `name`, `latitude`, `longitude`, `state_id`, `state_name`, `deleted_at`, `created_at`, `updated_at`) VALUES (NULL, 'Golden Gate', NULL, NULL, '2', 'Queensland', NULL, NULL, NULL);
+
+ INSERT INTO relationship (`name`,`created_at`) VALUES ("Wife",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Partner",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Husband",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Business Ptnr",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Director",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Son in law",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Shareholder",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Sister",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Brother in law",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Mother in law",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Father in law",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Sister in law",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Daughter in law",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Cousin",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Trustee",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("N/A",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Brother",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Director",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Friend",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Business Associate",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Guarantor",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Defacto",now());   INSERT INTO relationship (`name`,`created_at`) VALUES ("Co Borrower",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Accountant",now());    INSERT INTO relationship (`name`,`created_at`) VALUES ("Business Partner",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Financial Planner",now()); INSERT INTO relationship (`name`,`created_at`) VALUES ("Uncle",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Aunty",now());  INSERT INTO relationship (`name`,`created_at`) VALUES ("Banker",now());
+
+
+ALTER TABLE `deal_status_updates` ADD `created_by` INT(11) NOT NULL AFTER `updated_at`;
+ALTER TABLE `deal_status_updates` ADD `from_status` INT(11) NOT NULL AFTER `deal_id`;
+
+
+ALTER TABLE `deals` CHANGE `proposed_settlement` `proposed_settlement` DATE NULL DEFAULT NULL;
+
+
+ALTER TABLE `client_tasks` ADD `created_by` INT(11) NOT NULL AFTER `updated_at`, ADD `updated_by` INT(11) NULL AFTER `created_by`, ADD `deleted_by` INT(11) NULL AFTER `updated_by`;
+
+
+ALTER TABLE `deal_tasks` CHANGE `processor` `processor` INT(11) NOT NULL;
+
+
+ALTER TABLE `commissions_data` CHANGE `loan_amount` `loan_amount` DECIMAL(12,2) NULL;
+
+ALTER TABLE `commissions_data` CHANGE `rate` `rate` DECIMAL(10,2) NULL;
+
+
+ALTER TABLE `commissions_data` CHANGE `settlement_date` `settlement_date` DATE NULL;
+
+ALTER TABLE `commissions_data` CHANGE `total_paid` `total_paid` DECIMAL(12,2) NULL;
+
+ALTER TABLE `commissions_data` CHANGE `commission` `commission` DECIMAL(12,2) NULL;
+
+
+ALTER TABLE `commissions_data` CHANGE `gst` `gst` DECIMAL(10,2) NULL;
+
+ALTER TABLE `commissions_data` ADD `deal_id` INT(11) NOT NULL AFTER `id`;
+
+ALTER TABLE `commissions_data` CHANGE `commission_type` `commission_type` INT(2) NOT NULL;
+
+ALTER TABLE `commissions_data` ADD `broker_id` INT(11) NULL AFTER `deal_id`, ADD `broker_staff_id` INT(11) NULL AFTER `broker_id`, ADD `contact_id` INT(11) NULL AFTER `broker_staff_id`, ADD `product_id` INT(11) NULL AFTER `contact_id`
+
+
+ALTER TABLE `contact_searches` ADD `street_number` VARCHAR(250) NULL AFTER `home`, ADD `street_name` VARCHAR(250) NULL AFTER `street_number`, ADD `street_type` VARCHAR(250) NULL AFTER `street_name`, ADD `suburb` VARCHAR(250) NULL AFTER `street_type`;
+
+
+ALTER TABLE `contact_searches` ADD `postal_street_number` VARCHAR(250) NULL AFTER `mail`, ADD `postal_street_name` VARCHAR(250) NULL AFTER `postal_street_number`, ADD `postal_street_type` VARCHAR(250) NULL AFTER `postal_street_name`, ADD `postal_suburb` VARCHAR(250) NULL AFTER `postal_street_type`, ADD `same_as_residential` TINYINT(1) NOT NULL DEFAULT '0' AFTER `postal_suburb`;
+
+ALTER TABLE `deals` CHANGE `loan_repaid` `loan_repaid` TINYINT(1) NULL DEFAULT NULL;
+
+DELETE FROM `modules` WHERE `modules`.`id` = 10;
+DELETE FROM `modules` WHERE `modules`.`id` = 12;
+
+
+ALTER TABLE `deals`  ADD `broker_split_commis_model` INT(11) NULL DEFAULT NULL  AFTER `has_trail`,  ADD `broker_split_fee_per_deal` DECIMAL(12,2) NULL DEFAULT '0'  AFTER `broker_split_commis_model`,  ADD `broker_split_agg_brk_sp_upfrt` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `broker_split_fee_per_deal`,  ADD `broker_split_agg_brk_sp_trail` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `broker_split_agg_brk_sp_upfrt`,  ADD `referror_split_referror` INT(11) NULL DEFAULT NULL  AFTER `broker_split_agg_brk_sp_trail`,  ADD `referror_split_comm_per_deal` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `referror_split_referror`,  ADD `referror_split_agg_brk_sp_upfrt` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `referror_split_comm_per_deal`,  ADD `broker_staff_split_comm_per_deal` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `referror_split_agg_brk_sp_upfrt`,  ADD `broker_staff_split_agg_brk_sp_upfrt` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `broker_staff_split_comm_per_deal`,  ADD `broker_staff_split_agg_brk_sp_trail` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `broker_staff_split_agg_brk_sp_upfrt`,  ADD `referror_split_agg_brk_sp_trail` DECIMAL(12,2) NOT NULL DEFAULT '0'  AFTER `broker_staff_split_agg_brk_sp_trail`;
+
+
+ALTER TABLE `lenders` ADD `commis_type` INT(11) NULL DEFAULT NULL AFTER `code`;
+
+update lenders set commis_type = 1;
+
+ALTER TABLE `deal_tasks` ADD `followup_detail` INT(11) NULL DEFAULT NULL AFTER `user`;
+
+
+
+UPDATE `broker_types` SET `deleted_at` = '2021-08-07 10:53:36' WHERE `broker_types`.`id` = 2;
+
+UPDATE `broker_types` SET `deleted_at` = '2021-08-07 10:53:52' WHERE `broker_types`.`id` = 3;
+
+
+ALTER TABLE `client_tasks` CHANGE `processor` `processor` INT(11) NOT NULL;
+
+
+CREATE TABLE `commission_types` (
+ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+ `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `deleted_at` timestamp NULL DEFAULT NULL,
+ `created_at` timestamp NULL DEFAULT NULL,
+ `updated_at` timestamp NULL DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `commission_types_name_unique` (`name`)
+) ENGINE=InnoDB;
+
+
+ALTER TABLE `lender_product_commission_schedule` ADD `note` TEXT NULL DEFAULT NULL AFTER `per_rate`;
+
+
+133510
+
+2741
+
+ALTER TABLE `lender_product_commission_schedule` CHANGE `flat_rate` `flat_rate` DECIMAL(20,6) NOT NULL, CHANGE `per_rate` `per_rate` DECIMAL(20,6) NOT NULL;
+
+
+ALTER TABLE `refferor_product_commission_schedule` CHANGE `flat_rate` `flat_rate` DECIMAL(20,6) NOT NULL, CHANGE `per_rate` `per_rate` DECIMAL(20,6) NOT NULL;
+
+ALTER TABLE `broker_commission_model_institution` ADD UNIQUE( `broker_id`, `lender_id`);
+
+
+ALTER TABLE `broker_commission_model_institution` DROP INDEX `broker_comm_model_lender`;
