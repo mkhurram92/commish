@@ -185,6 +185,7 @@ class LenderReportsController extends Controller
             'deal_commissions.agg_amount',
             'deal_commissions.broker_amount',
             'deal_commissions.referror_amount',
+            'deal_commissions.total_amount',
             'commission_types.name as dealType',
         )
             ->join('products', 'deals.product_id', '=', 'products.id')
@@ -218,6 +219,7 @@ class LenderReportsController extends Controller
             'deal_commissions.agg_amount',
             'deal_commissions.broker_amount',
             'deal_commissions.referror_amount',
+            'deal_commissions.total_amount',
             'commission_types.name as dealType'
         )
             ->join('products', 'deals.product_id', '=', 'products.id')

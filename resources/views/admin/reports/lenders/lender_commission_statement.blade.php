@@ -114,9 +114,9 @@
             <tr>
                 <td style="width: 100%; text-align: center; font-size: 14px; font-weight: bold;">
                     Institution : <?php
-                                    $lender = \App\Models\Lenders::where('id', $lenders)->first();
-                                    echo $lender->name;
-                                    ?>
+                    $lender = \App\Models\Lenders::where('id', $lenders)->first();
+                    echo $lender->name;
+                    ?>
                 </td>
             </tr>
             <tr>
@@ -133,71 +133,71 @@
     $abp_upfront_amount = 0;
     ?>
     @php
-    $grandTotalAggAmount = $grandTotalBrokerAmount = $grandTotalReferrorAmount = 0;
+        $grandTotalAggAmount = $grandTotalBrokerAmount = $grandTotalReferrorAmount = 0;
     @endphp
     @foreach ($dealsforFIMU as $dealType => $deals)
-    <table>
-        <thead class="thead_style">
-            <tr class="product-row">
-                <th colspan="6">{{ $dealType }}</th>
-            </tr>
-            <tr class="product-row">
-                <th style="width: 15%">Product</th>
-                <th style="width: 35%">Client</th>
-                <th style="width: 14%">Master</th>
-                <th style="width: 12%">ABP</th>
-                <th style="width: 12%">Referror</th>
-                <th style="width: 12%">Total Amount</th>
-            </tr>
-        </thead>
-        <tbody class="body_class">
-            @php
-            $totalAggAmount = $totalBrokerAmount = $totalReferrorAmount = 0;
-            @endphp
-            @if ($deals->isNotEmpty())
-            @foreach ($deals as $deal)
-            <tr>
-                <td>{{ $deal->productName }}</td>
-                <td>{{ $deal->client_name }}</td>
-                <td>${{ number_format($deal->agg_amount, 2) }}</td>
-                <td>${{ number_format($deal->broker_amount, 2) }}</td>
-                <td>${{ number_format($deal->referror_amount, 2) }}</td>
-                <td>${{ number_format($deal->total_amont, 2) }}</td>
-            </tr>
-            @php
-            $totalAggAmount += $deal->agg_amount;
-            $totalBrokerAmount += $deal->broker_amount;
-            $totalReferrorAmount += $deal->referror_amount;
-            @endphp
-            @endforeach
-            @else
-            <tr>
-                <td colspan="6">No records found for this product type.</td>
-            </tr>
-            @endif
-            <tr class="product-total-row">
-                <td colspan="2">{{ $dealType }} Total : {{ $deals->count() }}</td>
-                <td>${{ number_format($totalAggAmount, 2) }}</td>
-                <td>${{ number_format($totalBrokerAmount, 2) }}</td>
-                <td>${{ number_format($totalReferrorAmount, 2) }}</td>
-                <td>${{ number_format($totalAggAmount + $totalBrokerAmount + $totalReferrorAmount, 2) }}</td>
-            </tr>
-            <?php
-            if ($dealType == 'Trail') {
-                $agg_trail_amount += $totalAggAmount;
-                $abp_trail_amount += $totalBrokerAmount;
-            } elseif ($dealType == 'Upfront') {
-                $agg_upfront_amount += $totalAggAmount;
-                $abp_upfront_amount += $totalBrokerAmount;
-            }
-            ?>
-            @php
-            $grandTotalAggAmount += $totalAggAmount;
-            $grandTotalBrokerAmount += $totalBrokerAmount;
-            $grandTotalReferrorAmount += $totalReferrorAmount;
-            @endphp
-        </tbody>
-    </table>
+        <table>
+            <thead class="thead_style">
+                <tr class="product-row">
+                    <th colspan="6">{{ $dealType }}</th>
+                </tr>
+                <tr class="product-row">
+                    <th style="width: 15%">Product</th>
+                    <th style="width: 35%">Client</th>
+                    <th style="width: 14%">Master</th>
+                    <th style="width: 12%">ABP</th>
+                    <th style="width: 12%">Referror</th>
+                    <th style="width: 12%">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody class="body_class">
+                @php
+                    $totalAggAmount = $totalBrokerAmount = $totalReferrorAmount = 0;
+                @endphp
+                @if ($deals->isNotEmpty())
+                    @foreach ($deals as $deal)
+                        <tr>
+                            <td>{{ $deal->productName }}</td>
+                            <td>{{ $deal->client_name }}</td>
+                            <td>${{ number_format($deal->agg_amount, 2) }}</td>
+                            <td>${{ number_format($deal->broker_amount, 2) }}</td>
+                            <td>${{ number_format($deal->referror_amount, 2) }}</td>
+                            <td>${{ number_format($deal->total_amount, 2) }}</td>
+                        </tr>
+                        @php
+                            $totalAggAmount += $deal->agg_amount;
+                            $totalBrokerAmount += $deal->broker_amount;
+                            $totalReferrorAmount += $deal->referror_amount;
+                        @endphp
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No records found for this product type.</td>
+                    </tr>
+                @endif
+                <tr class="product-total-row">
+                    <td colspan="2">{{ $dealType }} Total : {{ $deals->count() }}</td>
+                    <td>${{ number_format($totalAggAmount, 2) }}</td>
+                    <td>${{ number_format($totalBrokerAmount, 2) }}</td>
+                    <td>${{ number_format($totalReferrorAmount, 2) }}</td>
+                    <td>${{ number_format($totalAggAmount + $totalBrokerAmount + $totalReferrorAmount, 2) }}</td>
+                </tr>
+                <?php
+                if ($dealType == 'Trail') {
+                    $agg_trail_amount += $totalAggAmount;
+                    $abp_trail_amount += $totalBrokerAmount;
+                } elseif ($dealType == 'Upfront') {
+                    $agg_upfront_amount += $totalAggAmount;
+                    $abp_upfront_amount += $totalBrokerAmount;
+                }
+                ?>
+                @php
+                    $grandTotalAggAmount += $totalAggAmount;
+                    $grandTotalBrokerAmount += $totalBrokerAmount;
+                    $grandTotalReferrorAmount += $totalReferrorAmount;
+                @endphp
+            </tbody>
+        </table>
     @endforeach
     <!-- Finance Mutual Direct Section Total Row -->
     <table style="width:100%">
@@ -225,72 +225,72 @@
     </table>
     <hr style="margin-top: 2px; margin-bottom: 2px;">
     @php
-    $grandTotalAggAmountOthers = $grandTotalBrokerAmountOthers = $grandTotalReferrorAmountOthers = 0;
+        $grandTotalAggAmountOthers = $grandTotalBrokerAmountOthers = $grandTotalReferrorAmountOthers = 0;
     @endphp
     <!-- Loop for dealsforOthers -->
     @foreach ($dealsforOthers as $dealType => $deals)
-    <table>
-        <thead class="thead_style">
-            <tr class="product-row">
-                <th colspan="6">{{ $dealType }}</th>
-            </tr>
-            <tr class="product-row">
-                <th style="width: 15%">Product</th>
-                <th style="width: 35%">Client</th>
-                <th style="width: 14%">Master</th>
-                <th style="width: 12%">ABP</th>
-                <th style="width: 12%">Referror</th>
-                <th style="width: 12%">Total Amount</th>
-            </tr>
-        </thead>
-        <tbody class="body_class">
-            @php
-            $totalAggAmount = $totalBrokerAmount = $totalReferrorAmount = 0;
-            @endphp
-            @if ($deals->isNotEmpty())
-            @foreach ($deals as $deal)
-            <tr>
-                <td>{{ $deal->productName }}</td>
-                <td>{{ $deal->client_name }}</td>
-                <td>${{ number_format($deal->agg_amount, 2) }}</td>
-                <td>${{ number_format($deal->broker_amount, 2) }}</td>
-                <td>${{ number_format($deal->referror_amount, 2) }}</td>
-                <td>${{ number_format($deal->total_amont, 2) }}</td>
-            </tr>
-            @php
-            $totalAggAmount += $deal->agg_amount;
-            $totalBrokerAmount += $deal->broker_amount;
-            $totalReferrorAmount += $deal->referror_amount;
-            @endphp
-            @endforeach
-            @else
-            <tr>
-                <td colspan="6">No records found for this product type.</td>
-            </tr>
-            @endif
-            <tr class="product-total-row">
-                <td colspan="2">{{ $dealType }} Total : {{ $deals->count() }}</td>
-                <td>${{ number_format($totalAggAmount, 2) }}</td>
-                <td>${{ number_format($totalBrokerAmount, 2) }}</td>
-                <td>${{ number_format($totalReferrorAmount, 2) }}</td>
-                <td>${{ number_format($totalAggAmount + $totalBrokerAmount + $totalReferrorAmount, 2) }}</td>
-            </tr>
-            <?php
-            if ($dealType == 'Trail') {
-                $agg_trail_amount += $totalAggAmount;
-                $abp_trail_amount += $totalBrokerAmount;
-            } elseif ($dealType == 'Upfront') {
-                $agg_upfront_amount += $totalAggAmount;
-                $abp_upfront_amount += $totalBrokerAmount;
-            }
-            ?>
-            @php
-            $grandTotalAggAmountOthers += $totalAggAmount;
-            $grandTotalBrokerAmountOthers += $totalBrokerAmount;
-            $grandTotalReferrorAmountOthers += $totalReferrorAmount;
-            @endphp
-        </tbody>
-    </table>
+        <table>
+            <thead class="thead_style">
+                <tr class="product-row">
+                    <th colspan="6">{{ $dealType }}</th>
+                </tr>
+                <tr class="product-row">
+                    <th style="width: 15%">Product</th>
+                    <th style="width: 35%">Client</th>
+                    <th style="width: 14%">Master</th>
+                    <th style="width: 12%">ABP</th>
+                    <th style="width: 12%">Referror</th>
+                    <th style="width: 12%">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody class="body_class">
+                @php
+                    $totalAggAmount = $totalBrokerAmount = $totalReferrorAmount = 0;
+                @endphp
+                @if ($deals->isNotEmpty())
+                    @foreach ($deals as $deal)
+                        <tr>
+                            <td>{{ $deal->productName }}</td>
+                            <td>{{ $deal->client_name }}</td>
+                            <td>${{ number_format($deal->agg_amount, 2) }}</td>
+                            <td>${{ number_format($deal->broker_amount, 2) }}</td>
+                            <td>${{ number_format($deal->referror_amount, 2) }}</td>
+                            <td>${{ number_format($deal->total_amount, 2) }}</td>
+                        </tr>
+                        @php
+                            $totalAggAmount += $deal->agg_amount;
+                            $totalBrokerAmount += $deal->broker_amount;
+                            $totalReferrorAmount += $deal->referror_amount;
+                        @endphp
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No records found for this product type.</td>
+                    </tr>
+                @endif
+                <tr class="product-total-row">
+                    <td colspan="2">{{ $dealType }} Total : {{ $deals->count() }}</td>
+                    <td>${{ number_format($totalAggAmount, 2) }}</td>
+                    <td>${{ number_format($totalBrokerAmount, 2) }}</td>
+                    <td>${{ number_format($totalReferrorAmount, 2) }}</td>
+                    <td>${{ number_format($totalAggAmount + $totalBrokerAmount + $totalReferrorAmount, 2) }}</td>
+                </tr>
+                <?php
+                if ($dealType == 'Trail') {
+                    $agg_trail_amount += $totalAggAmount;
+                    $abp_trail_amount += $totalBrokerAmount;
+                } elseif ($dealType == 'Upfront') {
+                    $agg_upfront_amount += $totalAggAmount;
+                    $abp_upfront_amount += $totalBrokerAmount;
+                }
+                ?>
+                @php
+                    $grandTotalAggAmountOthers += $totalAggAmount;
+                    $grandTotalBrokerAmountOthers += $totalBrokerAmount;
+                    $grandTotalReferrorAmountOthers += $totalReferrorAmount;
+                @endphp
+            </tbody>
+        </table>
     @endforeach
     <!-- Other APBs Section Total Row -->
     <table style="width:100%">
@@ -299,7 +299,7 @@
                 <td colspan="2">Other ABPs Total</td>
                 <td style="width: 14%">${{ number_format($grandTotalAggAmountOthers, 2) }}</td>
                 <td style="width: 12%">${{ number_format($grandTotalBrokerAmountOthers, 2) }}</td>
-                <td style="width: 12%">${{ number_format($grandTotalReferrorAmount, 2) }}</td>
+                <td style="width: 12%">${{ number_format($grandTotalReferrorAmountOthers, 2) }}</td>
                 <td style="width: 12%">
                     ${{ number_format($grandTotalAggAmountOthers + $grandTotalBrokerAmountOthers + $grandTotalReferrorAmountOthers, 2) }}
                 </td>
@@ -318,72 +318,72 @@
     </table>
     <hr style="margin-top: 2px; margin-bottom: 2px;">
     @php
-    $grandTotalAggAmountReferror = $grandTotalBrokerAmountReferror = $grandTotalReferrorAmountReferror = 0;
+        $grandTotalAggAmountReferror = $grandTotalBrokerAmountReferror = $grandTotalReferrorAmountReferror = 0;
     @endphp
     <!-- Loop for Referrors -->
     @foreach ($dealsforReferror as $dealType => $deals)
-    <table>
-        <thead class="thead_style">
-            <tr class="product-row">
-                <th colspan="6">{{ $dealType }}</th>
-            </tr>
-            <tr class="product-row">
-                <th style="width: 15%">Product</th>
-                <th style="width: 35%">Client</th>
-                <th style="width: 14%">Master</th>
-                <th style="width: 12%">ABP</th>
-                <th style="width: 12%">Referror</th>
-                <th style="width: 12%">Total Amount</th>
-            </tr>
-        </thead>
-        <tbody class="body_class">
-            @php
-            $totalAggAmount = $totalBrokerAmount = $totalReferrorAmount = 0;
-            @endphp
-            @if ($deals->isNotEmpty())
-            @foreach ($deals as $deal)
-            <tr>
-                <td>{{ $deal->productName }}</td>
-                <td>{{ $deal->client_name }}</td>
-                <td>${{ number_format($deal->agg_amount, 2) }}</td>
-                <td>${{ number_format($deal->broker_amount, 2) }}</td>
-                <td>${{ number_format($deal->referror_amount, 2) }}</td>
-                <td>${{ number_format($deal->total_amont, 2) }}</td>
-            </tr>
-            @php
-            $totalAggAmount += $deal->agg_amount;
-            $totalBrokerAmount += $deal->broker_amount;
-            $totalReferrorAmount += $deal->referror_amount;
-            @endphp
-            @endforeach
-            @else
-            <tr>
-                <td colspan="6">No records found for this product type.</td>
-            </tr>
-            @endif
-            <tr class="product-total-row">
-                <td colspan="2">{{ $dealType }} Total : {{ $deals->count() }}</td>
-                <td>${{ number_format($totalAggAmount, 2) }}</td>
-                <td>${{ number_format($totalBrokerAmount, 2) }}</td>
-                <td>${{ number_format($totalReferrorAmount, 2) }}</td>
-                <td>${{ number_format($totalAggAmount + $totalBrokerAmount + $totalReferrorAmount, 2) }}</td>
-            </tr>
-            <?php
-            if ($dealType == 'Trail') {
-                $agg_trail_amount += $totalAggAmount;
-                $abp_trail_amount += $totalBrokerAmount;
-            } elseif ($dealType == 'Upfront') {
-                $agg_upfront_amount += $totalAggAmount;
-                $abp_upfront_amount += $totalBrokerAmount;
-            }
-            ?>
-            @php
-            $grandTotalAggAmountReferror += $totalAggAmount;
-            $grandTotalBrokerAmountReferror += $totalBrokerAmount;
-            $grandTotalReferrorAmountReferror += $totalReferrorAmount;
-            @endphp
-        </tbody>
-    </table>
+        <table>
+            <thead class="thead_style">
+                <tr class="product-row">
+                    <th colspan="6">{{ $dealType }}</th>
+                </tr>
+                <tr class="product-row">
+                    <th style="width: 15%">Product</th>
+                    <th style="width: 35%">Client</th>
+                    <th style="width: 14%">Master</th>
+                    <th style="width: 12%">ABP</th>
+                    <th style="width: 12%">Referror</th>
+                    <th style="width: 12%">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody class="body_class">
+                @php
+                    $totalAggAmount = $totalBrokerAmount = $totalReferrorAmount = 0;
+                @endphp
+                @if ($deals->isNotEmpty())
+                    @foreach ($deals as $deal)
+                        <tr>
+                            <td>{{ $deal->productName }}</td>
+                            <td>{{ $deal->client_name }}</td>
+                            <td>${{ number_format($deal->agg_amount, 2) }}</td>
+                            <td>${{ number_format($deal->broker_amount, 2) }}</td>
+                            <td>${{ number_format($deal->referror_amount, 2) }}</td>
+                            <td>${{ number_format($deal->total_amount, 2) }}</td>
+                        </tr>
+                        @php
+                            $totalAggAmount += $deal->agg_amount;
+                            $totalBrokerAmount += $deal->broker_amount;
+                            $totalReferrorAmount += $deal->referror_amount;
+                        @endphp
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="6">No records found for this product type.</td>
+                    </tr>
+                @endif
+                <tr class="product-total-row">
+                    <td colspan="2">{{ $dealType }} Total : {{ $deals->count() }}</td>
+                    <td>${{ number_format($totalAggAmount, 2) }}</td>
+                    <td>${{ number_format($totalBrokerAmount, 2) }}</td>
+                    <td>${{ number_format($totalReferrorAmount, 2) }}</td>
+                    <td>${{ number_format($totalAggAmount + $totalBrokerAmount + $totalReferrorAmount, 2) }}</td>
+                </tr>
+                <?php
+                if ($dealType == 'Trail') {
+                    $agg_trail_amount += $totalAggAmount;
+                    $abp_trail_amount += $totalBrokerAmount;
+                } elseif ($dealType == 'Upfront') {
+                    $agg_upfront_amount += $totalAggAmount;
+                    $abp_upfront_amount += $totalBrokerAmount;
+                }
+                ?>
+                @php
+                    $grandTotalAggAmountReferror += $totalAggAmount;
+                    $grandTotalBrokerAmountReferror += $totalBrokerAmount;
+                    $grandTotalReferrorAmountReferror += $totalReferrorAmount;
+                @endphp
+            </tbody>
+        </table>
     @endforeach
     <!-- Referror Section Total Row -->
     <table>
@@ -492,7 +492,8 @@
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
                 ${{ number_format($agg_gst + $abp_gst, 2) }}</td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
-                ${{ number_format($agg_upfront_total + $abp_upfront + $apb_trail + $abp_gst + $agg_trail_total + $agg_gst, 2) }}</td>
+                ${{ number_format($agg_upfront_total + $abp_upfront + $apb_trail + $abp_gst + $agg_trail_total + $agg_gst, 2) }}
+            </td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
                 ${{ number_format($abp_no_gst + $abp_no_gst, 2) }}</td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
