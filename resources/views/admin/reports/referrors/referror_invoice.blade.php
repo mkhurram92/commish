@@ -319,6 +319,8 @@
 
     <table style="page-break-inside: avoid;border-collapse: collapse; width: 30%; margin-left: auto; margin-right: 0;">
         <tbody>
+            <!-- Empty row for extra space -->
+            <tr style="height: 20px;"></tr>
             <tr class="grand-total-row">
                 <td style="padding: 8px;background-color: #f8f8f8;"><b>GST</b>
                 </td>
