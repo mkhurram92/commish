@@ -490,13 +490,13 @@
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
                 ${{ number_format($agg_trail_total + $apb_trail, 2) }}</td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
-                ${{ number_format($agg_trail_total + $abp_gst, 2) }}</td>
+                ${{ number_format($agg_gst + $abp_gst, 2) }}</td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
-                ${{ number_format($agg_upfront_total + $abp_upfront + $agg_trail_total + $agg_gst + $apb_trail + $abp_gst, 2) }}</td>
+                ${{ number_format($agg_upfront_total + $agg_trail_total + $agg_gst + $apb_trail + $abp_gst, 2) }}</td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
                 ${{ number_format($abp_no_gst + $abp_no_gst, 2) }}</td>
             <td style="border: 1px solid grey; padding: 8px; text-align: center;">
-                ${{ number_format($agg_upfront_total + $abp_upfront + $apb_trail + $abp_gst + $abp_no_gst + $agg_trail_total + $agg_gst + $agg_no_gst, 2) }}
+                ${{ number_format($agg_upfront_total + $apb_trail + $abp_gst + $abp_no_gst + $agg_trail_total + $agg_gst + $agg_no_gst, 2) }}
             </td>
         </tr>
     </table>
