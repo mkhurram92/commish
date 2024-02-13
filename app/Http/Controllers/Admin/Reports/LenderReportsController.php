@@ -147,6 +147,8 @@ class LenderReportsController extends Controller
         $dealsforOthers = $this->buildCommissionQuery($selectedLender, [8], $to_date, 'Others');
         $dealsforReferror = $this->buildReferror($selectedLender, $to_date);
 
+        //dd($dealsforReferror);
+
         $pdf = PDF::loadView(
             'admin.reports.lenders.lender_commission_statement',
             [
@@ -219,7 +221,7 @@ class LenderReportsController extends Controller
             'commission_types.name as dealType'
         )
             ->join('products', 'deals.product_id', '=', 'products.id')
-            ->join('contact_searches', 'deals.contact_id', '=', 'contact_searches.id')
+            ->join('contact_searches', 'deals.referror_split_referror', '=', 'contact_searches.id')
             ->leftJoin('deal_commissions', 'deals.id', '=', 'deal_commissions.deal_id')
             ->join('commission_types', 'deal_commissions.type', '=', 'commission_types.id')
             ->where('deal_commissions.referror_amount', '<>', '0')
