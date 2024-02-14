@@ -132,19 +132,21 @@
                 $grand_total_abp_gst = 0;
                 $grand_total_agg_gst = 0;
                 $grand_total_com = 0;
+                $grand_total_agg_invoices = 0;
+                $grand_total_abp_invoices = 0;
                 ?>
                 @foreach ($lenders as $lender)
                     <?php
                     $commssions = \App\Models\DealCommission::select(
                         \DB::raw('deals.gst_applies,deal_commissions.id,date_statement,
-                        
-                        ROUND(Sum(If(`type` = 12 AND deals.gst_applies=1,agg_amount * 1.1, 0)), 2) AS agg_gst,
-                        ROUND(Sum(If(`type` = 12 AND deals.gst_applies=0,agg_amount,0)), 2) AS agg_no_gst,
-                        ROUND(Sum(If(`type` = 13 ,agg_amount * 1.1, 0)), 2) AS agg_upfront,
-                        ROUND(Sum(If(`type` = 13 ,broker_amount * 1.1, 0) + If(`type` = 13, referror_amount * 1.1, 0)), 2) AS abp_upfront,
-                        ROUND(Sum(If(`type` = 12 AND deals.gst_applies=0,broker_amount,0) + If(`type` = 12 AND deals.gst_applies = 0, referror_amount, 0)), 2) AS abp_no_gst,
-                        ROUND(Sum(If(`type` = 12 AND deals.gst_applies=1,broker_amount * 1.1, 0) + 
-                        If(`type` = 12 AND deals.gst_applies = 1, referror_amount * 1.1, 0)), 2) AS abp_gst,deal_id'),
+                                                                                                                                                                                                                                                    
+                                                                                ROUND(Sum(If(`type` = 12 AND deals.gst_applies=1,agg_amount * 1.1, 0)), 2) AS agg_gst,
+                                                                                ROUND(Sum(If(`type` = 12 AND deals.gst_applies=0,agg_amount,0)), 2) AS agg_no_gst,
+                                                                                ROUND(Sum(If(`type` = 13 ,agg_amount * 1.1, 0)), 2) AS agg_upfront,
+                                                                                ROUND(Sum(If(`type` = 13 ,broker_amount * 1.1, 0) + If(`type` = 13, referror_amount * 1.1, 0)), 2) AS abp_upfront,
+                                                                                ROUND(Sum(If(`type` = 12 AND deals.gst_applies=0,broker_amount,0) + If(`type` = 12 AND deals.gst_applies = 0, referror_amount, 0)), 2) AS abp_no_gst,
+                                                                                ROUND(Sum(If(`type` = 12 AND deals.gst_applies=1,broker_amount * 1.1, 0) + 
+                                                                                If(`type` = 12 AND deals.gst_applies = 1, referror_amount * 1.1, 0)), 2) AS abp_gst,deal_id'),
                     )
                         ->join('deals', 'deals.id', '=', 'deal_commissions.deal_id')
                         ->join('lenders', 'lenders.id', '=', 'deals.lender_id')
@@ -165,6 +167,7 @@
                     $total_abp_gst = 0;
                     $total_agg_gst = 0;
                     $total_com = 0;
+                    
                     ?>
                     @if (count($commssions))
                         <tr>
@@ -178,7 +181,18 @@
                         </tr>
                         @foreach ($commssions as $commssion)
                             <tr>
+
+                                <?php
+                                $invoice_sums = \App\Models\Deal::select(\DB::raw('SUM((agg_est_trail + agg_est_upfront) * 1.1) as sum_of_trail_upfront_gst'), \DB::raw('SUM((broker_est_upfront + broker_est_trail) * 1.1) as sum_of_abp_trail_upfront_gst'))
+                                    ->where('id', $commssion->deal_id)
+                                    ->first();
+                                
+                                $grand_total_agg_invoices += $invoice_sums ? $invoice_sums->sum_of_trail_upfront_gst : 0;
+                                $grand_total_abp_invoices += $invoice_sums ? $invoice_sums->sum_of_abp_trail_upfront_gst : 0;
+                                ?>
+
                                 <td style="width:12.5%;">{{ date('d/m/Y', strtotime($commssion->date_statement)) }}</td>
+
                                 <td style="width:12.5%;">
                                     <?php
                                     echo '$' . number_format($commssion->agg_upfront, 2);
@@ -259,7 +273,7 @@
                         <table class="grand-total-table">
                             <thead>
                                 <tr style="background-color: #f2f2f2;">
-                                    <td>Total</td>
+                                    <td>SubTotal</td>
                                     <td>${{ number_format($grand_total_agg_upfront, 2) }}</td>
                                     <td>${{ number_format($grand_total_agg_gst, 2) }}</td>
                                     <td>${{ number_format($grand_total_agg_no_gst, 2) }}</td>
@@ -276,8 +290,8 @@
                 $agg_subtotal = $grand_total_agg_upfront + $grand_total_agg_gst + $grand_total_agg_no_gst;
                 $abp_subtotal = $grand_total_abp_upfront + $grand_total_abp_gst + $grand_total_abp_no_gst;
                 
-                $agg_inovices = 1;
-                $abp_invoices = 1;
+                $agg_inovices = $grand_total_agg_invoices;
+                $abp_invoices = $grand_total_abp_invoices;
                 
                 ?>
                 <tr>
@@ -285,14 +299,14 @@
                         <table class="grand-total-table">
                             <thead style="border: 0;">
                                 <tr style="background-color: #ffffff;">
-                                    <th colspan="4">AGG SubTotal :
+                                    <th colspan="4">Total :
                                         ${{ number_format($agg_subtotal, 2) }}
                                     </th>
-                                    <th colspan="4">ABP SubTotal :
+                                    <th colspan="4">Total :
                                         ${{ number_format($abp_subtotal, 2) }}
                                     </th>
                                 </tr>
-                                <tr style="background-color: #ffffff;">
+                                <!--<tr style="background-color: #ffffff;">
                                     <th colspan="4">AGG Invoices :
                                         ${{ number_format($agg_inovices, 2) }}
                                     </th>
@@ -302,12 +316,12 @@
                                 </tr>
                                 <tr style="background-color: #ffffff;">
                                     <th colspan="4">Difference :
-                                        ${{ number_format($agg_inovices - $agg_subtotal , 2) }}
+                                        ${{ number_format($agg_inovices - $agg_subtotal, 2) }}
                                     </th>
                                     <th colspan="4">Difference :
-                                        ${{ number_format($abp_invoices - $abp_subtotal , 2) }}
+                                        ${{ number_format($abp_invoices - $abp_subtotal, 2) }}
                                     </th>
-                                </tr>
+                                </tr>-->
                             </thead>
                         </table>
                     </td>
