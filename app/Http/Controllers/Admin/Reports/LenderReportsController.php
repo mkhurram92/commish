@@ -207,8 +207,10 @@ class LenderReportsController extends Controller
             $query->where('deals.lender_id', $selectedLender);
         }
 
-        $query->orderBy('productName')->orderBy('client_name', 'asc');
+        //$query->orderBy('productName')->orderBy('client_name', 'asc');
 
+        $query->orderBy('client_name', 'asc');
+        
         return $query->get()->groupBy('dealType');
     }
     private function buildReferror($selectedLender, $to_date)
@@ -228,12 +230,14 @@ class LenderReportsController extends Controller
             ->join('commission_types', 'deal_commissions.type', '=', 'commission_types.id')
             ->where('deal_commissions.referror_amount', '<>', '0')
             ->where('deal_commissions.date_statement', $to_date)
-            ->whereNotNull('deals.referror_split_referror')
-            ->orderBy('productName');
+            ->whereNotNull('deals.referror_split_referror');
+            //->orderBy('productName');
 
         if (!empty($selectedLender)) {
             $query->where('deals.lender_id', $selectedLender);
         }
+
+        $query->orderBy('client_name', 'asc');
 
         return $query->get()->groupBy('dealType');
     }
