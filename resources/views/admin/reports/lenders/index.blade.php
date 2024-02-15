@@ -30,7 +30,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="main-card card add_form_card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Lender Filterssss</h5>
+                    <h5 class="card-title">Lender Filtersssss</h5>
                     <div class="ml-auto">
                         <select class="form-control" name="report_type" id="report_type">
                             <option
