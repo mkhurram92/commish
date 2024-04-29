@@ -71,11 +71,11 @@
                                             <a role="tab" class="nav-link" id="tab-5" data-toggle="tab" href="#tab-content-5">
                                                 <span>Statuses</span>
                                             </a>
-                                        </li>-->
+                                        </li>
                     <li class="ml-auto">
                         <button class="btn btn-primary" onclick="window.alert('this lead has been archived')">Archive This
                             Lead</button>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </div>
