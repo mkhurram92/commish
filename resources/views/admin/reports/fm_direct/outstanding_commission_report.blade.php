@@ -3,11 +3,11 @@
 
 <head>
     <title>Commission Outstanding</title>
-
 </head>
 
 <body style=" font-family: system-ui, system-ui, sans-serif;">
     <style>
+        <style>
         table {
             border: 0;
             border-collapse: separate;
@@ -21,59 +21,41 @@
             border-spacing: 5px 5px;
             text-align: left;
             font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 1px;
+            font-size: 12px;
         }
-
         .subtotal tr th {
             border-top: 1px solid grey;
             font-family: system-ui, system-ui, sans-serif;
             border-collapse: separate;
             border-spacing: 5px 5px;
             text-align: left;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
-        .grand_total tr th {
-            border-top: 2px solid grey;
-            font-family: system-ui, system-ui, sans-serif;
-            border-collapse: separate;
-            border-spacing: 5px 5px;
-            text-align: left;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
+            font-size: 12px;
+        }.grand_total tr th {
+             border-top: 2px solid grey;
+             font-family: system-ui, system-ui, sans-serif;
+             border-collapse: separate;
+             border-spacing: 5px 5px;
+             text-align: left;
+             font-size: 14px;
+         }
         .body_class tr td {
             font-family: system-ui, system-ui, sans-serif;
             border-collapse: separate;
             border-spacing: 5px 5px;
             text-align: left;
-            font-size: 13px;
-            letter-spacing: 1px;
+            font-size: 12px;
         }
-
-        .body_class tbody {
+        .body_class tbody{
             border-collapse: separate;
             border-spacing: 5px 5px;
             border-bottom: 1px solid;
         }
-
-        thead {
-            display: table-header-group;
-        }
-
-        tfoot {
-            display: table-row-group;
-        }
-
-        tr {
-            page-break-inside: avoid;
-        }
+        thead{display: table-header-group;}
+        tfoot {display: table-row-group;}
+        tr {page-break-inside: avoid;}
     </style>
 
-    <table style="margin-top: 5px;margin-bottom:5px;width: 100%">
+    <!--<table style="margin-top: 5px;margin-bottom:5px;width: 100%">
         <tbody>
             <tr>
                 <td style="width: 30%"> <span style="font-size: 18px;font-weight: bold;">FM Direct Commission
@@ -83,6 +65,21 @@
             </tr>
         </tbody>
     </table>
+    -->
+    <table style="margin-top: 5px;margin-bottom:5px;width: 100%">
+        <tbody>
+            <tr>
+                <td style="width: 100%; text-align: center;"> <span style="font-size: 24px;font-weight: bold;">FM Direct Commission
+                    Outstanding</span></td>
+            </tr>
+            <tr>
+                <td style="width: 100%; text-align: center; font-size: 16px; font-weight: bold;">
+                    Report Period: {{ date('d/m/Y', strtotime($date_from)) }} - {{ date('d/m/Y', strtotime($date_to)) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
     <?php
     $total_actual_loan_amt = 0;
     $total_ABP_est_upfront_amt = 0;
@@ -138,7 +135,8 @@
         $actual_trail = 0;
         $tra_dif = 0;
         ?>
-        <table style="width: 100%;margin-top: 5px">
+        <table class="row" style="margin-top: 5px;margin-bottom:5px;width: 100%">
+
             <thead class="thead_style">
                 <tr>
                     <th>Deal</th>
@@ -164,7 +162,8 @@
                                     if ($group_by == 'Product') {
                                         echo $deal_list->product->name ?? '';
                                     } elseif ($group_by == 'BrokerStaff') {
-                                        echo $deal_list->broker_staff->surname ?? '';
+                                        //echo $deal_list->broker_staff->surname ?? '';
+                                        echo ($deal_list->broker_staff->surname ?? '') . ' ' . ($deal_list->broker_staff->given_name ?? '');
                                     } elseif ($group_by == 'Status') {
                                         echo $deal_list->deal_status->name;
                                     } else {
@@ -191,16 +190,17 @@
                         </td>
                         <td>{{ $deal_list->lender->code }}</td>
                         <td>{{ $deal_list->deal_status->name }}</td>
-                        <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->given_name . ' ' . $deal_list->broker_staff->surname : ' ' }}
+                        <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}
                         </td>
-                        <td style="padding-left:12px;">{{ number_format($deal_list->actual_loan, 2) }}</td>
-                        <td>{{ $deal_list->broker_est_upfront }}</td>
-                        <td>{{ number_format($upfront, 2) }}</td>
+                        <td style="padding-left:12px;">${{ number_format($deal_list->actual_loan, 2, '.', ',') }}</td>
+                        <td>${{ $deal_list->broker_est_upfront }}</td>
+                        <td>${{ number_format($upfront?? 0, 2, '.', ',') }}</td>
 
-                        <td>{{ $up_diff = $deal_list->broker_est_upfront - $upfront }}</td>
-                        <td>{{ number_format($deal_list->broker_est_brokerage ?? 0, 2) }}</td>
-                        <td>{{ number_format($brokerrage ?? 0, 2) }}</td>
-                        <td>{{ number_format($br_dif = $deal_list->broker_est_brokerage - $brokerrage, 2) }}
+                        <td>${{ number_format($up_diff = $deal_list->broker_est_upfront - $upfront, 2, '.', ',') }}</td>
+                        
+                        <td>${{ number_format($deal_list->broker_est_brokerage ?? 0, 2, '.', ',') }}</td>
+                        <td>${{ number_format($brokerrage ?? 0, 2, '.', ',') }}</td>
+                        <td>${{ number_format($br_dif = $deal_list->broker_est_brokerage - $brokerrage, 2) }}
                         </td>
                     </tr>
 
@@ -232,13 +232,14 @@
                     </th>
                     <th style="text-align: left;width: 7%"></th>
                     <th colspan="2">{{ 'Rows: ' . count($deals) }}</th>
-                    <th style="text-align: left;width: 7%">${{ $actual_loan_amt }}</th>
-                    <th style="text-align: left;width: 7%">${{ $ABP_est_upfront_amt }}</th>
-                    <th style="text-align: left;width: 7%">${{ $ABP_actual_upfront_amt }}</th>
-                    <th style="text-align: left;width: 7%">${{ $ABP_upfront_diff }}</th>
-                    <th style="text-align: left;width: 7%">${{ $ABP_est_brokerage }}</th>
-                    <th style="text-align: left;width: 7%">${{ $ABP_actual_brokerage }}</th>
-                    <th style="text-align: left;width: 7%">${{ $brokerage_dif }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($actual_loan_amt, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_est_upfront_amt, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_actual_upfront_amt, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_upfront_diff, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_est_brokerage, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_actual_brokerage, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($brokerage_dif, 2, '.', ',')  }}</th>
+
                 </tr>
                 <?php
                 $total_actual_loan_amt += $actual_loan_amt;
@@ -266,9 +267,6 @@
                     <th>ABP Est. Brokerage</th>
                     <th>Actual Brokerage</th>
                     <th>Brokerage Difference</th>
-                    <th>ABP Est. Trail</th>
-                    <th>Actual <span style="margin-right: 10px">Trail</span></th>
-                    <th>Trail Difference</th>
                 </tr>
             </thead>
             <tbody class="body_class">
@@ -281,13 +279,13 @@
                 <th colspan="3"><?php
                 echo 'Grand Total';
                 ?></th>
-                <th style="text-align: left;width: 7%">${{ $total_actual_loan_amt }}</th>
-                <th style="text-align: left;width: 7%">${{ $total_ABP_est_upfront_amt }}</th>
-                <th style="text-align: left;width: 7%">${{ $total_ABP_actual_upfront_amt }}</th>
-                <th style="text-align: left;width: 7%">${{ $total_ABP_upfront_diff }}</th>
-                <th style="text-align: left;width: 7%">${{ $total_ABP_est_brokerage }}</th>
-                <th style="text-align: left;width: 7%">${{ $total_ABP_actual_brokerage }}</th>
-                <th style="text-align: left;width: 7%">${{ $total_brokerage_dif }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_actual_loan_amt, 2, '.', ',') }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_est_upfront_amt, 2, '.', ',')  }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_actual_upfront_amt, 2, '.', ',')  }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_upfront_diff, 2, '.', ',')  }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_est_brokerage, 2, '.', ',')  }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_actual_brokerage, 2, '.', ',')  }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_brokerage_dif, 2, '.', ',')  }}</th>
             </tr>
         </table>
     @endif

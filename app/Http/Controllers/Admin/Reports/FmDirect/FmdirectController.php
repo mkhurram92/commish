@@ -638,7 +638,7 @@ class FmdirectController extends Controller
             'group_by' => $request['group_by'],
             'date_from' => $request['from_date'],
             'date_to' => $request['to_date']
-        ])->setPaper('a4', 'portrait')
+        ])->setPaper('a4', 'landscape')
             ->setOption('footer-left', getCurrentDateTimeFormatted())
             ->setOption("footer-right", "Page [page] of [topage]")
             ->setOption('footer-font-size', '8')

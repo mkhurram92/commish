@@ -52,6 +52,7 @@
                             <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='pipeline'?'selected':'' }} value="pipeline">Pipeline</option>
                             <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='monthly_pipeline'?'selected':'' }} value="monthly_pipeline">Monthly Pipeline</option>1
                             <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='referrers_rating_summary'?'selected':'' }} value="referrers_rating_summary">Referrer Rating Summary</option>
+                            <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='outstanding-commissions'?'selected':'' }} value="outstanding-commissions">Outstanding Commissions</option>
 
                         </select>
                     </div>
