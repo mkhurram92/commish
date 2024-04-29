@@ -12,7 +12,7 @@
         <!--        </select>-->
         <!--    </div>-->
         <!--</div>-->
-        <div class="col-md-6 col-sm-12">
+        <div class="col-sm">
             <div class="form-group">
                 <label for="group_by" class="form-label">Group By</label>
                 <select class="form-control" name="group_by" id="group_by">
@@ -22,13 +22,13 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-sm">
             <div class="form-group">
                 <label class="form-label">Start Date</label>
                 <input name="from_date" value="{{ date("01-m-Y") }}" id="from_date" type="text" class=" form-control">
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-sm">
             <div class="form-group">
                 <label class="form-label">End Date</label>
                 <input name="to_date" value="{{ date("t-m-Y") }}" id="to_date" type="text" class=" form-control">

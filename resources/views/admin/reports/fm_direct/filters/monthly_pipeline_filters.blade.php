@@ -12,17 +12,17 @@
         <!--        </select>-->
         <!--    </div>-->
         <!--</div>-->
-            <div class="col-sm">
-                <div class="form-group">
-                    <label class="form-label">Start Date</label>
-                    <input name="from_date" value="{{ date("01-m-Y") }}" id="from_date" type="text" class=" form-control">
-                </div>
+        <div class="col-sm">
+            <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input name="from_date" value="{{ date('01-m-Y') }}" id="from_date" type="text"
+                    class=" form-control">
             </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    <label class="form-label">End Date</label>
-                    <input name="to_date" value="{{ date("t-m-Y") }}" id="to_date" type="text" class=" form-control">
-                </div>
+        </div>
+        <div class="col-sm">
+            <div class="form-group">
+                <label class="form-label">End Date</label>
+                <input name="to_date" value="{{ date('t-m-Y') }}" id="to_date" type="text" class=" form-control">
             </div>
         </div>
     </div>
@@ -44,21 +44,28 @@
     </div>
 </form>
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js" integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js"
+        integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        $(document).ready(function () {
-            $("#from_date").datepicker({ format: "dd-mm-yyyy"});
-            $('#to_date').datepicker({ format: "dd-mm-yyyy"});
+        $(document).ready(function() {
+            $("#from_date").datepicker({
+                format: "dd-mm-yyyy"
+            });
+            $('#to_date').datepicker({
+                format: "dd-mm-yyyy"
+            });
         });
-        $(".preview").on("click",function (){
-            $("#monthly_pipeline_form").attr("action","{{ route('admin.fm_direct.get_preview_monthly_pipeline_records') }}");
+        $(".preview").on("click", function() {
+            $("#monthly_pipeline_form").attr("action",
+                "{{ route('admin.fm_direct.get_preview_monthly_pipeline_records') }}");
             $("#monthly_pipeline_form").submit();
         });
-        $(".export_pdf").on("click",function (){
-            $("#monthly_pipeline_form").attr("action","{{ route('admin.fm_direct.export_monthly_pipeline_records') }}");
+        $(".export_pdf").on("click", function() {
+            $("#monthly_pipeline_form").attr("action",
+                "{{ route('admin.fm_direct.export_monthly_pipeline_records') }}");
             $("#monthly_pipeline_form").submit();
         });
     </script>
-
 @endsection

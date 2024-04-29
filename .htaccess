@@ -1,7 +1,7 @@
 Options +FollowSymLinks
 RewriteEngine on
 RewriteCond %{SERVER_PORT} 80
-RewriteRule ^(.*)$ https://secapp.ftcarabia.com/$1 [R,L]
+RewriteRule ^(.*)$ https://localhost/commish [R,L]
 
 RewriteCond %{REQUEST_URI} !^public
 RewriteRule ^(.*)$ public/$1 [L]

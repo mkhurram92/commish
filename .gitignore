@@ -15,3 +15,5 @@ yarn-error.log
 /.vscode
 error_log
 *.zip
+vendor/nesbot/carbon/src/Carbon/Traits/Creator.php
+.htaccess
