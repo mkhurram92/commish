@@ -299,10 +299,10 @@
                         <table class="grand-total-table">
                             <thead style="border: 0;">
                                 <tr style="background-color: #ffffff;">
-                                    <th colspan="4">Total :
+                                    <th colspan="4">AGG Invoices Total :
                                         ${{ number_format($agg_subtotal, 2) }}
                                     </th>
-                                    <th colspan="4">Total :
+                                    <th colspan="4">ABP Invoices Total :
                                         ${{ number_format($abp_subtotal, 2) }}
                                     </th>
                                 </tr>

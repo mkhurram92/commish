@@ -319,7 +319,7 @@
 
                     <!-- Display Totals for the last broker -->
                     <tr style="background-color: #f2f2f2;">
-                        <td colspan="2" style="text-align: center"><b>Total</b></td>
+                        <td colspan="2" style="text-align: center;margin-top: 10px"><b>Total</b></td>
                         <td><b>${{ number_format((float) $total_actual_loan, 2) }}</b></td>
                         <td colspan="3"></td>
                         <td><b>${{ number_format((float) $total_total_amount, 2) }}</b></td>
@@ -330,7 +330,7 @@
 
                     <!-- Grand Total Row -->
                     <tr style="background-color: #f2f2f2;">
-                        <td colspan="2" style="text-align: center"><b>Grand Total</b></td>
+                        <td colspan="2" style="text-align: center;margin-top: 10px"><b>Grand Total</b></td>
                         <td><b>${{ number_format($grand_total_actual, 2) }}</b></td>
                         <td colspan="3"></td>
                         <td><b>${{ number_format($grand_total_total, 2) }}</b></td>
