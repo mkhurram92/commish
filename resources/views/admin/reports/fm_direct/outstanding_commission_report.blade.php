@@ -143,7 +143,7 @@
                     <th style="padding-left:12px;">Client</th>
                     <th>Lender</th>
                     <th>Status</th>
-                    <th>Broker <br>Staff</th>
+                    <th>Broker Staff</th>
                     <th style="padding-left:12px;">Loan <br>Amount</th>
                     <th>ABP Est. <br>Upfront</th>
                     <th>Actual <br>Upfront</th>
@@ -162,7 +162,6 @@
                                     if ($group_by == 'Product') {
                                         echo $deal_list->product->name ?? '';
                                     } elseif ($group_by == 'BrokerStaff') {
-                                        //echo $deal_list->broker_staff->surname ?? '';
                                         echo ($deal_list->broker_staff->surname ?? '') . ' ' . ($deal_list->broker_staff->given_name ?? '');
                                     } elseif ($group_by == 'Status') {
                                         echo $deal_list->deal_status->name;
@@ -218,7 +217,7 @@
                 @endforeach
             </tbody>
 
-            <thead class="subtotal">
+            <thead class="subtotal" style="width: 100%;margin-top: 10px">
                 <tr>
                     <th colspan="2"><?php
                     if ($group_by == 'BrokerStaff') {
@@ -253,7 +252,7 @@
             </thead>
         </table>
     @else
-        <table style="width: 100%;margin-top: 5px">
+        <table style="width: 100%;margin-top: 10px">
             <thead class="thead_style">
                 <tr>
                     <th>Deal</th>
@@ -269,8 +268,6 @@
                     <th>Brokerage Difference</th>
                 </tr>
             </thead>
-            <tbody class="body_class">
-            </tbody>
         </table>
     @endif
     @if (count($deals) > 0)
