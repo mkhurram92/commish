@@ -7,8 +7,7 @@
 
 <body style=" font-family: system-ui, system-ui, sans-serif;">
     <style>
-        <style>
-        table {
+        <style>table {
             border: 0;
             border-collapse: separate;
             border-spacing: 0 5px;
@@ -23,6 +22,7 @@
             font-weight: 800;
             font-size: 12px;
         }
+
         .subtotal tr th {
             border-top: 1px solid grey;
             font-family: system-ui, system-ui, sans-serif;
@@ -30,14 +30,17 @@
             border-spacing: 5px 5px;
             text-align: left;
             font-size: 12px;
-        }.grand_total tr th {
-             border-top: 2px solid grey;
-             font-family: system-ui, system-ui, sans-serif;
-             border-collapse: separate;
-             border-spacing: 5px 5px;
-             text-align: left;
-             font-size: 14px;
-         }
+        }
+
+        .grand_total tr th {
+            border-top: 2px solid grey;
+            font-family: system-ui, system-ui, sans-serif;
+            border-collapse: separate;
+            border-spacing: 5px 5px;
+            text-align: left;
+            font-size: 14px;
+        }
+
         .body_class tr td {
             font-family: system-ui, system-ui, sans-serif;
             border-collapse: separate;
@@ -45,14 +48,24 @@
             text-align: left;
             font-size: 12px;
         }
-        .body_class tbody{
+
+        .body_class tbody {
             border-collapse: separate;
             border-spacing: 5px 5px;
             border-bottom: 1px solid;
         }
-        thead{display: table-header-group;}
-        tfoot {display: table-row-group;}
-        tr {page-break-inside: avoid;}
+
+        thead {
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-row-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
     </style>
 
     <!--<table style="margin-top: 5px;margin-bottom:5px;width: 100%">
@@ -69,8 +82,9 @@
     <table style="margin-top: 5px;margin-bottom:5px;width: 100%">
         <tbody>
             <tr>
-                <td style="width: 100%; text-align: center;"> <span style="font-size: 24px;font-weight: bold;">FM Direct Commission
-                    Outstanding</span></td>
+                <td style="width: 100%; text-align: center;"> <span style="font-size: 24px;font-weight: bold;">FM Direct
+                        Commission
+                        Outstanding</span></td>
             </tr>
             <tr>
                 <td style="width: 100%; text-align: center; font-size: 16px; font-weight: bold;">
@@ -180,40 +194,40 @@
                     $brokerrage = \App\Models\DealCommission::whereDealId($deal_list->id)
                         ->where('type', 4)
                         ->sum('broker_amount');
-                    
+                        $up_diff = $deal_list->broker_est_upfront - $upfront;
                     ?>
-                    <tr>
-                        <td>{{ $deal_list->id }}</td>
-                        <td style="padding-left:12px;">
-                            {{ $deal_list->client ? ($deal_list->client->given_name != '' ? $deal_list->client->given_name : $deal_list->client->preferred_name) . ' ' . $deal_list->client->surname : '' }}
-                        </td>
-                        <td>{{ $deal_list->lender->code }}</td>
-                        <td>{{ $deal_list->deal_status->name }}</td>
-                        <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}
-                        </td>
-                        <td style="padding-left:12px;">${{ number_format($deal_list->actual_loan, 2, '.', ',') }}</td>
-                        <td>${{ $deal_list->broker_est_upfront }}</td>
-                        <td>${{ number_format($upfront?? 0, 2, '.', ',') }}</td>
-
-                        <td>${{ number_format($up_diff = $deal_list->broker_est_upfront - $upfront, 2, '.', ',') }}</td>
-                        
-                        <td>${{ number_format($deal_list->broker_est_brokerage ?? 0, 2, '.', ',') }}</td>
-                        <td>${{ number_format($brokerrage ?? 0, 2, '.', ',') }}</td>
-                        <td>${{ number_format($br_dif = $deal_list->broker_est_brokerage - $brokerrage, 2) }}
-                        </td>
-                    </tr>
-
-                    <?php
-                    $actual_loan_amt += $deal_list->actual_loan;
-                    $ABP_est_upfront_amt += $deal_list->broker_est_upfront;
-                    $ABP_actual_upfront_amt += $upfront;
-                    $ABP_upfront_diff += $up_diff;
-                    $ABP_est_brokerage += $deal_list->broker_est_brokerage;
-                    $ABP_actual_brokerage += $brokerrage;
-                    $ABP_actual_brokerage += $brokerrage;
-                    $ABP_actual_brokerage += $brokerrage;
-                    $brokerage_dif += $br_dif;
-                    ?>
+                    @if ($up_diff != 0)
+                        <tr>
+                            <td>{{ $deal_list->id }}</td>
+                            <td style="padding-left:12px;">
+                                {{ $deal_list->client ? ($deal_list->client->given_name != '' ? $deal_list->client->given_name : $deal_list->client->preferred_name) . ' ' . $deal_list->client->surname : '' }}
+                            </td>
+                            <td>{{ $deal_list->lender->code }}</td>
+                            <td>{{ $deal_list->deal_status->name }}</td>
+                            <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}
+                            </td>
+                            <td style="padding-left:12px;">${{ number_format($deal_list->actual_loan, 2, '.', ',') }}
+                            </td>
+                            <td>${{ $deal_list->broker_est_upfront }}</td>
+                            <td>${{ number_format($upfront ?? 0, 2, '.', ',') }}</td>
+                            <td>${{ number_format($up_diff, 2, '.', ',') }}
+                            </td>
+                            <td>${{ number_format($deal_list->broker_est_brokerage ?? 0, 2, '.', ',') }}</td>
+                            <td>${{ number_format($brokerrage ?? 0, 2, '.', ',') }}</td>
+                            <td>${{ number_format($br_dif = $deal_list->broker_est_brokerage - $brokerrage, 2) }}</td>
+                        </tr>
+                        <?php
+                        $actual_loan_amt += $deal_list->actual_loan;
+                        $ABP_est_upfront_amt += $deal_list->broker_est_upfront;
+                        $ABP_actual_upfront_amt += $upfront;
+                        $ABP_upfront_diff += $up_diff;
+                        $ABP_est_brokerage += $deal_list->broker_est_brokerage;
+                        $ABP_actual_brokerage += $brokerrage;
+                        $ABP_actual_brokerage += $brokerrage;
+                        $ABP_actual_brokerage += $brokerrage;
+                        $brokerage_dif += $br_dif;
+                        ?>
+                    @endif
                 @endforeach
             </tbody>
 
@@ -231,13 +245,15 @@
                     </th>
                     <th style="text-align: left;width: 7%"></th>
                     <th colspan="2">{{ 'Rows: ' . count($deals) }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($actual_loan_amt, 2, '.', ',')  }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($ABP_est_upfront_amt, 2, '.', ',')  }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($ABP_actual_upfront_amt, 2, '.', ',')  }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($ABP_upfront_diff, 2, '.', ',')  }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($ABP_est_brokerage, 2, '.', ',')  }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($ABP_actual_brokerage, 2, '.', ',')  }}</th>
-                    <th style="text-align: left;width: 7%">${{ number_format($brokerage_dif, 2, '.', ',')  }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($actual_loan_amt, 2, '.', ',') }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_est_upfront_amt, 2, '.', ',') }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_actual_upfront_amt, 2, '.', ',') }}
+                    </th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_upfront_diff, 2, '.', ',') }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_est_brokerage, 2, '.', ',') }}</th>
+                    <th style="text-align: left;width: 7%">${{ number_format($ABP_actual_brokerage, 2, '.', ',') }}
+                    </th>
+                    <th style="text-align: left;width: 7%">${{ number_format($brokerage_dif, 2, '.', ',') }}</th>
 
                 </tr>
                 <?php
@@ -277,12 +293,15 @@
                 echo 'Grand Total';
                 ?></th>
                 <th style="text-align: left;width: 7%">${{ number_format($total_actual_loan_amt, 2, '.', ',') }}</th>
-                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_est_upfront_amt, 2, '.', ',')  }}</th>
-                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_actual_upfront_amt, 2, '.', ',')  }}</th>
-                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_upfront_diff, 2, '.', ',')  }}</th>
-                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_est_brokerage, 2, '.', ',')  }}</th>
-                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_actual_brokerage, 2, '.', ',')  }}</th>
-                <th style="text-align: left;width: 7%">${{ number_format($total_brokerage_dif, 2, '.', ',')  }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_est_upfront_amt, 2, '.', ',') }}
+                </th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_actual_upfront_amt, 2, '.', ',') }}
+                </th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_upfront_diff, 2, '.', ',') }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_est_brokerage, 2, '.', ',') }}</th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_ABP_actual_brokerage, 2, '.', ',') }}
+                </th>
+                <th style="text-align: left;width: 7%">${{ number_format($total_brokerage_dif, 2, '.', ',') }}</th>
             </tr>
         </table>
     @endif
