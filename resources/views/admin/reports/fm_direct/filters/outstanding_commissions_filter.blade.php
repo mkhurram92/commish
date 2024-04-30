@@ -12,16 +12,7 @@
         <!--        </select>-->
         <!--    </div>-->
         <!--</div>-->
-        <div class="col-sm">
-            <div class="form-group">
-                <label for="group_by" class="form-label">Group By</label>
-                <select class="form-control" name="group_by" id="group_by">
-                    <option value="BrokerStaff">BrokerStaff</option>
-                    <option value="Lender">Lender</option>
-                    <option value="Product">Product</option>
-                </select>
-            </div>
-        </div>
+        
         <div class="col-sm">
             <div class="form-group">
                 <label class="form-label">Start Date</label>
@@ -32,6 +23,16 @@
             <div class="form-group">
                 <label class="form-label">End Date</label>
                 <input name="to_date" value="{{ date("t-m-Y") }}" id="to_date" type="text" class=" form-control">
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="form-group">
+                <label for="group_by" class="form-label">Group By</label>
+                <select class="form-control" name="group_by" id="group_by">
+                    <option value="BrokerStaff">BrokerStaff</option>
+                    <option value="Lender">Lender</option>
+                    <option value="Product">Product</option>
+                </select>
             </div>
         </div>
     </div>
