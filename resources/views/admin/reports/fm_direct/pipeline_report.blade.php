@@ -204,9 +204,9 @@
                             @endif
                             <td>{{ $deal_list->status_date != '' ? date('d/m/Y', strtotime($deal_list->status_date)) : '' }}
                             </td>
-                            <td>${{ number_format($deal_list->broker_est_loan_amt ?? '0', 2) }}</td>
-                            <td>${{ number_format($deal_list->broker_est_upfront ?? '0', 2) }}</td>
-                            <td>${{ number_format($deal_list->broker_est_brokerage ?? '0', 2) }}</td>
+                            <td>${{ number_format($deal_list->broker_est_loan_amt ?? 0, 2, '.', ',') }}</td>
+                            <td>${{ number_format($deal_list->broker_est_upfront ?? 0, 2, '.', ',') }}</td>
+                            <td>${{ number_format($deal_list->broker_est_brokerage ?? 0, 2, '.', ',') }}</td>
                         </tr>
                         <?php
                         $actual_loan += $deal_list->broker_est_loan_amt;

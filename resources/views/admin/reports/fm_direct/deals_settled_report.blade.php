@@ -33,7 +33,7 @@
          border-collapse: separate;
          border-spacing: 5px 5px;
          text-align: left;
-         font-size: 14px;
+         font-size: 13px;
      }
     .body_class tr td {
         font-family: system-ui, system-ui, sans-serif;
@@ -163,9 +163,9 @@
                                     
                                     ?></td>
                                 <!--<td>{{ $deal_list->status_date!=''?date('m/d/Y',strtotime($deal_list->status_date)):'' }}</td>-->
-                                <td>${{ $deal_list->broker_est_loan_amt??'0' }}</td>
-                                <td>${{$deal_list->broker_est_upfront??'0' }}</td>
-                                <td>${{$deal_list->broker_est_brokerage??'0' }}</td>
+                                <td>${{ number_format($deal_list->broker_est_loan_amt?? 0, 2, '.', ',') }}</td>
+                                <td>${{ number_format($deal_list->broker_est_upfront?? 0, 2, '.', ',') }}</td>
+                                <td>${{ number_format($deal_list->broker_est_brokerage?? 0, 2, '.', ',') }}</td>
                             </tr>
                             <?php
                             $broker_est_loan_amt+=$deal_list->broker_est_loan_amt;
@@ -187,9 +187,9 @@
                                     echo $deal->lender->name.' Subtotals';
                                 }
                                 ?></th>
-                            <th style="text-align: left;width: 7%">${{ $broker_est_loan_amt }}</th>
-                            <th style="text-align: left;width: 7%">${{$broker_est_upfront}}</th>
-                            <th style="text-align: left;width: 7%">${{ $broker_est_brokerage }}</th>
+                            <th style="text-align: left;width: 7%">${{ number_format($broker_est_loan_amt?? 0, 2, '.', ',') }}</th>
+                            <th style="text-align: left;width: 7%">${{ number_format($broker_est_upfront?? 0, 2, '.', ',')}}</th>
+                            <th style="text-align: left;width: 7%">${{ number_format($broker_est_brokerage?? 0, 2, '.', ',') }}</th>
                         </tr>
                         <?php
                         $total_broker_est_loan_amt+=$broker_est_loan_amt;
@@ -231,9 +231,9 @@
                         <th colspan="8"><?php
                             echo 'Grand Total'
                         ?></th>
-                        <th style="text-align: left;width: 8%">${{ $total_broker_est_loan_amt }}</th>
-                        <th style="text-align: left;width: 7%">${{$total_broker_est_upfront}}</th>
-                        <th style="text-align: left;width: 7%">${{ $total_broker_est_brokerage }}</th>
+                        <th style="text-align: left;width: 8%">${{ number_format($total_broker_est_loan_amt?? 0, 2, '.', ',') }}</th>
+                        <th style="text-align: left;width: 7%">${{ number_format($total_broker_est_upfront?? 0, 2, '.', ',')}}</th>
+                        <th style="text-align: left;width: 7%">${{ number_format($total_broker_est_brokerage?? 0, 2, '.', ',') }}</th>
                     </tr>
                 </table>
             </td>

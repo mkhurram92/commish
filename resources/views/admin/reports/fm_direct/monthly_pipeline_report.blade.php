@@ -156,9 +156,9 @@
                                     <td>{{ $deal_list->deal_status->status_code .' '. $deal_list->deal_status->name }}</td>
                                 @endif
                                 <td>{{ $deal_list->status_date!=''? $deal_list->status_date:'' }}</td>
-                                <td>${{ number_format($deal_list->broker_est_loan_amt??'0', 2) }}</td>
-                                <td>${{ number_format($deal_list->broker_est_upfront??'0', 2) }}</td>
-                                <td>${{ number_format($deal_list->broker_est_brokerage??'0', 2) }}</td>
+                                <td>${{ number_format($deal_list->broker_est_loan_amt?? 0, 2, '.', ',') }}</td>
+                                <td>${{ number_format($deal_list->broker_est_upfront?? 0, 2, '.', ',') }}</td>
+                                <td>${{ number_format($deal_list->broker_est_brokerage?? 0, 2, '.', ',') }}</td>
                             </tr>
                             <?php
                             $broker_est_loan_amt+=$deal_list->broker_est_loan_amt;
