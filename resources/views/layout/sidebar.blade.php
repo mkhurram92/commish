@@ -249,7 +249,7 @@
                     <li>
                         <a href="{{ route('admin.fm_direct.index') }}" class="slide-item {{(request()->segment(3) ==  "fm-direct") ? 'mm-active':""}}">
                             <i class="metismenu-icon"></i>
-                            FM Direct
+                            Reports
                         </a>
                     </li>
                     <li>
@@ -259,7 +259,7 @@
                         </a>
                     </li>
 
-                   <!--  <li>
+                   <!--<li>
                         <a href="{{ route('admin.outstanding.index') }}" class="slide-item {{request()->segment(3) ==  "outstanding" ? 'mm-active':""}}">
                             <i class="metismenu-icon"></i>
                             Commission Outstanding
