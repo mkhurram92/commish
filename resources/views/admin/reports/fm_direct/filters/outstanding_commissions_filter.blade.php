@@ -12,20 +12,28 @@
         <!--        </select>-->
         <!--    </div>-->
         <!--</div>-->
-        
-        <div class="col-sm">
+        <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <label class="form-label">Start Date</label>
+                <label for="broker_type" class="form-label">Broker</label>
+                <select class="form-control" name="broker_type" id="broker_type">
+                    <option value="finance-mutual">Finance Mutual Direct</option>
+                    <option value="legendary-finance">Legendary Finance</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">Start Date (DD-MM-YYYY)</label>
                 <input name="from_date" value="{{ date("01-m-Y") }}" id="from_date" type="text" class=" form-control">
             </div>
         </div>
-        <div class="col-sm">
+        <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <label class="form-label">End Date</label>
+                <label class="form-label">End Date (DD-MM-YYYY)</label>
                 <input name="to_date" value="{{ date("t-m-Y") }}" id="to_date" type="text" class=" form-control">
             </div>
         </div>
-        <div class="col-sm">
+        <div class="col-md-3 col-sm-12">
             <div class="form-group">
                 <label for="group_by" class="form-label">Group By</label>
                 <select class="form-control" name="group_by" id="group_by">

@@ -2,16 +2,26 @@
     @csrf
     <input name="export_type" id="export_type" type="hidden">
     <div class="row">
-        <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label class="form-label">Start Date</label>
-                    <input name="from_date" value="{{ date("01-m-Y") }}" id="from_date" type="text" class=" form-control">
-                </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-4 col-sm-12">
             <div class="form-group">
-                <label class="form-label">End Date</label>
-                <input name="to_date" value="{{ date("t-m-Y") }}" id="to_date" type="text" class=" form-control">
+                <label for="broker_type" class="form-label">Broker</label>
+                <select class="form-control" name="broker_type" id="broker_type">
+                    <option value="finance-mutual">Finance Mutual Direct</option>
+                    <option value="legendary-finance">Legendary Finance</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">Start Date (DD-MM-YYYY)</label>
+                <input name="from_date" value="{{ date('01-m-Y') }}" id="from_date" type="text"
+                    class=" form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">End Date (DD-MM-YYYY)</label>
+                <input name="to_date" value="{{ date('t-m-Y') }}" id="to_date" type="text" class=" form-control">
             </div>
         </div>
     </div>
@@ -32,37 +42,45 @@
     </div>
 </form>
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js" integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js"
+        integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        $(document).ready(function () {
-            $("#from_date").datepicker({ format: "dd-mm-yyyy"});
-            $('#to_date').datepicker({ format: "dd-mm-yyyy"});
+        $(document).ready(function() {
+            $("#from_date").datepicker({
+                format: "dd-mm-yyyy"
+            });
+            $('#to_date').datepicker({
+                format: "dd-mm-yyyy"
+            });
         });
-        $("#date_type").on("change",function (){
-            if($(this).val()==='financial_year'){
-                $("#from_date").datepicker('setDate', '{{ date('01-07-Y',strtotime('-1 Year')) }}');
+        $("#date_type").on("change", function() {
+            if ($(this).val() === 'financial_year') {
+                $("#from_date").datepicker('setDate', '{{ date('01-07-Y', strtotime('-1 Year')) }}');
                 $("#to_date").datepicker('setDate', '{{ date('30-06-Y') }}');
-            }else if($(this).val()==='current_month'){
+            } else if ($(this).val() === 'current_month') {
                 $("#from_date").datepicker('setDate', '{{ date('01-m-Y') }}');
                 $("#to_date").datepicker('setDate', '{{ date('t-m-Y') }}');
-            }else{
+            } else {
                 $("#from_date").datepicker('setDate', '{{ date('01-01-Y') }}');
                 $("#to_date").datepicker('setDate', '{{ date('31-12-Y') }}');
             }
         });
-        $(".preview-records").on("click",function (){
-            $("#referrer_commission_rating").attr("action","{{ route("admin.fm_direct.referrer_commission_rating_preview_records") }}");
+        $(".preview-records").on("click", function() {
+            $("#referrer_commission_rating").attr("action",
+                "{{ route('admin.fm_direct.referrer_commission_rating_preview_records') }}");
             $("#referrer_commission_rating").submit();
         });
-        $(".preview").on("click",function (){
-            $("#referrer_commission_rating").attr("action","{{ route("admin.fm_direct.referrer_commission_rating_preview") }}");
+        $(".preview").on("click", function() {
+            $("#referrer_commission_rating").attr("action",
+                "{{ route('admin.fm_direct.referrer_commission_rating_preview') }}");
             $("#referrer_commission_rating").submit();
         });
-        $(".export_pdf").on("click",function (){
-            $("#referrer_commission_rating").attr("action","{{ route("admin.fm_direct.referrer_commission_rating_export") }}");
+        $(".export_pdf").on("click", function() {
+            $("#referrer_commission_rating").attr("action",
+                "{{ route('admin.fm_direct.referrer_commission_rating_export') }}");
             $("#referrer_commission_rating").submit();
         });
     </script>
-
 @endsection
