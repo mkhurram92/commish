@@ -3,7 +3,7 @@
     <title>Deals Settled</title>
 
 </head>
-<body style=" font-family: system-ui, system-ui, sans-serif;">
+<body style="font-family: system-ui, system-ui, verdana;">
 <style>
     table {
         border: 0;
@@ -13,7 +13,6 @@
 
     .thead_style tr th {
         border-bottom: 1px solid grey;
-        font-family: system-ui, system-ui, sans-serif;
         border-collapse: separate;
         border-spacing: 5px 5px;
         text-align: left;
@@ -22,25 +21,23 @@
     }
     .subtotal tr th {
         border-top: 1px solid grey;
-        font-family: system-ui, system-ui, sans-serif;
         border-collapse: separate;
         border-spacing: 5px 5px;
         text-align: left;
-        font-size: 12px;
-    }.grand_total tr th {
+        font-size: 11px;
+    }
+    .grand_total tr th {
          border-top: 2px solid grey;
-         font-family: system-ui, system-ui, sans-serif;
          border-collapse: separate;
          border-spacing: 5px 5px;
          text-align: left;
-         font-size: 13px;
+         font-size: 11px;
      }
     .body_class tr td {
-        font-family: system-ui, system-ui, sans-serif;
         border-collapse: separate;
         border-spacing: 5px 5px;
         text-align: left;
-        font-size: 12px;
+        font-size: 11;
     }
     .body_class tbody{
         border-collapse: separate;
@@ -55,7 +52,7 @@
             <table style="margin-top: 5px;margin-bottom:5px;width: 100%">
                 <tbody>
                 <tr>
-                    <td style="width: 100%; text-align: center;"> <span style="font-size: 24px;font-weight: bold;">Deals Settled Report</span></td>
+                    <td style="width: 100%; text-align: center;"> <span style="font-size: 20px;font-weight: bold;">Deals Settled Report</span></td>
                 </tr>
                 <tr>
                     <td style="width: 100%; text-align: center; font-size: 16px; font-weight: bold;">
@@ -125,13 +122,13 @@
                             <th style="width: 15%">Client</th>
                             <th style="width: 10%">Lender</th>
                             <th style="width: 10%">Product</th>
-                            <th style="width: 15%">Broker Staff</th>
+                            <th style="width: 12%">Broker Staff</th>
                             <th style="width: 8%">Date</th>
                             <th style="width: 7%">Status</th>
                             <th style="width: 7%">Age (Days)</th>
-                            <th style="width: 7%">Broker Est Loan Amount</th>
-                            <th style="width: 7%">Broker Est Upfront</th>
-                            <th style="width: 7%">Broker Est Brokerage</th>
+                            <th style="width: 10%">Broker Est <br />Loan Amount</th>
+                            <th style="width: 7%">Broker Est <br />Upfront</th>
+                            <th style="width: 7%">Broker Est <br />Brokerage</th>
                         </tr>
                         </thead>
                         <tbody class="body_class">
@@ -180,7 +177,7 @@
                                 if($group_by=='Product'){
                                     echo $deal->product->name.' Subtotals';
                                 }else if($group_by=='BrokerStaff'){
-                                    echo $deal->broker_staff->surname??''.' Subtotals';
+                                    echo ($deal->broker_staff->surname?? '') . ' ' . ( $deal->broker_staff->given_name?? '') .' Subtotals';
                                 }else if($group_by=='Status'){
                                     echo $deal->deal_status->name.' Subtotals';
                                 }else{
@@ -208,12 +205,12 @@
                         <th style="width: 15%">Client</th>
                         <th style="width: 15%">Lender</th>
                         <th style="width: 10%">Product</th>
-                        <th style="width: 10%">Broker Staff</th>
+                        <th style="width: 12%">Broker Staff</th>
                         <th style="width: 8%">Settled</th>
                         <th style="width: 7%">Status</th>
                         <th style="width: 7%">Age (Days)</th>
-                        <th style="width: 7%">Broker Est Loan Amount</th>
-                        <th style="width: 7%">Broker Est Upfront</th>
+                        <th style="width: 10%">Broker Est <br />Loan Amount</th>
+                        <th style="width: 7%">Broker Est <br />Upfront</th>
                         <th style="width: 7%">Broker Est Brokerage</th>
                     </tr>
                     </thead>
@@ -231,7 +228,7 @@
                         <th colspan="8"><?php
                             echo 'Grand Total'
                         ?></th>
-                        <th style="text-align: left;width: 8%">${{ number_format($total_broker_est_loan_amt?? 0, 2, '.', ',') }}</th>
+                        <th style="text-align: left;width: 12%">${{ number_format($total_broker_est_loan_amt?? 0, 2, '.', ',') }}</th>
                         <th style="text-align: left;width: 7%">${{ number_format($total_broker_est_upfront?? 0, 2, '.', ',')}}</th>
                         <th style="text-align: left;width: 7%">${{ number_format($total_broker_est_brokerage?? 0, 2, '.', ',') }}</th>
                     </tr>

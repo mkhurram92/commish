@@ -36,7 +36,6 @@ class FmdirectController extends Controller
 
     public function getDealsSettledRecords(Request $request)
     {
-
         $deal = Deal::select('deals.*')->with(['lender', 'client', 'deal_status', 'product', 'broker_staff'])
             ->whereIn('status', [4])->orderBy('status_date', 'asc');
 
@@ -56,8 +55,6 @@ class FmdirectController extends Controller
         } else {
             $deal->groupBy('lender_id');
         }
-
-
         $pdf = PDF::loadView('admin.reports.fm_direct.deals_settled_report', [
             'deals' => $deal->get(),
             'date_from' => $request['from_date'],
@@ -66,7 +63,7 @@ class FmdirectController extends Controller
         ])->setPaper('a4', 'landscape')
             ->setOption('footer-left', getCurrentDateTimeFormatted())
             ->setOption("footer-right", "Page [page] of [topage]")
-            ->setOption('footer-font-size', '8')
+            ->setOption('footer-font-size', '7')
             ->setWarnings(false);
         return $pdf->stream('deals_settled.pdf');
     }
@@ -98,7 +95,7 @@ class FmdirectController extends Controller
         ])->setPaper('a4', 'landscape')
             ->setOption('footer-left', getCurrentDateTimeFormatted())
             ->setOption("footer-right", "Page [page] of [topage]")
-            ->setOption('footer-font-size', '8')
+            ->setOption('footer-font-size', '7')
             ->setWarnings(false);
         return $pdf->download('deals_settled.pdf');
     }
