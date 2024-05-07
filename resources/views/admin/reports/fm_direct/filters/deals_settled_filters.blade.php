@@ -4,10 +4,9 @@
     <div class="row">
         <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <label for="broker_type" class="form-label">Broker</label>
-                <select class="form-control" name="broker_type" id="broker_type">
-                    <option value="finance-mutual">Finance Mutual Direct</option>
-                    <option value="legendary-finance">Legendary Finance</option>
+                <label for="date_type" class="form-label">Broker</label>
+                <select class="form-control" name="broker_id" id="broker_id">
+                    <option value=""></option>
                 </select>
             </div>
         </div>
@@ -65,18 +64,6 @@
             $('#to_date').datepicker({
                 format: "dd-mm-yyyy"
             });
-        });
-        $("#date_type").on("change", function() {
-            if ($(this).val() === 'financial_year') {
-                $("#from_date").datepicker('setDate', '{{ date('01-07-Y', strtotime('-1 Year')) }}');
-                $("#to_date").datepicker('setDate', '{{ date('30-06-Y') }}');
-            } else if ($(this).val() === 'current_month') {
-                $("#from_date").datepicker('setDate', '{{ date('01-m-Y') }}');
-                $("#to_date").datepicker('setDate', '{{ date('t-m-Y') }}');
-            } else {
-                $("#from_date").datepicker('setDate', '{{ date('01-01-Y') }}');
-                $("#to_date").datepicker('setDate', '{{ date('31-12-Y') }}');
-            }
         });
         $(".preview").on("click", function() {
             $("#deals_settled_form").attr("action", "{{ route('admin.fm_direct.get_deal_settled_records') }}");

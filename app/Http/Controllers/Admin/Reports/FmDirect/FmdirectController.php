@@ -25,13 +25,13 @@ class FmdirectController extends Controller
     public function fmDirect()
     {
 
-        return view('admin.reports.fm_direct.index', ['title' => 'Commish| FM Direct']);
+        return view('admin.reports.fm_direct.index', ['title' => 'Commish | Reports']);
     }
 
     public function dealsSettled()
     {
 
-        return view('admin.reports.fm_direct.deals_settled_report', ['header' => 'Commish| Deal Settled Report']);
+        return view('admin.reports.fm_direct.deals_settled_report', ['header' => 'Commish | Deal Settled Report']);
     }
 
     public function getDealsSettledRecords(Request $request)
