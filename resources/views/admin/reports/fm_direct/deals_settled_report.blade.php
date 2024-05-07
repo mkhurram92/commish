@@ -78,7 +78,7 @@
             </tr>
             <tr>
                 <td style="width: 100%; text-align: center; font-size: 14px; font-weight: bold;">
-                    Grouped By: {{ $group_by }}
+                    Group By: {{ $group_by }}
                 </td>
             </tr>
             <tr>

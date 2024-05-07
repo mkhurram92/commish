@@ -196,7 +196,6 @@
                         ->sum('broker_amount');
                         $up_diff = $deal_list->broker_est_upfront - $upfront;
                     ?>
-                    @if ($up_diff != 0)
                         <tr>
                             <td>{{ $deal_list->id }}</td>
                             <td style="padding-left:12px;">
@@ -227,7 +226,6 @@
                         $ABP_actual_brokerage += $brokerrage;
                         $brokerage_dif += $br_dif;
                         ?>
-                    @endif
                 @endforeach
             </tbody>
 

@@ -14,10 +14,26 @@
         <!--</div>-->
         <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <label for="broker_type" class="form-label">Broker</label>
-                <select class="form-control" name="broker_type" id="broker_type">
-                    <option value="finance-mutual">Finance Mutual Direct</option>
-                    <option value="legendary-finance">Legendary Finance</option>
+                <?php
+                $brokers = \App\Models\Broker::where('is_active', 1)->get();
+                ?>
+                <label for="broker_id" class="form-label">Broker Name</label>
+                <select class="form-control" name="broker_id" id="broker_id">
+                    <option value=""></option>
+                    @php
+                        $sortedBrokers = $brokers->sortBy(function ($broker) {
+                            return $broker->is_individual == 1 ? $broker->surname : $broker->trading;
+                        });
+                    @endphp
+
+                    @foreach ($sortedBrokers as $broker)
+                        @if ($broker->is_individual == 1)
+                            <option value="{{ $broker->id }}">{{ $broker->surname }} {{ $broker->given_name }}
+                            </option>
+                        @elseif($broker->is_individual == 2)
+                            <option value="{{ $broker->id }}">{{ $broker->trading }}</option>
+                        @endif
+                    @endforeach
                 </select>
             </div>
         </div>
