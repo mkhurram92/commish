@@ -597,6 +597,8 @@ class FmdirectController extends Controller
 
     public function getOutstandingCommissionPreview(Request $request)
     {
+        $broker_id = $request['broker_id'];
+
         $deals = Deal::with(['lender', 'client', 'deal_status', 'product', 'broker_staff'])
             ->whereStatus(4)
             ->where(function ($query) {
@@ -621,17 +623,12 @@ class FmdirectController extends Controller
                 $q->whereDate('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
             })
             ->with('deal_commission');
-        // if ($request['group_by'] == 'BrokerStaff') {
-        //     $deals->groupBy('broker_staff_id');
-        // } else if ($request['group_by'] === 'Status') {
-        //     $deals->groupBy('status');
-        // } else {
-        //     $deals->groupBy('lender_id');
-        // }
-        $deals = $deals->get();
+
+            $deals = $deals->get();
 
         $pdf = PDF::loadView('admin.reports.fm_direct.outstanding_commission_report', [
             'deals' => $deals,
+            'broker_id' => $broker_id,
             'group_by' => $request['group_by'],
             'date_from' => $request['from_date'],
             'date_to' => $request['to_date']

@@ -68,17 +68,6 @@
         }
     </style>
 
-    <!--<table style="margin-top: 5px;margin-bottom:5px;width: 100%">
-        <tbody>
-            <tr>
-                <td style="width: 30%"> <span style="font-size: 18px;font-weight: bold;">FM Direct Commission
-                        Outstanding</span></td>
-                <td> <span style="width: 60%;">Grouped By {{ $group_by }} For period from
-                        {{ $date_from . ' to ' . $date_to }}</span></td>
-            </tr>
-        </tbody>
-    </table>
-    -->
     <table style="margin-top: 5px;margin-bottom:5px;width: 100%">
         <tbody>
             <tr>
@@ -89,6 +78,11 @@
             <tr>
                 <td style="width: 100%; text-align: center; font-size: 16px; font-weight: bold;">
                     Report Period: {{ date('d/m/Y', strtotime($date_from)) }} - {{ date('d/m/Y', strtotime($date_to)) }}
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; text-align: left; font-size: 16px; font-weight: bold;">
+                    Broker Name : {{ $broker_id }}
                 </td>
             </tr>
         </tbody>
@@ -108,36 +102,6 @@
     ?>
     @if (count($deals) > 0)
         <?php
-        // $deals_list = \App\Models\Deal::with(['lender', 'client', 'deal_status', 'product', 'broker_staff'])
-        //     ->whereStatus(4)
-        //     ->where(function ($query) {
-        //         $query->where('broker_est_upfront', '>', 0)->orWhere('broker_est_loan_amt', '>', 0);
-        //     })
-        //     ->whereHas('deal_commission', function ($query) {
-        //         $query
-        //             ->selectRaw('deal_commissions.deal_id, SUM(deal_commissions.broker_amount) as total_broker_amount')
-        //             ->join('deals', 'deals.id', '=', 'deal_commissions.deal_id')
-        //             ->where('deal_commissions.type', 13)
-        //             ->groupBy('deal_commissions.deal_id')
-        //             ->havingRaw('deals.broker_est_upfront - total_broker_amount > 0')
-        //             ->orHavingRaw('deals.broker_est_brokerage - deals.agg_est_brokerage > 0');
-        //     })
-        //     ->when(!empty($date_from), function ($q) use ($date_from) {
-        //         $q->where('status_date', '>=', date('Y-m-d H:i:s', strtotime($date_from)));
-        //     })
-        //     ->when(!empty($date_to), function ($q) use ($date_to) {
-        //         $q->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($date_to)));
-        //     })
-        //     ->with('deal_commission');
-        // // if ($group_by == 'Product') {
-        // //     $deals_list->where('product_id', $deal->product_id);
-        // // } elseif ($group_by == 'BrokerStaff') {
-        // //     $deals_list->where('broker_staff_id', $deal->broker_staff_id);
-        // // } elseif ($group_by == 'Status') {
-        // //     $deals_list->where('status', $deal->status);
-        // // } else {
-        // //     $deals_list->where('lender_id', $deal->lender_id);
-        // // }
         $actual_loan_amt = 0;
         $ABP_est_upfront_amt = 0;
         $ABP_actual_upfront_amt = 0;
@@ -194,38 +158,38 @@
                     $brokerrage = \App\Models\DealCommission::whereDealId($deal_list->id)
                         ->where('type', 4)
                         ->sum('broker_amount');
-                        $up_diff = $deal_list->broker_est_upfront - $upfront;
+                    $up_diff = $deal_list->broker_est_upfront - $upfront;
                     ?>
-                        <tr>
-                            <td>{{ $deal_list->id }}</td>
-                            <td style="padding-left:12px;">
-                                {{ $deal_list->client ? ($deal_list->client->given_name != '' ? $deal_list->client->given_name : $deal_list->client->preferred_name) . ' ' . $deal_list->client->surname : '' }}
-                            </td>
-                            <td>{{ $deal_list->lender->code }}</td>
-                            <td>{{ $deal_list->deal_status->name }}</td>
-                            <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}
-                            </td>
-                            <td style="padding-left:12px;">${{ number_format($deal_list->actual_loan, 2, '.', ',') }}
-                            </td>
-                            <td>${{ $deal_list->broker_est_upfront }}</td>
-                            <td>${{ number_format($upfront ?? 0, 2, '.', ',') }}</td>
-                            <td>${{ number_format($up_diff, 2, '.', ',') }}
-                            </td>
-                            <td>${{ number_format($deal_list->broker_est_brokerage ?? 0, 2, '.', ',') }}</td>
-                            <td>${{ number_format($brokerrage ?? 0, 2, '.', ',') }}</td>
-                            <td>${{ number_format($br_dif = $deal_list->broker_est_brokerage - $brokerrage, 2) }}</td>
-                        </tr>
-                        <?php
-                        $actual_loan_amt += $deal_list->actual_loan;
-                        $ABP_est_upfront_amt += $deal_list->broker_est_upfront;
-                        $ABP_actual_upfront_amt += $upfront;
-                        $ABP_upfront_diff += $up_diff;
-                        $ABP_est_brokerage += $deal_list->broker_est_brokerage;
-                        $ABP_actual_brokerage += $brokerrage;
-                        $ABP_actual_brokerage += $brokerrage;
-                        $ABP_actual_brokerage += $brokerrage;
-                        $brokerage_dif += $br_dif;
-                        ?>
+                    <tr>
+                        <td>{{ $deal_list->id }}</td>
+                        <td style="padding-left:12px;">
+                            {{ $deal_list->client ? ($deal_list->client->given_name != '' ? $deal_list->client->given_name : $deal_list->client->preferred_name) . ' ' . $deal_list->client->surname : '' }}
+                        </td>
+                        <td>{{ $deal_list->lender->code }}</td>
+                        <td>{{ $deal_list->deal_status->name }}</td>
+                        <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}
+                        </td>
+                        <td style="padding-left:12px;">${{ number_format($deal_list->actual_loan, 2, '.', ',') }}
+                        </td>
+                        <td>${{ $deal_list->broker_est_upfront }}</td>
+                        <td>${{ number_format($upfront ?? 0, 2, '.', ',') }}</td>
+                        <td>${{ number_format($up_diff, 2, '.', ',') }}
+                        </td>
+                        <td>${{ number_format($deal_list->broker_est_brokerage ?? 0, 2, '.', ',') }}</td>
+                        <td>${{ number_format($brokerrage ?? 0, 2, '.', ',') }}</td>
+                        <td>${{ number_format($br_dif = $deal_list->broker_est_brokerage - $brokerrage, 2) }}</td>
+                    </tr>
+                    <?php
+                    $actual_loan_amt += $deal_list->actual_loan;
+                    $ABP_est_upfront_amt += $deal_list->broker_est_upfront;
+                    $ABP_actual_upfront_amt += $upfront;
+                    $ABP_upfront_diff += $up_diff;
+                    $ABP_est_brokerage += $deal_list->broker_est_brokerage;
+                    $ABP_actual_brokerage += $brokerrage;
+                    $ABP_actual_brokerage += $brokerrage;
+                    $ABP_actual_brokerage += $brokerrage;
+                    $brokerage_dif += $br_dif;
+                    ?>
                 @endforeach
             </tbody>
 
@@ -303,7 +267,5 @@
             </tr>
         </table>
     @endif
-
 </body>
-
 </html>
