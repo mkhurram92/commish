@@ -658,13 +658,30 @@ class FmdirectController extends Controller
             ->when(!empty($request['to_date']), function ($q) use ($request) {
                 $q->whereDate('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
             })
+            ->when(!empty($request['broker_id']), function ($q) use ($request) {
+                $q->where('broker_id', $request['broker_id']);
+            })
             ->with('deal_commission');
+
+        if (!empty($request['broker_id'])) {
+            $brokers = Broker::where('id', $request['broker_id'])->get();
+            if ($brokers->isNotEmpty()) {
+                $broker = $brokers->first();
+                if ($broker->is_individual == 1) {
+                    $broker_name = $broker->surname . ' ' . $broker->given_name;
+                } else {
+                    $broker_name = $broker->trading;
+                }
+            }
+        } else {
+            $broker_name = 'All';
+        }
 
         $deals = $deals->get();
 
         $pdf = PDF::loadView('admin.reports.fm_direct.outstanding_commission_report', [
             'deals' => $deals,
-            'broker_id' => $broker_id,
+            'broker_id' => $broker_name,
             'group_by' => $request['group_by'],
             'date_from' => $request['from_date'],
             'date_to' => $request['to_date']

@@ -61,6 +61,11 @@
                             Report Period: {{ date('d/m/Y', strtotime($date_from)) }} - {{ date('d/m/Y', strtotime($date_to)) }}
                         </td>
                     </tr>
+                    <tr>
+                        <td style="width: 100%; text-align: left; font-size: 16px; font-weight: bold;">
+                            Broker : {{ $broker_name }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <?php $total_broker_est_loan_amt=0;
