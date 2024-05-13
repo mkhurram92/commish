@@ -82,7 +82,14 @@
                 </td>
             </tr>
             <tr>
-                <td> <span style="width: 50%;font-weight: bold;">Grouped By : {{ $group_by }}</span></td>
+                <td style="width: 100%; text-align: center; font-size: 14px; font-weight: bold;">
+                    Group By: {{ $group_by }}
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%; text-align: left; font-size: 16px; font-weight: bold;">
+                    Broker : {{ $broker_name }}
+                </td>
             </tr>
         </tbody>
     </table>
