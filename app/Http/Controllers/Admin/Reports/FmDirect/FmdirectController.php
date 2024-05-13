@@ -45,7 +45,9 @@ class FmdirectController extends Controller
         if (!empty($request['to_date'])) {
             $deal->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'] . ' 23:59:59')));
         }
-        // dd($deal->get()->toArray());
+        if (!empty($request['broker_id'])) {
+            $deal->where('broker_id', '=', $request['broker_id']);
+        }
         if ($request['group_by'] == 'Product') {
             $deal->groupBy('product_id');
         } else if ($request['group_by'] == 'BrokerStaff') {
@@ -55,8 +57,24 @@ class FmdirectController extends Controller
         } else {
             $deal->groupBy('lender_id');
         }
+
+        if (!empty($request['broker_id'])) {
+            $brokers = Broker::where('id', $request['broker_id'])->get();
+            if ($brokers->isNotEmpty()) {
+                $broker = $brokers->first();
+                if ($broker->is_individual == 1) {
+                    $broker_name = $broker->surname . ' ' . $broker->given_name;
+                } else {
+                    $broker_name = $broker->trading;
+                }
+            }
+        } else {
+            $broker_name = 'All';
+        }
+        
         $pdf = PDF::loadView('admin.reports.fm_direct.deals_settled_report', [
             'deals' => $deal->get(),
+            'broker_name' => $broker_name,
             'date_from' => $request['from_date'],
             'date_to' => $request['to_date'],
             'group_by' => $request['group_by']
@@ -87,6 +105,24 @@ class FmdirectController extends Controller
         if (!empty($request['to_date'])) {
             $deal->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'] . ' 23:59:59')));
         }
+        if (!empty($request['broker_id'])) {
+            $deal->where('broker_id', '=', $request['broker_id']);
+        }
+        
+        if (!empty($request['broker_id'])) {
+            $brokers = Broker::where('id', $request['broker_id'])->get();
+            if ($brokers->isNotEmpty()) {
+                $broker = $brokers->first();
+                if ($broker->is_individual == 1) {
+                    $broker_name = $broker->surname . ' ' . $broker->given_name;
+                } else {
+                    $broker_name = $broker->trading;
+                }
+            }
+        } else {
+            $broker_name = 'All';
+        }
+
         $pdf = PDF::loadView('admin.reports.fm_direct.deals_settled_report', [
             'deals' => $deal->get(),
             'date_from' => $request['from_date'],
@@ -624,7 +660,7 @@ class FmdirectController extends Controller
             })
             ->with('deal_commission');
 
-            $deals = $deals->get();
+        $deals = $deals->get();
 
         $pdf = PDF::loadView('admin.reports.fm_direct.outstanding_commission_report', [
             'deals' => $deals,

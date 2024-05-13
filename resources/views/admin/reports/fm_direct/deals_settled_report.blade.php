@@ -83,7 +83,7 @@
             </tr>
             <tr>
                 <td style="width: 100%; text-align: left; font-size: 16px; font-weight: bold;">
-                    Broker : {{ $group_by }}
+                    Broker : {{ $broker_name }}
                 </td>
             </tr>
         </tbody>
