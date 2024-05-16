@@ -631,7 +631,7 @@ class FmdirectController extends Controller
         return $pdf->download('upfront_outstanding.pdf');
     }
 
-    public function getOutstandingCommissionPreview(Request $request)
+/*    public function getOutstandingCommissionPreview(Request $request)
     {
         $broker_id = $request['broker_id'];
 
@@ -678,6 +678,53 @@ class FmdirectController extends Controller
         }
 
         $deals = $deals->get();
+
+        $pdf = PDF::loadView('admin.reports.fm_direct.outstanding_commission_report', [
+            'deals' => $deals,
+            'broker_id' => $broker_name,
+            'group_by' => $request['group_by'],
+            'date_from' => $request['from_date'],
+            'date_to' => $request['to_date']
+        ])->setPaper('a4', 'landscape')
+            ->setOption('footer-left', getCurrentDateTimeFormatted())
+            ->setOption("footer-right", "Page [page] of [topage]")
+            ->setOption('footer-font-size', '8')
+            ->setWarnings(false);
+        return $pdf->stream('outstanding_commission.pdf');
+    }
+**/
+
+    public function getOutstandingCommissionPreview(Request $request)
+    {
+        $broker_id = $request['broker_id'];
+
+        $deals = Deal::with(['lender', 'client', 'deal_status', 'product', 'broker_staff'])
+            ->whereStatus(4)
+            ->when(!empty($request['from_date']), function ($q) use ($request) {
+                $q->whereDate('status_date', '>=', date('Y-m-d H:i:s', strtotime($request['from_date'])));
+            })
+            ->when(!empty($request['to_date']), function ($q) use ($request) {
+                $q->whereDate('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
+            })
+            ->when(!empty($request['broker_id']), function ($q) use ($request) {
+                $q->where('broker_id', $request['broker_id']);
+            })
+            ->with('deal_commission')
+            ->get();
+
+        if (!empty($request['broker_id'])) {
+            $brokers = Broker::where('id', $request['broker_id'])->get();
+            if ($brokers->isNotEmpty()) {
+                $broker = $brokers->first();
+                if ($broker->is_individual == 1) {
+                    $broker_name = $broker->surname . ' ' . $broker->given_name;
+                } else {
+                    $broker_name = $broker->trading;
+                }
+            }
+        } else {
+            $broker_name = 'All';
+        }
 
         $pdf = PDF::loadView('admin.reports.fm_direct.outstanding_commission_report', [
             'deals' => $deals,
