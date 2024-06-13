@@ -109,7 +109,8 @@
                                                         <p class="mb-2"><b>Trust Name : </b>{{ $contact->trust_name }}
                                                         </p>
                                                         <p class="mb-2"><b>Status :
-                                                            </b>{{ $contact->status == 1 ? 'Active' : 'Inactive' }} </p>
+                                                            </b>{{ $contact->status == 1 ? 'Active' : 'Inactive' }} 
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,9 +151,12 @@
                                                         <p class="mb-2"><b>Broker : </b><a class="active_a"
                                                                 href="{{ route('admin.brokers.view', encrypt($contact->contact_abp_id)) }}"
                                                                 target="_blank">{{ $contact->entity_name }}</a></p>
-                                                        <p class="mb-2"><b>Industry : </b>{{ $contact->industry_name }}
+                                                        <p class="mb-2">
+                                                            <b>Industry : </b>{{ $contact->industry_name }}
                                                         </p>
-                                                        <!--<p class="mb-2"><b>Include In General Mailout : </b>{{ $contact->general_mail_out == 1 ? 'Yes' : 'No' }}</p>-->
+                                                        <p class="mb-2">
+                                                            <b>Subject to GST : </b>{{ $contact->has_gst == 1 ? 'Yes' : 'No' }} 
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

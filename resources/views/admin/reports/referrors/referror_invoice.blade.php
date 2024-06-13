@@ -256,7 +256,7 @@
                     @endphp
                     @endforeach
                 </tbody>
-
+                <tr style="height: 20px;"></tr>
                 <!-- Display totals after the inner loop -->
                 <tr class="grand-total-row" style="background-color: #f2f2f2;">
                     <td style="padding: 5px;" colspan="3"><b>Total

@@ -157,6 +157,7 @@ class ContactSearchController extends Controller
             $contact->middle_name = $request['middle_name'];
             $contact->dob = $request['dob'];
             $contact->status = $request->input('status') == '1' ? 1 : 0;
+            $contact->has_gst = $request->input('has_gst') == '1' ? 1 : 0;
             $contact->role_title = $request['role_title'];
             $contact->role = $request['role'];
             $contact->entity_name = $request['entity_name'];
@@ -499,6 +500,7 @@ class ContactSearchController extends Controller
                 $contact->middle_name = $request['middle_name'];
                 $contact->dob = $request['dob'];
                 $contact->status = $request->input('status') == '1' ? 1 : 0;
+                $contact->has_gst = $request->input('has_gst') == '1' ? 1 : 0;
                 $contact->role_title = $request['role_title'];
                 $contact->role = $request['role'];
                 $contact->entity_name = $request['entity_name'];

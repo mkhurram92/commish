@@ -631,7 +631,7 @@
 
                                                 <div class="form-row">
 
-                                                    <div class="col-md-6 col-sm-12">
+                                                    <div class="col-md-6 col-sm-6">
                                                         <div class="position-relative form-group">
                                                             <label class="form-label font-weight-bold">Broker</label>
                                                             <select name="abp" id="abp" class="form-control">
@@ -648,7 +648,21 @@
                                                             @endif
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <div class="position-relative form-group">
+                                                            <label class="form-label font-weight-bold">Subject to GST</label>
+                                                            <select name="has_gst" id="has_gst" class="form-control">
+                                                                <option value="1"
+                                                                    @if (isset($contact) && $contact->has_gst == 1) selected @endif>
+                                                                    Yes
+                                                                </option>
+                                                                <option value="0"
+                                                                    @if (isset($contact) && $contact->has_gst == 0) selected @endif>
+                                                                    No
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="form-row">
