@@ -148,16 +148,15 @@
                                             <div class="col-sm-3">
                                                 <div class="card">
                                                     <div class="card-body">
+                                                        <p class="mb-2">
+                                                            <b>Subject to GST : </b>{{ $contact->has_gst == 1 ? 'Yes' : 'No' }} 
+                                                        </p>
                                                         <p class="mb-2"><b>Broker : </b><a class="active_a"
                                                                 href="{{ route('admin.brokers.view', encrypt($contact->contact_abp_id)) }}"
                                                                 target="_blank">{{ $contact->entity_name }}</a></p>
                                                         <p class="mb-2">
                                                             <b>Industry : </b>{{ $contact->industry_name }}
-                                                        </p>
-                                                        <p class="mb-2">
-                                                            <b>Subject to GST : </b>{{ $contact->has_gst == 1 ? 'Yes' : 'No' }} 
-                                                        </p>
-                                                    </div>
+                                                        </p></div>
                                                 </div>
                                             </div>
                                         </div>
