@@ -180,7 +180,7 @@
     <table style="border-collapse: collapse; width: 33%; border: 1px solid #ddd;">
         <thead>
             <tr style="background-color: #f2f2f2;">
-                <th style="padding: 10px; text-align:center;">{{ $dp->display_name }} {{ $has_gst }}</th>
+                <th style="padding: 10px; text-align:center;">{{ $dp->display_name }}</th>
             </tr>
         </thead>
         <tbody>
