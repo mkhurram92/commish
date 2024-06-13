@@ -7,7 +7,7 @@
 
 <body style=" font-family: system-ui, system-ui, sans-serif;">
     <style>
-        <style>table {
+        table {
             border: 0;
             border-collapse: separate;
             border-spacing: 0 5px;
@@ -118,11 +118,11 @@
             <thead class="thead_style">
                 <tr>
                     <th>Deal</th>
-                    <th style="padding-left:12px;">Client</th>
+                    <th>Client</th>
                     <th>Lender</th>
                     <th>Status</th>
                     <th>Broker Staff</th>
-                    <th style="padding-left:12px;">Loan <br>Amount</th>
+                    <th>Loan Amount</th>
                     <th>ABP Est. <br>Upfront</th>
                     <th>Actual <br>Upfront</th>
                     <th>Upfront <br>Difference</th>
@@ -167,10 +167,8 @@
                         </td>
                         <td>{{ $deal_list->lender->code }}</td>
                         <td>{{ $deal_list->deal_status->name }}</td>
-                        <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}
-                        </td>
-                        <td style="padding-left:12px;">${{ number_format($deal_list->actual_loan, 2, '.', ',') }}
-                        </td>
+                        <td>{{ $deal_list->broker_staff ? $deal_list->broker_staff->surname . ' ' . $deal_list->broker_staff->given_name : ' ' }}</td>
+                        <td>${{ number_format($deal_list->actual_loan, 2, '.', ',') }}</td>
                         <td>${{ $deal_list->broker_est_upfront }}</td>
                         <td>${{ number_format($upfront ?? 0, 2, '.', ',') }}</td>
                         <td>${{ number_format($up_diff, 2, '.', ',') }}
@@ -234,16 +232,17 @@
             <thead class="thead_style">
                 <tr>
                     <th>Deal</th>
-                    <th>Client</th>
+                    <th style="padding-left:12px;">Client</th>
                     <th>Lender</th>
+                    <th>Status</th>
                     <th>Broker Staff</th>
                     <th>Loan Amount</th>
-                    <th>ABP Est. Upfront</th>
-                    <th>Actual Upfront</th>
-                    <th>Upfront Difference</th>
-                    <th>ABP Est. Brokerage</th>
-                    <th>Actual Brokerage</th>
-                    <th>Brokerage Difference</th>
+                    <th>ABP Est. <br>Upfront</th>
+                    <th>Actual <br>Upfront</th>
+                    <th>Upfront <br>Difference</th>
+                    <th>ABP Est. <br>Brokerage</th>
+                    <th>Actual <br>Brokerage</th>
+                    <th>Brokerage <br>Difference</th>
                 </tr>
             </thead>
         </table>
@@ -268,4 +267,5 @@
         </table>
     @endif
 </body>
+
 </html>

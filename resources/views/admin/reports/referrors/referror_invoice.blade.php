@@ -131,6 +131,7 @@
     @if (count($distinctDisplayNames) > 0)
     @foreach ($distinctDisplayNames as $index => $dp)
     @php
+    $has_gst = $dp->has_gst;
     $filteredInvoices = $referrorInvoices->where('display_name', $dp->display_name);
     $grand_displayName_loanTotal = $grand_displayName_commissionTotal = $grand_displayName_aggTotal = $grand_displayName_brokerTotal = $grand_displayName_referrorTotal = 0;
     @endphp
@@ -321,6 +322,7 @@
         <tbody>
             <!-- Empty row for extra space -->
             <tr style="height: 20px;"></tr>
+            @if($has_gst == 1)
             <tr class="grand-total-row">
                 <td style="padding: 8px;background-color: #f8f8f8;"><b>GST</b>
                 </td>
@@ -335,6 +337,15 @@
                     <b>${{ number_format($grand_displayName_referrorTotal + $grand_displayName_referrorTotal * 0.1, 2) }}</b>
                 </td>
             </tr>
+            @else
+            <tr class="grand-total-row">
+                <td style="padding: 8px;background-color: #f8f8f8;"><b>Total Due</b>
+                </td>
+                <td style="padding: 8px; text-align: right; background-color: #f8f8f8;">
+                    <b>${{ number_format($grand_displayName_referrorTotal, 2) }}</b>
+                </td>
+            </tr>
+            @endif
         </tbody>
     </table>
     <?php
