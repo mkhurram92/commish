@@ -339,6 +339,13 @@
             </tr>
             @else
             <tr class="grand-total-row">
+                <td style="padding: 8px;background-color: #f8f8f8;"><b>GST</b>
+                </td>
+                <td style="padding: 8px; text-align: right;background-color: #f8f8f8;">
+                    <b>$0.00 </b>
+                </td>
+            </tr>
+            <tr class="grand-total-row">
                 <td style="padding: 8px;background-color: #f8f8f8;"><b>Total Due</b>
                 </td>
                 <td style="padding: 8px; text-align: right; background-color: #f8f8f8;">
