@@ -340,6 +340,36 @@
                         <td><b>${{ number_format($grand_total_referror, 2) }}</b></td>
                         <td><b>${{ number_format($grand_total_broker, 2) }}</b></td>
                     </tr>
+                    <tr style="height: 20px;"></tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;margin-top: 10px"><b></b></td>
+                        <td><b></b></td>
+                        <td colspan="3"></td>
+                        <td style="background-color: #f2f2f2;"><b></b></td>
+                        <td style="background-color: #f2f2f2;"><b>Balance</b></td>
+                        <td style="background-color: #f2f2f2;"><b></b></td>
+                        <td style="background-color: #f2f2f2;"><b>${{ number_format($grand_total_broker, 2) }}</b></td>
+                    </tr>
+                    <tr style="height: 2px;"></tr>
+                    <tr style="background-color: #ffffff;">
+                        <td colspan="2" style="text-align: center;margin-top: 10px"><b></b></td>
+                        <td><b></b></td>
+                        <td colspan="3"></td>
+                        <td style="background-color: #f2f2f2;"><b></b></td>
+                        <td style="background-color: #f2f2f2;"><b>GST</b></td>
+                        <td style="background-color: #f2f2f2;"><b></b></td>
+                        <td style="background-color: #f2f2f2;"><b>${{ number_format($grand_total_broker * 0.1, 2) }}</b></td>
+                    </tr>
+                    <tr style="height: 2px;"></tr>
+                    <tr style="background-color: #ffffff;">
+                        <td colspan="2" style="text-align: center;margin-top: 10px"><b></b></td>
+                        <td><b></b></td>
+                        <td colspan="3"></td>
+                        <td style="background-color: #f2f2f2;"><b></b></td>
+                        <td style="background-color: #f2f2f2;"><b>Total Due</b></td>
+                        <td style="background-color: #f2f2f2;"><b></b></td>
+                        <td style="background-color: #f2f2f2;"><b>${{ number_format($grand_total_broker + ($grand_total_broker * 0.1), 2) }}</b></td>
+                    </tr>
                 </tbody>
             </table>
             <div class="pagebreak"> </div>
