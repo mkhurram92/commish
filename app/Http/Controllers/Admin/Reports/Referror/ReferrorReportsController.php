@@ -79,7 +79,8 @@ class ReferrorReportsController extends Controller
                     cd.city as cd_city, 
                     states.name as cd_state, 
                     cs.id as cs_id, 
-                    cs.has_gst as has_gst, cd.postal_code as cd_pincode")
+                    cs.has_gst as has_gst, 
+                    cs.abn as cs_abn, cd.postal_code as cd_pincode")
             ->distinct('display_name')
             ->orderBy('display_name', 'asc')
             ->get();

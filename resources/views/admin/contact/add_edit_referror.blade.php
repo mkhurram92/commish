@@ -381,6 +381,19 @@
                                                             @endif
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="position-relative form-group">
+                                                            <label class="form-label font-weight-bold">ABN</label>
+                                                            <input name="abn" placeholder="ABN"
+                                                                value="{{ isset($contact) ? $contact->abn : '' }}"
+                                                                type="text" class="form-control" maxlength="255">
+                                                            @if ($errors->has('abn'))
+                                                                <div class="error" style="color:red">
+                                                                    {{ $errors->first('abn') }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

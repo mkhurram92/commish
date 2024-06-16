@@ -191,7 +191,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding: 5px; text-align: center; font-size: 11px;">ABN : </td>
+                <td style="padding: 5px; text-align: center; font-size: 11px;">ABN : {{ $dp->cs_abn ?? ' ' }}</td>
             </tr>
         </tbody>
     </table>
@@ -362,7 +362,7 @@
     <table style="page-break-inside: avoid;">
         <tr class="grand-total-row">
             <td style="padding: 8px;background-color: #f8f8f8;"><b>Please contact {{ $entity_name }} in
-                    regard to any queries you may concering this invoice.</b>
+                    regard to any queries you may concerning this invoice.</b>
             </td>
         </tr>
     </table>

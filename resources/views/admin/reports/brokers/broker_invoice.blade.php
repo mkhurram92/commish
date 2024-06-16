@@ -234,8 +234,9 @@
                         @if ($nameeee != $older_broker_name)
                             <!-- Code inside this block will be executed when $nameeee is different from $older_broker_name -->
                             @if ($older_broker_name !== null)
+                            <tr style="height: 20px;"></tr>
                                 <tr style="background-color: #f2f2f2;">
-                                    <td colspan="2" style="text-align: center"><b>Total</b></td>
+                                    <td colspan="2" style="text-align: center"><b>Total {{ $type_name }} </b></td>
                                     <td><b>${{ number_format((float) $total_actual_loan, 2) }}</b></td>
                                     <td colspan="3"></td>
                                     <td><b>${{ number_format((float) $total_total_amount, 2) }}</b></td>
@@ -243,6 +244,7 @@
                                     <td><b>${{ number_format((float) $total_referror_amount, 2) }}</b></td>
                                     <td><b>${{ number_format((float) $total_broker_amount, 2) }}</b></td>
                                 </tr>
+                                <tr style="height: 20px;"></tr>
                             @endif
                             @php
                                 // Reset totals for the new broker
@@ -316,10 +318,10 @@
                         //$grand_total_broker += $total_broker_amount;
                         ?>
                     @endforeach
-
+                    <tr style="height: 20px;"></tr>
                     <!-- Display Totals for the last broker -->
                     <tr style="background-color: #f2f2f2;">
-                        <td colspan="2" style="text-align: center;margin-top: 10px"><b>Total</b></td>
+                        <td colspan="2" style="text-align: center;margin-top: 10px"><b>Total {{ $type_name }} </b></td>
                         <td><b>${{ number_format((float) $total_actual_loan, 2) }}</b></td>
                         <td colspan="3"></td>
                         <td><b>${{ number_format((float) $total_total_amount, 2) }}</b></td>
@@ -327,7 +329,7 @@
                         <td><b>${{ number_format((float) $total_referror_amount, 2) }}</b></td>
                         <td><b>${{ number_format((float) $total_broker_amount, 2) }}</b></td>
                     </tr>
-
+                    <tr style="height: 20px;"></tr>
                     <!-- Grand Total Row -->
                     <tr style="background-color: #f2f2f2;">
                         <td colspan="2" style="text-align: center;margin-top: 10px"><b>Grand Total</b></td>
