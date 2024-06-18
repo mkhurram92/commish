@@ -440,7 +440,49 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="card mb-2">
+                                            <div class="card-header">
+                                                Bank Detail
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-row">
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <div class="position-relative form-group">
+                                                            <label class="form-label  font-weight-bold">Bank Name</label>
+                                                            <input type="text" name="bank" id="bank"
+                                                                class="form-control" placeholder="Bank Name"
+                                                                value="{{ isset($broker) && $broker->bank != '' ? $broker->bank : '' }}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <div class="position-relative form-group">
+                                                            <label class="form-label font-weight-bold">Account Name</label>
+                                                            <input type="text" name="acc_name" id="acc_name"
+                                                                class="form-control" placeholder="Account Name"
+                                                                value="{{ isset($broker) && $broker->account_name != '' ? $broker->account_name : '' }}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <div class="position-relative form-group">
+                                                            <label class="form-label  font-weight-bold">BSB</label>
+                                                            <input type="text" name="bsb" id="bsb"
+                                                                class="form-control" placeholder="BSB"
+                                                                value="{{ isset($broker) && $broker->bsb != '' ? $broker->bsb : '' }}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <div class="position-relative form-group">
+                                                            <label class="form-label  font-weight-bold">Account
+                                                                Number</label>
+                                                            <input type="text" name="acc_number" id="acc_number"
+                                                                class="form-control input_int_number"
+                                                                placeholder="Account Number"
+                                                                value="{{ isset($broker) && $broker->account_number != '' ? $broker->account_number : '' }}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="card mb-2">
                                             <div class="card-header">
                                                 Other
@@ -514,50 +556,6 @@
                                         </div>
                                         <div class="card mb-2">
                                             <div class="card-header">
-                                                Bank Detail
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="form-row">
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <div class="position-relative form-group">
-                                                            <label class="form-label  font-weight-bold">Bank Name</label>
-                                                            <input type="text" name="bank" id="bank"
-                                                                class="form-control" placeholder="Bank Name"
-                                                                value="{{ isset($broker) && $broker->bank != '' ? $broker->bank : '' }}" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <div class="position-relative form-group">
-                                                            <label class="form-label font-weight-bold">Account Name</label>
-                                                            <input type="text" name="acc_name" id="acc_name"
-                                                                class="form-control" placeholder="Account Name"
-                                                                value="{{ isset($broker) && $broker->account_name != '' ? $broker->account_name : '' }}" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <div class="position-relative form-group">
-                                                            <label class="form-label  font-weight-bold">BSB</label>
-                                                            <input type="text" name="bsb" id="bsb"
-                                                                class="form-control" placeholder="BSB"
-                                                                value="{{ isset($broker) && $broker->bsb != '' ? $broker->bsb : '' }}" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <div class="position-relative form-group">
-                                                            <label class="form-label  font-weight-bold">Account
-                                                                Number</label>
-                                                            <input type="text" name="acc_number" id="acc_number"
-                                                                class="form-control input_int_number"
-                                                                placeholder="Account Number"
-                                                                value="{{ isset($broker) && $broker->account_number != '' ? $broker->account_number : '' }}" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card mb-2">
-                                            <div class="card-header">
-
                                             </div>
                                             <div class="card-body">
                                                 <div class="form-row">
