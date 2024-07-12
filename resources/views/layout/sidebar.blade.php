@@ -30,7 +30,7 @@
         <div class="dropdown user-pro-body text-center">
             <div class="user-pic">
                 @if (auth()->user()->image && \Storage::disk('public')->exists('profile/images/' . auth()->user()->image))
-                    <img src="{{ asset('storage/profile/images/' . auth()->user()->image) }}" alt="user-img"
+                    <img src="{{ asset('assets/images/' . auth()->user()->image) }}" alt="user-img"
                         class="avatar-xl rounded-circle mb-1">
                 @else
                     <img src="{{ url('assets/images/users/jason.jpg') }}" alt="user-img"
