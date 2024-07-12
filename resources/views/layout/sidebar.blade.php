@@ -1,14 +1,19 @@
 <style>
-    .app-sidebar, .app-sidebar2, .app-sidebar3 {
-        width: 280px; /* Increase the width as needed */
+    .app-sidebar,
+    .app-sidebar2,
+    .app-sidebar3 {
+        width: 280px;
+        /* Increase the width as needed */
     }
 
     .app-content {
-        margin-left: 280px; /* Adjust the content margin to match the sidebar width */
+        margin-left: 280px;
+        /* Adjust the content margin to match the sidebar width */
     }
 
     .side-menu__item {
-        padding-left: 20px; /* Adjust the padding if necessary */
+        padding-left: 20px;
+        /* Adjust the padding if necessary */
     }
 
     .custom-avatar-size {
@@ -21,7 +26,7 @@
 <div class="app-sidebar app-sidebar2">
     <div class="app-sidebar__logo">
         <a class="header-brand" href="{{ route('admin.dashboard') }}">
-            
+
         </a>
     </div>
 </div>
@@ -50,7 +55,11 @@
             </a>
         </li>
 
-        @if ($user_is_admin == 1 || in_array('contacts', $module_permissions))
+        @if (
+            $user_is_admin == 1 ||
+                in_array('Contacts', $module_permissions) ||
+                in_array('contacts-list', $module_permissions) ||
+                in_array('contacts-add', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'contact' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
                     <i class="ion-person-stalker side-menu__icon"></i>
@@ -59,121 +68,107 @@
 
                 </a>
                 <ul class="slide-menu {{ request()->segment(2) == 'contact' ? 'mm-show' : '' }}">
-                    <li>
-                        <a href="{{ route('admin.contact.list') }}"
-                            class="slide-item {{ request()->segment(3) == 'list' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Search
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ route('admin.contact.add') }}"
-                            class="slide-item {{ request()->segment(3) == 'add' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Add Client
-                        </a>
-                    </li>
+                    @if ($user_is_admin == 1 || in_array('contacts-list', $module_permissions))
+                        <li>
+                            <a href="{{ route('admin.contact.list') }}"
+                                class="slide-item {{ request()->segment(3) == 'contacts-list' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Search
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user_is_admin == 1 || in_array('contacts-add', $module_permissions))
+                        <li>
+                            <a href="{{ route('admin.contact.add') }}"
+                                class="slide-item {{ request()->segment(3) == 'contacts-add' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Add Client
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
 
         @if (
             $user_is_admin == 1 ||
-                in_array('deals', $module_permissions) ||
-                in_array('lenders-commission-schedules', $module_permissions) ||
-                in_array('refferor-commission-schedules', $module_permissions))
-            <li
-                class="slide {{ request()->segment(2) == 'deals' ||
-                request()->segment(2) == 'lenders-commission-schedules' ||
-                request()->segment(2) == 'refferor-commission-schedules'
-                    ? 'mm-active'
-                    : '' }}">
+                in_array('Deals', $module_permissions) ||
+                in_array('deals-list', $module_permissions) ||
+                in_array('deals-add', $module_permissions))
+            <li class="slide {{ request()->segment(2) == 'Deals' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
                     <i class="ion-clipboard side-menu__icon"></i>
-
                     <span class="side-menu__label">Deals</span><i class="angle fa fa-angle-right"></i>
-
                 </a>
                 <ul class="slide-menu {{ request()->segment(2) == 'deals' ? 'mm-show' : '' }}">
-                    <li>
-                        <a href="{{ route('admin.deals.list') }}"
-                            class="slide-item {{ request()->segment(3) == 'list' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Seach
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ route('admin.deals.add') }}"
-                            class="slide-item {{ request()->segment(3) == 'add' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Add Deal
-                        </a>
-                    </li>
-
-
+                    @if ($user_is_admin == 1 || in_array('deals-list', $module_permissions))
+                        <li>
+                            <a href="{{ route('admin.deals.list') }}"
+                                class="slide-item {{ request()->segment(3) == 'deals-list' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Seach
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user_is_admin == 1 || in_array('deals-add', $module_permissions))
+                        <li>
+                            <a href="{{ route('admin.deals.add') }}"
+                                class="slide-item {{ request()->segment(3) == 'deals-add' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Add Deal
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
-        <li class="slide {{ request()->segment(2) == 'commissions' ? 'mm-active' : '' }}">
-            <a href="#" class="side-menu__item" data-toggle="slide">
-                <i class="ion-cash side-menu__icon"></i>
+        @if ($user_is_admin == 1 || in_array('Commission', $module_permissions))
+            <li class="slide {{ request()->segment(2) == 'commissions' ? 'mm-active' : '' }}">
+                <a href="#" class="side-menu__item" data-toggle="slide">
+                    <i class="ion-cash side-menu__icon"></i>
 
-                <span class="side-menu__label">Commissions</span><i class="angle fa fa-angle-right"></i>
-            </a>
-            <ul class="slide-menu {{ request()->segment(2) == 'commissions' ? 'mm-show' : '' }}">
-                <li>
-                    <a href="{{ route('admin.deals.commissions') }}"
-                        class=" slide-item {{ request()->segment(3) == 'commissions' ? 'mm-active' : '' }}">
-                        <i class="metismenu-icon"></i>
-                        Import Deals Data
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.deals.dealMissingList') }}"
-                        class=" slide-item {{ request()->segment(3) == 'commissions' ? 'mm-active' : '' }}">
-                        <i class="metismenu-icon"></i>
-                        Missing Ref. No
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.commissiontypes') }}"
-                        class="slide-item {{ request()->segment(2) == 'commission-types' ? 'mm-active' : '' }}">
-                        <i class="metismenu-icon"></i>
-                        Commission Types
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.lendercommissionschedule') }}"
-                        class="slide-item {{ request()->segment(2) == 'lenders-commission-schedules' ? 'mm-active' : '' }}">
-                        <i class="metismenu-icon"></i>
-                        Commission Schedule
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.refferorcommissionschedule') }}"
-                        class="slide-item {{ request()->segment(2) == 'refferor-commission-schedules' ? 'mm-active' : '' }}">
-                        <i class="metismenu-icon"></i>
-                        Referrer Commission Schedule
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        @if (
-            $user_is_admin == 1 ||
-                (in_array('users', $module_permissions) ||
-                    in_array('abp', $module_permissions) ||
-                    in_array('contact-role', $module_permissions) ||
-                    in_array('products', $module_permissions) ||
-                    in_array('industries', $module_permissions) ||
-                    in_array('lenders', $module_permissions) ||
-                    in_array('expense-type', $module_permissions) ||
-                    in_array('services', $module_permissions) ||
-                    in_array('referral-sources', $module_permissions) ||
-                    in_array('processors', $module_permissions) ||
-                    in_array('commission-types', $module_permissions)))
+                    <span class="side-menu__label">Commissions</span><i class="angle fa fa-angle-right"></i>
+                </a>
+                <ul class="slide-menu {{ request()->segment(2) == 'commissions' ? 'mm-show' : '' }}">
+                    <li>
+                        <a href="{{ route('admin.deals.commissions') }}"
+                            class=" slide-item {{ request()->segment(3) == 'commissions' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Import Deals Data
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.deals.dealMissingList') }}"
+                            class=" slide-item {{ request()->segment(3) == 'commissions' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Missing Ref. No
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.commissiontypes') }}"
+                            class="slide-item {{ request()->segment(2) == 'commission-types' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Commission Types
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.lendercommissionschedule') }}"
+                            class="slide-item {{ request()->segment(2) == 'lenders-commission-schedules' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Commission Schedule
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.refferorcommissionschedule') }}"
+                            class="slide-item {{ request()->segment(2) == 'refferor-commission-schedules' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Referrer Commission Schedule
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+        @if ($user_is_admin == 1 || in_array('Master', $module_permissions))
             <li
                 class="slide {{ request()->segment(2) == 'abp' ||
                 request()->segment(2) == 'relationship' ||
@@ -187,6 +182,7 @@
                 request()->segment(2) == 'processor' ||
                 request()->segment(2) == 'commission-types' ||
                 request()->segment(2) == 'commissions' ||
+                request()->segment(2) == 'add' ||
                 request()->segment(2) == 'refferor-commission-schedules'
                     ? 'mm-active'
                     : '' }}">
@@ -210,70 +206,55 @@
                             Add Broker
                         </a>
                     </li>
-                    @if ($user_is_admin == 1 || in_array('users', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.user') }}"
-                                class="slide-item {{ request()->segment(2) == 'user' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                User
-                            </a>
-                        </li>
-                    @endif
-                    @if ($user_is_admin == 1 || in_array('relationship', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.relationship') }}"
-                                class="slide-item {{ request()->segment(2) == 'relationship' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Relationship
-                            </a>
-                        </li>
-                    @endif
-                    @if ($user_is_admin == 1 || in_array('products', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.products') }}"
-                                class="slide-item {{ request()->segment(2) == 'products' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Products
-                            </a>
-                        </li>
-                    @endif
-                    @if ($user_is_admin == 1 || in_array('industries', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.industry') }}"
-                                class="slide-item {{ request()->segment(2) == 'industry' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Industry
-                            </a>
-                        </li>
-                    @endif
-                    @if ($user_is_admin == 1 || in_array('lenders', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.lenders') }}"
-                                class="slide-item {{ request()->segment(2) == 'lenders' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Lenders
-                            </a>
-                        </li>
-                    @endif
-                    
-                    @if ($user_is_admin == 1 || in_array('services', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.service') }}"
-                                class="slide-item {{ request()->segment(2) == 'service' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Services
-                            </a>
-                        </li>
-                    @endif
-                    @if ($user_is_admin == 1 || in_array('loantypes', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.loantype') }}"
-                                class="slide-item {{ request()->segment(2) == 'processor' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Loan Types
-                            </a>
-                        </li>
-                    @endif
+                    <li>
+                        <a href="{{ route('admin.user') }}"
+                            class="slide-item {{ request()->segment(2) == 'user' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            User
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.relationship') }}"
+                            class="slide-item {{ request()->segment(2) == 'relationship' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Relationship
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.products') }}"
+                            class="slide-item {{ request()->segment(2) == 'products' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.industry') }}"
+                            class="slide-item {{ request()->segment(2) == 'industry' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Industry
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.lenders') }}"
+                            class="slide-item {{ request()->segment(2) == 'lenders' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Lenders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.service') }}"
+                            class="slide-item {{ request()->segment(2) == 'service' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Services
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.loantype') }}"
+                            class="slide-item {{ request()->segment(2) == 'processor' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Loan Types
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('admin.setting.profile') }}"
                             class="slide-item {{ request()->segment(3) == 'profile' ? 'mm-active' : '' }}">
@@ -291,13 +272,13 @@
                 </ul>
             </li>
         @endif
-        <li class="slide {{ request()->segment(2) == 'reports' ? 'mm-active' : '' }}">
-            <a href="#" class="side-menu__item" data-toggle="slide">
-                <i class="ion-compose side-menu__icon"></i>
-                <span class="side-menu__label">Reports</span><i class="angle fa fa-angle-right"></i>
-            </a>
-            <ul class="slide-menu {{ request()->segment(2) == 'reports' ? 'mm-show' : '' }}">
-                @if ($user_is_admin == 1 || in_array('reports', $module_permissions))
+        @if ($user_is_admin == 1 || in_array('Reports', $module_permissions))
+            <li class="slide {{ request()->segment(2) == 'Reports' ? 'mm-active' : '' }}">
+                <a href="#" class="side-menu__item" data-toggle="slide">
+                    <i class="ion-compose side-menu__icon"></i>
+                    <span class="side-menu__label">Reports</span><i class="angle fa fa-angle-right"></i>
+                </a>
+                <ul class="slide-menu {{ request()->segment(2) == 'reports' ? 'mm-show' : '' }}">
                     <li>
                         <a href="{{ route('admin.broker.index') }}"
                             class="slide-item {{ request()->segment(3) == 'broker' ? 'mm-active' : '' }}">
@@ -326,10 +307,9 @@
                             Referrer Invoices
                         </a>
                     </li>
-                @endif
-            </ul>
-        </li>
-
+                </ul>
+            </li>
+        @endif
         <li>
             <a href="{{ route('logout') }}" class="side-menu__item">
                 <i class="ion-power side-menu__icon"></i>
