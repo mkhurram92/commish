@@ -46,8 +46,14 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-9 col-xl-8">
                             <div class="card-group mb-0">
+                                <div class="card text-white py-5 d-md-down-none page-content mt-0">
+                                    <div class="card-body text-center justify-content-center page-single-content">
+                                        <img src="{{asset('assets/images/logo_o.jpg')}}" alt="img">
+                                    </div>
+                                </div>
+                                
                                 <div class="card p-4 page-content">
-                                    <div class="card-body page-single-content" style="margin-top: 0;padding-top: 0">
+                                    <div class="card-body page-single-content p-5" style="margin-top: 0;padding-top: 0">
                                         <div class="w-100">
                                            <!--<div class="text-center">
                                                <img src="{{url('assets/images/logo-commish.png')}}" class="header-brand-img desktop-lgo" alt="Commish  logo">
@@ -62,7 +68,7 @@
                                                     <strong>Error! </strong> {{$message}}
                                                 </div>
                                             @endif
-                                            <div class="">
+                                            <div>
                                                 <center>
                                                     <h1 class="mb-2">Login</h1>
                                                     <h6 class="text-muted">Sign In to your account</h6><br />
@@ -119,11 +125,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card text-white bg-primary py-5 d-md-down-none page-content mt-0">
-                                    <div class="card-body text-center justify-content-center page-single-content">
-                                        <img src="{{asset('assets/images/pattern/login.png')}}" alt="img">
-                                    </div>
-                                </div>
+                                
                             </div>
 
                         </div>
