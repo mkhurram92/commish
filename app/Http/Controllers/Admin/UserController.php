@@ -124,16 +124,9 @@ class UserController extends Controller
             return response()->json(['error'=>$validator->errors()->all()]);
         }
 
-        //print_R($request->all());die;
         $user = User::find($request->edit_id);
-       /* $imageName = '';
-        if($request->file('profile_img')!=null){
-            $image = $request->file('profile_img');
-            $image_path = $image->store('public/profile/images/');
-            $imageName = $request->profile_img->hashName();
-        }*/
 
-        if ($request->hasFile('image')) {
+/*      if ($request->hasFile('image')) {
 
             if ($request->file('image')->isValid()) {
 
@@ -141,17 +134,19 @@ class UserController extends Controller
                 $image_name = time().".".$extension;
                 $request->image->storeAs('/public/profile/images/', $image_name);
                 $user->image = $image_name;
-
-            }else{
-
-                //$image_name ="default.png";
-
             }
+        }
+*/
 
-        }else{
-
-            //$image_name ="default.png";
-
+        if ($request->hasFile('image')) {
+            if ($request->file('image')->isValid()) {
+                // Define the path to store the image in the public directory
+                $image_path = 'profile/images/';
+                $image_name = $request->image->hashName();
+                // Store the image in the public/profile/images directory
+                $request->image->move(public_path($image_path), $image_name);
+                $user->image = $image_name;
+            }
         }
 
         if(!$user) {
