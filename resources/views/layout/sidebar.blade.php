@@ -46,8 +46,8 @@
                 <h5 class="mb-1 font-weight-bold">{{ auth()->user()->fname }} {{ auth()->user()->lname }}</h5>
             </div>
         </div>
-    </div> 
-    
+    </div>
+
     <ul class="side-menu">
         <li class="slide {{ request()->segment(2) == 'dashboard' ? 'mm-active' : '' }}">
             <a href="{{ route('admin.dashboard') }}" class="side-menu__item">
@@ -194,11 +194,17 @@
         @if (
             $user_is_admin == 1 ||
                 /**in_array('Commissions', $module_permissions) ||**/
-                in_array('deals-commissions', $module_permissions) ||
-                in_array('deals-missinglist', $module_permissions) ||
-                in_array('commission-types', $module_permissions) ||
-                in_array('lenders-commission-schedules', $module_permissions) ||
-                in_array('refferor-commission-schedules', $module_permissions))
+                in_array('referrer_add', $module_permissions) ||
+                in_array('brokers-add', $module_permissions) ||
+                in_array('users-list', $module_permissions) ||
+                in_array('relationship-list', $module_permissions) ||
+                in_array('products-list', $module_permissions) ||
+                in_array('industry-list', $module_permissions) ||
+                in_array('lenders-list', $module_permissions) ||
+                in_array('service-list', $module_permissions)||
+                in_array('processor-list', $module_permissions)||
+                in_array('profile', $module_permissions)||
+                in_array('entity', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'master' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
                     <i class="ion-settings side-menu__icon"></i>
@@ -322,10 +328,9 @@
         @if (
             $user_is_admin == 1 ||
                 in_array('broker-index', $module_permissions) ||
-                in_array('deals-missinglist', $module_permissions) ||
-                in_array('commission-types', $module_permissions) ||
-                in_array('lenders-commission-schedules', $module_permissions) ||
-                in_array('refferor-commission-schedules', $module_permissions))
+                in_array('fm_direct-index', $module_permissions) ||
+                in_array('lender-index', $module_permissions) ||
+                in_array('referrors-index', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'Reports' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
                     <i class="ion-compose side-menu__icon"></i>
@@ -333,43 +338,43 @@
                 </a>
                 <ul class="slide-menu {{ request()->segment(2) == 'reports' ? 'mm-show' : '' }}">
                     @if ($user_is_admin == 1 || in_array('broker-index', $module_permissions))
-                    <li>
-                        <a href="{{ route('admin.broker.index') }}"
-                            class="slide-item {{ request()->segment(3) == 'broker-index' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Broker Invoices
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{{ route('admin.broker.index') }}"
+                                class="slide-item {{ request()->segment(3) == 'broker-index' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Broker Invoices
+                            </a>
+                        </li>
                     @endif
 
                     @if ($user_is_admin == 1 || in_array('fm_direct-index', $module_permissions))
-                    <li>
-                        <a href="{{ route('admin.fm_direct.index') }}"
-                            class="slide-item {{ request()->segment(3) == 'fm_direct-index' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Reports
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{{ route('admin.fm_direct.index') }}"
+                                class="slide-item {{ request()->segment(3) == 'fm_direct-index' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Reports
+                            </a>
+                        </li>
                     @endif
 
                     @if ($user_is_admin == 1 || in_array('lender-index', $module_permissions))
-                    <li>
-                        <a href="{{ route('admin.lender.index') }}"
-                            class="slide-item {{ request()->segment(3) == 'lender-index' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Lender
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{{ route('admin.lender.index') }}"
+                                class="slide-item {{ request()->segment(3) == 'lender-index' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Lender
+                            </a>
+                        </li>
                     @endif
 
                     @if ($user_is_admin == 1 || in_array('referrors-index', $module_permissions))
-                    <li>
-                        <a href="{{ route('admin.referrors.index') }}"
-                            class="slide-item {{ request()->segment(3) == 'referrors-index' ? 'mm-active' : '' }}">
-                            <i class="metismenu-icon"></i>
-                            Referrer Invoices
-                        </a>
-                    </li>
+                        <li>
+                            <a href="{{ route('admin.referrors.index') }}"
+                                class="slide-item {{ request()->segment(3) == 'referrors-index' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Referrer Invoices
+                            </a>
+                        </li>
                     @endif
                 </ul>
             </li>
