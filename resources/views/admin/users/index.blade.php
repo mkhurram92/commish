@@ -449,7 +449,6 @@
         }
 
         function setPermission(current) {
-
             var id = jQuery(current).attr('data-id');
             jQuery('#per_user_id').val(id);
             if (typeof id != "undefined" && parseInt(id) > 0) {
@@ -465,36 +464,34 @@
                         if ($.isEmptyObject(data.error)) {
                             var payloadData = data.payload;
                             if (typeof payloadData != "undefined" && Object.keys(payloadData).length > 0) {
-                                // jQuery('#edit_id').val(payloadData.id);
                                 hideLoader();
 
                                 var str = '';
 
                                 $.each(payloadData.modules, function(k, v) {
                                     let check = '';
-                                    if (payloadData.selrec.includes(v.id))
+                                    if (payloadData.selrec.includes(v.id)) {
                                         check = 'checked';
-                                    //<input type="checkbox" checked data-toggle="toggle" data-on="Yes"
-                                    //data-off="No" data-onstyle="success" data-offstyle="danger">
-                                    str_sg = `<label class="custom-switch" >
-                                                               <input id="perm_` + v.id + `"
-                                                                      value="` + v.id + `"
-                                                                      name="module[]"
-                                                                       type="checkbox" class="custom-switch-input mod permiss_mod">
-                                                               <span class="custom-switch-indicator"></span>
-                                                               <span class="custom-switch-description"> ` + v
-                                        .module_description + `</span>
-                                                           </label>`;
+                                    }
+
+                                    str_sg = `<label class="custom-switch">
+                                        <input id="perm_${v.id}"
+                                               value="${v.id}"
+                                               name="module[]"
+                                               type="checkbox" class="custom-switch-input mod permiss_mod" ${check}>
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description"> ${v.module_description}</span>
+                                      </label>`;
                                     str += '<div class="col-sm-4"><div class="form-group">' + str_sg +
                                         '</div></div>';
-
                                 });
+
                                 $("#mods").html('<div class="col-sm-12"><div class="row">' + str +
                                     '</div></div><div ' +
-                                    'class="col-sm-12"><a href="javascript:void(0)" onclick="return selectAllMod(1)' +
-                                    '" style="margin-right:10px">Select All</a>' +
-                                    '<a href="javascript:void(0)" onclick="return selectAllMod(0)">Unselect ' +
-                                    'All</a>');
+                                    'class="col-sm-12"><a href="javascript:void(0)" onclick="return selectAllMod(1)"' +
+                                    ' style="margin-right:10px">Select All</a>' +
+                                    '<a href="javascript:void(0)" onclick="return selectAllMod(0)">Unselect All</a>'
+                                    );
                                 jQuery('.user-permission-modal').modal('show');
                                 $(function() {
                                     $('input[data-toggle="toggle"]').bootstrapToggle();
@@ -503,14 +500,13 @@
                                 printErrorMsg('No records found!');
                                 hideLoader();
                             }
-
                         } else {
                             printErrorMsg(data.error);
                             hideLoader();
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        errorMessage(jqXHR.responseText)
+                        errorMessage(jqXHR.responseText);
                         hideLoader();
                     }
                 });
@@ -752,7 +748,7 @@
                             "password": jQuery('#epassword').val(),
                             "id": jQuery('#edit_id').val(),
                             "status": jQuery('#estatus')
-                        .val(), //(jQuery('#estatus').prop('checked'))?1:0,
+                                .val(), //(jQuery('#estatus').prop('checked'))?1:0,
                         },
                         success: function(data) {
                             //console.log(data);
