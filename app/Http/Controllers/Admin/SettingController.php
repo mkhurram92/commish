@@ -49,17 +49,13 @@ class SettingController extends Controller
             $user->email = $request['email'];
         }
 
-        /*$imageName = '';
-        if($request->file('profile_img')!=null){
-            $image = $request->file('profile_img');
-            $image_path = $image->store('public/profile/images/');
-            $imageName = $request->profile_img->hashName();
-        }*/
-
         if ($request->hasFile('image')) {
             if ($request->file('image')->isValid()) {
+                // Define the path to store the image in the public directory
+                $image_path = 'profile/images/';
                 $image_name = $request->image->hashName();
-                $request->image->storeAs('/public/profile/images/', $image_name);
+                // Store the image in the public/profile/images directory
+                $request->image->move(public_path($image_path), $image_name);
                 $user->image = $image_name;
             }
         }

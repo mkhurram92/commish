@@ -34,19 +34,20 @@
     <div class="app-sidebar__user">
         <div class="dropdown user-pro-body text-center">
             <div class="user-pic">
-                @if (auth()->user()->image && \Storage::disk('public')->exists('profile/images/' . auth()->user()->image))
-                    <img src="{{ asset('assets/images/' . auth()->user()->image) }}" alt="user-img"
+                @if (auth()->user()->image && file_exists(public_path('profile/images/' . auth()->user()->image)))
+                    <img src="{{ asset('profile/images/' . auth()->user()->image) }}" alt="user-img"
                         class="avatar-xl rounded-circle mb-1">
                 @else
-                    <img src="{{ url('assets/images/users/jason.jpg') }}" alt="user-img"
+                    <img src="{{ asset('profile/images/commish.png') }}" alt="user-img"
                         class="custom-avatar-size rounded-circle mb-1 img-fluid">
                 @endif
             </div>
             <div class="user-info">
-                <h5 class=" mb-1 font-weight-bold">{{ auth()->user()->fname }} {{ auth()->user()->lname }}</h5>
+                <h5 class="mb-1 font-weight-bold">{{ auth()->user()->fname }} {{ auth()->user()->lname }}</h5>
             </div>
         </div>
-    </div>
+    </div> 
+    
     <ul class="side-menu">
         <li class="slide {{ request()->segment(2) == 'dashboard' ? 'mm-active' : '' }}">
             <a href="{{ route('admin.dashboard') }}" class="side-menu__item">
