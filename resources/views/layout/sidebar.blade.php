@@ -21,6 +21,29 @@
         height: 100px;
         padding: 2px;
     }
+
+    .app-sidebar::-webkit-scrollbar {
+        width: 15px;
+        /* Increase this value to your desired width */
+        border-radius: 50px;
+    }
+
+    .app-sidebar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        /* Customize the background color of the track */
+        border-radius: 50px;
+    }
+
+    .app-sidebar::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Customize the color of the scrollbar thumb */
+        border-radius: 50px;
+    }
+
+    .app-sidebar::-webkit-scrollbar-thumb:hover {
+        background: #555;
+        /* Customize the color of the scrollbar thumb when hovered */
+    }
 </style>
 <!--aside open-->
 <div class="app-sidebar app-sidebar2">
@@ -201,9 +224,9 @@
                 in_array('products-list', $module_permissions) ||
                 in_array('industry-list', $module_permissions) ||
                 in_array('lenders-list', $module_permissions) ||
-                in_array('service-list', $module_permissions)||
-                in_array('processor-list', $module_permissions)||
-                in_array('profile', $module_permissions)||
+                in_array('service-list', $module_permissions) ||
+                in_array('processor-list', $module_permissions) ||
+                in_array('profile', $module_permissions) ||
                 in_array('entity', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'master' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
