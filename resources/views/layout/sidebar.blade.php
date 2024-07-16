@@ -49,7 +49,8 @@
 <div class="app-sidebar app-sidebar2">
     <div class="app-sidebar__logo">
         <a class="header-brand" href="{{ route('admin.dashboard') }}">
-
+            <img src="{{ asset('assets/images/logo-commish.png') }}" alt="user-img"
+                        class="img-fluid">
         </a>
     </div>
 </div>
@@ -154,7 +155,8 @@
                 in_array('deals-missinglist', $module_permissions) ||
                 in_array('commission-types', $module_permissions) ||
                 in_array('lenders-commission-schedules', $module_permissions) ||
-                in_array('refferor-commission-schedules', $module_permissions))
+                in_array('refferor-commission-schedules', $module_permissions)||
+                in_array('lenders-list', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'commissions' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
                     <i class="ion-cash side-menu__icon"></i>
@@ -211,6 +213,16 @@
                             </a>
                         </li>
                     @endif
+
+                    @if ($user_is_admin == 1 || in_array('lenders-list', $module_permissions))
+                        <li>
+                            <a href="{{ route('admin.lenders') }}"
+                                class="slide-item {{ request()->segment(2) == 'lenders-list' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Lenders
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
@@ -223,7 +235,6 @@
                 in_array('relationship-list', $module_permissions) ||
                 in_array('products-list', $module_permissions) ||
                 in_array('industry-list', $module_permissions) ||
-                in_array('lenders-list', $module_permissions) ||
                 in_array('service-list', $module_permissions) ||
                 in_array('processor-list', $module_permissions) ||
                 in_array('profile', $module_permissions) ||
@@ -291,16 +302,6 @@
                                 class="slide-item {{ request()->segment(2) == 'industry' ? 'mm-active' : '' }}">
                                 <i class="metismenu-icon"></i>
                                 Industry
-                            </a>
-                        </li>
-                    @endif
-
-                    @if ($user_is_admin == 1 || in_array('lenders-list', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.lenders') }}"
-                                class="slide-item {{ request()->segment(2) == 'lenders-list' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Lenders
                             </a>
                         </li>
                     @endif

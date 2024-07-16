@@ -39,13 +39,13 @@
         </div>
         <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <label class="form-label">Start Date (DD-MM-YYYY)</label>
+                <label class="form-label">Start Date</label>
                 <input name="from_date" value="{{ date("01-m-Y") }}" id="from_date" type="text" class=" form-control">
             </div>
         </div>
         <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <label class="form-label">End Date (DD-MM-YYYY)</label>
+                <label class="form-label">End Date</label>
                 <input name="to_date" value="{{ date("t-m-Y") }}" id="to_date" type="text" class=" form-control">
             </div>
         </div>
