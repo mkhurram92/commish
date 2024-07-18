@@ -1,21 +1,4 @@
 <style>
-    .app-sidebar,
-    .app-sidebar2,
-    .app-sidebar3 {
-        width: 280px;
-        /* Increase the width as needed */
-    }
-
-    .app-content {
-        margin-left: 280px;
-        /* Adjust the content margin to match the sidebar width */
-    }
-
-    .side-menu__item {
-        padding-left: 20px;
-        /* Adjust the padding if necessary */
-    }
-
     .custom-avatar-size {
         width: 100px;
         height: 100px;
@@ -23,7 +6,7 @@
     }
 
     .app-sidebar::-webkit-scrollbar {
-        width: 15px;
+        width: 10px;
         /* Increase this value to your desired width */
         border-radius: 50px;
     }
@@ -49,8 +32,7 @@
 <div class="app-sidebar app-sidebar2">
     <div class="app-sidebar__logo">
         <a class="header-brand" href="{{ route('admin.dashboard') }}">
-            <img src="{{ asset('assets/images/logo-commish.png') }}" alt="user-img"
-                        class="img-fluid">
+            <img src="{{ asset('assets/images/logo-commish.png') }}" alt="user-img" class="img-fluid">
         </a>
     </div>
 </div>
@@ -155,7 +137,7 @@
                 in_array('deals-missinglist', $module_permissions) ||
                 in_array('commission-types', $module_permissions) ||
                 in_array('lenders-commission-schedules', $module_permissions) ||
-                in_array('refferor-commission-schedules', $module_permissions)||
+                in_array('refferor-commission-schedules', $module_permissions) ||
                 in_array('lenders-list', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'commissions' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
@@ -237,7 +219,6 @@
                 in_array('industry-list', $module_permissions) ||
                 in_array('service-list', $module_permissions) ||
                 in_array('processor-list', $module_permissions) ||
-                in_array('profile', $module_permissions) ||
                 in_array('entity', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'master' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
@@ -326,16 +307,6 @@
                         </li>
                     @endif
 
-                    @if ($user_is_admin == 1 || in_array('profile', $module_permissions))
-                        <li>
-                            <a href="{{ route('admin.setting.profile') }}"
-                                class="slide-item {{ request()->segment(3) == 'profile' ? 'mm-active' : '' }}">
-                                <i class="metismenu-icon"></i>
-                                Profile
-                            </a>
-                        </li>
-                    @endif
-
                     @if ($user_is_admin == 1 || in_array('entity', $module_permissions))
                         <li>
                             <a href="{{ route('admin.entity.edit') }}"
@@ -403,6 +374,13 @@
                 </ul>
             </li>
         @endif
+        <li>
+            <a href="{{ route('admin.setting.profile') }}" class="side-menu__item">
+                <i class="ion-person side-menu__icon"></i>
+
+                <span class="side-menu__label">Profile</span>
+            </a>
+        </li>
         <li>
             <a href="{{ route('logout') }}" class="side-menu__item">
                 <i class="ion-power side-menu__icon"></i>
