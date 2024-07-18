@@ -131,11 +131,6 @@ class AuthController extends Controller
                 'password' => [
                     'required',
                     'string',
-                    //                    'min:8',             // must be at least 10 characters in length
-                    //                    'regex:/[a-z]/',      // must contain at least one lowercase letter
-                    //                    'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                    //                    'regex:/[0-9]/',      // must contain at least one digit
-                    //                    'regex:/[@$!%*#?&]/', // must contain a special character
                     'same:retype_password'
                 ],
                 'retype_password' => 'required',
@@ -148,24 +143,4 @@ class AuthController extends Controller
             return redirect()->route('login')->with('error', 'User not found.');
         }
     }
-
-    //    public function vendorManage()
-    //    {
-    //        VendorRep::truncate();
-    //        $vendors = Vendor::get();
-    //        foreach ($vendors as $vendor) {
-    //            $vendorRep = new VendorRep();
-    //            $vendorRep->name = $vendor->rep_name;
-    //            $vendorRep->email = $vendor->rep_email;
-    //            $vendorRep->phone = $vendor->rep_phone;
-    //            $vendorRep->uploaded_by = Auth::user()->id;
-    //
-    //            if ($vendor->rep_name != "" || $vendor->rep_email != "" || $vendor->rep_phone != "") {
-    //                $vendorRep->vendor_id = $vendor->id;
-    //                $vendorRep->save();
-    //            }
-    //        }
-    //        dd('done');
-
-    //    }
 }

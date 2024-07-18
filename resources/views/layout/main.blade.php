@@ -28,6 +28,7 @@
     <div id="global-loader">
         <img src="{{ url('assets/images/svgs/loader.svg') }}" alt="loader">
     </div>
+
     {{-- End Theme Settings --}}
     <div class="page is-expanded">
         <div class="page-main">
@@ -36,15 +37,18 @@
             {{-- End Side Bar --}}
             <div class="app-content main-content">
                 @if ($message = Session::get('success'))
-                    <div class="alert notify-popup alert-success mb-2" id="alert-success-message" role="alert">
+                    <div class="alert notify-popup alert-success mb-2" id="alert-success-message" role="alert"
+                        style="margin-top: 50px;">
                         <strong>Success! </strong> {{ $message }}
                     </div>
                 @endif
                 @if ($message = Session::get('error'))
-                    <div class="alert notify-popup alert-danger mb-2" id="alert-error-message" role="alert">
+                    <div class="alert notify-popup alert-danger mb-2" id="alert-error-message" role="alert"
+                        style="margin-top: 50px;">
                         <strong>Error! </strong> {{ $message }}
                     </div>
                 @endif
+
                 <div class="side-app">
                     <!--app header-->
                     <div class="app-header header top-header">
@@ -85,6 +89,7 @@
                                         </a>
                                     </div>
                                 </div>
+
                                 <div class="d-flex align-items-center justify-content-center mx-auto">
                                     <p class="h6 mb-0" style="color: red;  font-size: 20px;">
                                         @if (session('use_old_database'))
@@ -97,7 +102,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--/app header--> 
+                    <!--/app header-->
                     @yield('page_title_con')
                     @yield('body')
                 </div>
@@ -110,6 +115,7 @@
     </div>
     @include('layout.footer')
     {{-- Start Footer --}}
+
     @stack('script-section')
     @if ($message = Session::get('success'))
         <script>
