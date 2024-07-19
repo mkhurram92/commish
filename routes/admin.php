@@ -351,7 +351,6 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
                 Route::post('/export-client-records',
                     [FmdirectController::class,'exportClientRecords'])
                     ->name('admin.fm_direct.export_client_records');
-
                 Route::get('/deal-tasks', [PipelinereportController::class,'dealTasks'])
                     ->name('admin.fm_direct.deal_tasks');
                 Route::post('/get-deal-tasks-records',
@@ -360,7 +359,6 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
                 Route::post('/export-deal-tasks-records',
                     [PipelinereportController::class,'exportDealTasks'])
                     ->name('admin.fm_direct.export_deal_tasks_records');
-
                 Route::get('/settled-deals', [FmdirectController::class,'dealsSettled'])
                     ->name('admin.deals_settled');
                 Route::post('/get-settled-deals-records',
@@ -496,7 +494,6 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
                     [BrokerReportsController::class, 'exportReferrerCommissionSummary'])
                     ->name('admin.broker.export_referrer_commission_summary');
                 /////////////FM Direct Pipeline///////////////////////////
-
                 Route::post('/preview-broker-invoice',
                     [BrokerReportsController::class, 'getBrokerInvoice'])
                     ->name('admin.broker.preview_broker_invoice');
@@ -504,7 +501,6 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
                     [BrokerReportsController::class, 'exportBrokerInvoice'])
                     ->name('admin.broker.export_broker_invoice');
                 /////////////FM Direct Pipeline///////////////////////////
-
                 Route::post('/preview-performance-report',
                     [BrokerReportsController::class, 'getPerformanceRecords'])
                     ->name('admin.broker.get_performance_records');
