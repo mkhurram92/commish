@@ -6,10 +6,10 @@
         "format": "prettier --write 'resources/**/*.{css,js,ts,vue}'"
     },
     "dependencies": {
-        "git-url-parse": "^11.1.2",
+        "git-url-parse": "^13.0.0",
         "highlight.js": "^10.4.1",
         "lodash": "^4.17.21",
-        "markdown-it": "^12.3.2",
+        "markdown-it": "^13.0.2",
         "md5": "^2.2.1",
         "sql-formatter": "^2.3.3"
     },
