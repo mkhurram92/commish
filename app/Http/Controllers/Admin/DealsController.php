@@ -247,7 +247,7 @@ class DealsController extends Controller
         }
     }
 
-    public function dealEdit($id)
+    /*    public function dealEdit($id)
     {
         //print_R($id);die;
         $deal = Deal::with(['relations', 'tasks', 'withLoanType'])->find(decrypt($id));
@@ -287,6 +287,86 @@ class DealsController extends Controller
             $data['deal_client_types'] = DealClientType::whereNull('deleted_at')->get();
             $data['existing_deals'] = Deal::select(DB::raw('deals.*,CONCAT_WS(",",contact_searches.surname,contact_searches.preferred_name) as display_name'))->join('contact_searches', 'contact_searches.id', '=', 'deals.contact_id')->where('deals.id', '!=', $deal->id)->get();
             $data['LoanTypes'] = DealLoanTypes::select('*')->whereNull('deleted_at')->orderBy('name', 'ASC')->get();
+            return view('admin.deal.add_edit', $data);
+        } else {
+            return redirect()->back()->with('error', 'Deal not found.');
+        }
+    }
+*/
+    public function dealEdit($id)
+    {
+        $deal = Deal::with(['relations', 'tasks', 'withLoanType'])->find(decrypt($id));
+        $data['relations'] = Relationship::all();
+
+        if ($deal) {
+            $user = auth()->user(); // Get the logged-in user
+            $userId = $user->id;
+
+            // Query to get brokers
+            $brokersQuery = Broker::select(DB::raw('brokers.id, brokers.is_individual, brokers.trading as display_name, brokers.trading, brokers.trust_name, brokers.surname, brokers.given_name, brokers.entity_name, brokers.parent_broker'))
+                ->where('brokers.parent_broker', 0)
+                ->where('brokers.is_active', 1)
+                ->whereNull('brokers.deleted_at');
+
+            // Apply the user_brokers join and filter only if the user is not an admin
+            if ($user->role != 'admin') {
+                $brokersQuery->join('user_brokers', 'brokers.id', '=', 'user_brokers.broker_id')
+                    ->where('user_brokers.user_id', $userId);
+            }
+
+            $data['brokers'] = $brokersQuery->get();
+
+            // Query to get contacts
+            $contactsQuery = ContactSearch::select(DB::raw('contact_searches.id, contact_searches.surname, contact_searches.first_name, contact_searches.preferred_name, contact_searches.trading, contact_searches.entity_name'))
+                ->whereNull('contact_searches.deleted_at');
+
+            // Apply the user_contacts join and filter only if the user is not an admin
+            if ($user->role != 'admin') {
+                $contactsQuery->join('user_contacts', 'contact_searches.id', '=', 'user_contacts.contact_id')
+                    ->where('user_contacts.user_id', $userId);
+            }
+
+            $data['contacts'] = $contactsQuery->get();
+
+            $data['broker_staffs'] = BrokerStaff::select(DB::raw('id, CONCAT_WS(" ", given_name, surname) as display_name, surname, given_name, broker_id'))
+                ->orderBy('display_name')
+                ->get();
+
+            $data['client'] = $data['contacts']->firstWhere('id', $deal->contact_id);
+
+            $data['refferors'] = ContactSearch::select(
+                DB::raw('id, CONCAT_WS(" ", surname, preferred_name) as display_name, trading, trust_name, surname, first_name, middle_name, preferred_name, entity_name')
+            )->where('search_for', 2)
+                ->whereNull('deleted_at')
+                ->where('status', 1)
+                ->get();
+
+            $data['products'] = Products::whereNull('deleted_at')->get();
+            $data['lenders'] = Lenders::whereNull('deleted_at')->get();
+            $data['statuses'] = DealStatus::select(DB::raw('id, status_code, CONCAT(LPAD(status_code, 2, 0), " ", name) as name'))
+                ->whereNull('deleted_at')
+                ->orderBy('status_code', 'ASC')
+                ->get();
+
+            $data['deal'] = $deal;
+            $data['commission_models'] = Commission::all();
+            $data['deal_commissions'] = DealCommission::select(DB::raw('deal_commissions.*, ct.name as commission_type_name, DATE_FORMAT(date_statement, "' . $this->mysql_date_format . '") as date_statement, DATE_FORMAT(bro_amt_date_paid, "' . $this->mysql_date_format . '") as bro_amt_date_paid, DATE_FORMAT(ref_amt_date_paid, "' . $this->mysql_date_format . '") as ref_amt_date_paid'))
+                ->where('deal_id', $deal->id)
+                ->whereNull('deal_commissions.deleted_at')
+                ->where('type_data', 0)
+                ->orderBy('order', 'ASC')
+                ->join('commission_types as ct', 'ct.id', '=', 'deal_commissions.type')
+                ->get();
+
+            $data['comm_types'] = CommissionType::all()->pluck('name', 'id')->toArray();
+            $data['deal_client_types'] = DealClientType::whereNull('deleted_at')->get();
+            $data['existing_deals'] = Deal::select(DB::raw('deals.*, CONCAT_WS(",", contact_searches.surname, contact_searches.preferred_name) as display_name'))
+                ->join('contact_searches', 'contact_searches.id', '=', 'deals.contact_id')
+                ->where('deals.id', '!=', $deal->id)
+                ->get();
+
+            $data['LoanTypes'] = DealLoanTypes::select('*')->whereNull('deleted_at')->orderBy('name', 'ASC')->get();
+
             return view('admin.deal.add_edit', $data);
         } else {
             return redirect()->back()->with('error', 'Deal not found.');
