@@ -467,11 +467,14 @@ class DealsController extends Controller
         }
     }
 
-    public function getRecords(Request $request)
+    /*    public function getRecords(Request $request)
     {
         try {
             $input = $request->all();
             $search = $request->search['value'];
+
+            $userId = auth()->user()->id;
+
             if ($request->ajax()) {
                 $data = Deal::select(DB::raw("deals.*,
                 CASE WHEN brokers.is_individual = 1 THEN CONCAT_WS(' ', COALESCE(NULLIF(brokers.surname, ''), ''), COALESCE(NULLIF(brokers.given_name, ''), '')) ELSE brokers.trading END AS broker_trading,
@@ -484,31 +487,17 @@ class DealsController extends Controller
                     ->leftJoin('lenders', 'deals.lender_id', '=', 'lenders.id')
                     ->leftJoin('deal_statuses as st', 'deals.status', '=', 'st.id')
                     ->leftJoin('products as p', 'deals.product_id', '=', 'p.id')
+                    ->join('deal_permissions', 'deals.id', '=', 'deal_permissions.deal_id') // Join with deal_permissions table
+                    ->where('deal_permissions.user_id', $userId) // Filter by logged-in user
                     ->when($search != "", function ($q) use ($search) {
                         $split = explode(' ', $search);
                         if (is_countable($split) && count($split) > 0) {
                             foreach ($split as $word) {
-                                /**$q->orWhere("deals.id", "LIKE", "%" . $word . "%");
-                                $q->orWhere("cs.preferred_name", "LIKE", "%" . $word . "%");
-                                $q->orWhere("cs.surname", "LIKE", "%" . $word . "%");
-                                $q->orWhere("cs.trading", "LIKE", "%" . $word . "%");
-                                $q->orWhere("brokers.given_name", "LIKE", "%" . $word . "%");
-                                $q->orWhere("brokers.surname", "LIKE", "%" . $word . "%");
-                                $q->orWhere("cs.trading", "LIKE", "%" . $word . "%");
-                                $q->orWhere("deals.status_code", "LIKE", "%" . $word . "%");
-                                //$q->orWhere("deals.status_date", "LIKE", "%" . $word . "%");
-                                $q->orWhere("brokers.trading", "LIKE", "%" . $word . "%");
-                                $q->orWhere("lenders.code", "LIKE", "%" . $word . "%");
-                                $q->orWhere("deals.actual_loan", "LIKE", "%" . $word . "%");**/
-
                                 $q->orWhere("deals.id", "LIKE", $word . "%");
                                 $q->orWhere("cs.preferred_name", "LIKE", $word . "%");
                                 $q->orWhere("cs.surname", "LIKE", $word . "%");
                                 $q->orWhere("cs.trading", "LIKE", $word . "%");
-                                //$q->orWhere("brokers.given_name", "LIKE", $word . "%");
                                 $q->orWhere("brokers.surname", "LIKE", $word . "%");
-                                //$q->orWhere("deals.status_code", "LIKE", $word . "%");
-                                //$q->orWhere("deals.status_date", "LIKE", $word . "%");
                                 $q->orWhere("brokers.trading", "LIKE", $word . "%");
                                 $q->orWhere("lenders.code", "LIKE", $word . "%");
                                 $q->orWhere("deals.actual_loan", "LIKE", $word . "%");
@@ -520,7 +509,6 @@ class DealsController extends Controller
                 return DataTables::of($data)
                     ->addIndexColumn()
                     ->editColumn('id', function ($row) {
-
 
                         return $row->id;
                     })
@@ -558,6 +546,121 @@ class DealsController extends Controller
                             $instance->where(function ($w) use ($request) {
                                 $w->where('cs.preferred_name', 'LIKE', $request->get('preferred_name') . '%');
                                 //->orWhere('brokers.given_name', 'LIKE', $request->get('brokers.given_name'). '%');
+                            });
+                        }
+                        if (!empty($request->get('trading'))) {
+                            $instance->where('brokers.trading', 'LIKE', $request->get('trading') . '%')
+                                ->orWhere('cs.trading', 'LIKE', $request->get('trading') . '%');
+                        }
+                        if (!empty($request->get('lender_id'))) {
+                            $instance->where('lender_id', $request->get('lender_id'));
+                        }
+                        if (!empty($request->get('product_id'))) {
+                            $instance->where('product_id', $request->get('product_id'));
+                        }
+                        if (!empty($request->get('loan_op')) && !empty($request->get('loan_amt'))) {
+                            $op = $request->get('loan_op');
+                            if ($op == "eq") $op = '=';
+                            if ($op == "gt") $op = '>';
+                            if ($op == "gte") $op = '>=';
+                            if ($op == "lt") $op = '<';
+                            if ($op == "lte") $op = '<=';
+
+                            $instance->where('actual_loan', $op, $request->get('loan_amt'));
+                        }
+
+                        if (!empty($request->get('status'))) {
+                            $instance->where('deals.status', '=', $request->get('status'));
+                        }
+                    })
+                    ->rawColumns(['action', 'id'])
+                    ->make(true);
+            }
+
+            // return response()->json(['success' => true, 'payload' => $response]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+**/
+
+    public function getRecords(Request $request)
+    {
+        try {
+            $input = $request->all();
+            $search = $request->search['value'];
+            $user = auth()->user(); // Get the currently logged-in user
+
+            if ($request->ajax()) {
+                $data = Deal::select(DB::raw("deals.*,
+            CASE WHEN brokers.is_individual = 1 THEN CONCAT_WS(' ', COALESCE(NULLIF(brokers.surname, ''), ''), COALESCE(NULLIF(brokers.given_name, ''), '')) ELSE brokers.trading END AS broker_trading,
+            preferred_name,lenders.code as lendername,CONCAT_WS(' ',
+            CASE WHEN cs.individual = 1 THEN COALESCE(NULLIF(cs.surname, ''), '') ELSE COALESCE(NULLIF(cs.trading, ''), '') END,
+            CASE WHEN cs.individual = 1 THEN COALESCE(NULLIF(cs.preferred_name, ''), '') ELSE '' END ) AS fullname , CONCAT(LPAD(st.status_code,2,0),':',st.name) status, p.name productname, 
+            cs.preferred_name, brokers.given_name, cs.email, date_format(deals.status_date,'%d-%m-%Y') proposed_settlement"))
+                    ->leftJoin('brokers', 'deals.broker_id', '=', 'brokers.id')
+                    ->leftJoin('contact_searches as cs', 'deals.contact_id', '=', 'cs.id')
+                    ->leftJoin('lenders', 'deals.lender_id', '=', 'lenders.id')
+                    ->leftJoin('deal_statuses as st', 'deals.status', '=', 'st.id')
+                    ->leftJoin('products as p', 'deals.product_id', '=', 'p.id')
+
+                    // Only join with deal_permissions if the user is not an admin
+                    ->when($user->role !== 'admin', function ($query) use ($user) {
+                        $query->join('deal_permissions', 'deals.id', '=', 'deal_permissions.deal_id')
+                            ->where('deal_permissions.user_id', $user->id);
+                    })
+
+                    ->when($search != "", function ($q) use ($search) {
+                        $split = explode(' ', $search);
+                        if (is_countable($split) && count($split) > 0) {
+                            foreach ($split as $word) {
+                                $q->orWhere("deals.id", "LIKE", $word . "%");
+                                $q->orWhere("cs.preferred_name", "LIKE", $word . "%");
+                                $q->orWhere("cs.surname", "LIKE", $word . "%");
+                                $q->orWhere("cs.trading", "LIKE", $word . "%");
+                                $q->orWhere("brokers.surname", "LIKE", $word . "%");
+                                $q->orWhere("brokers.trading", "LIKE", $word . "%");
+                                $q->orWhere("lenders.code", "LIKE", $word . "%");
+                                $q->orWhere("deals.actual_loan", "LIKE", $word . "%");
+                                $q->orWhere('p.name', "LIKE", $word . "%");
+                            }
+                        }
+                    });
+
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->editColumn('id', function ($row) {
+                        return $row->id;
+                    })
+                    ->addColumn('action', function ($row) {
+                        $html = ' &nbsp;' .
+                            '<div class="dropdown">' .
+                            '          <button id="dLabel" type="button" data-toggle="dropdown"' .
+                            '                  aria-haspopup="true" aria-expanded="false" class="btn btn-primary"><i class="pe-7s-helm"></i>  <span class="caret"></span>' .
+                            '          </button>' .
+                            '          <ul class="dropdown-menu broker_menu " role="menu" ' .
+                            'aria-labelledby="dLabel">' .
+                            '<li class="nav-item"><a href="' . route('admin.deals.edit', encrypt($row->id)) . '" class="edit "><i title="Edit" class="pe-7s-pen btn-icon-wrapper"></i> Edit</a></li>' .
+                            '            <li class="nav-item"><a  href="' . route('admin.deals.view', encrypt($row->id))
+                            . '"><i class="fa fa-eye"></i> View</a></li>' .
+                            '          </ul>' .
+                            '        </div>';
+
+                        return $html;
+                    })
+                    ->filter(function ($instance) use ($request) {
+                        if (!empty($request->get('deal_id'))) {
+                            $instance->where('deals.id', $request->get('deal_id'));
+                        }
+                        if (!empty($request->get('surname'))) {
+                            $instance->where(function ($w) use ($request) {
+                                $w->where('cs.surname', 'LIKE', $request->get('surname') . '%')
+                                    ->orWhere('brokers.surname', 'LIKE', $request->get('surname') . '%');
+                            });
+                        }
+                        if (!empty($request->get('preferred_name'))) {
+                            $instance->where(function ($w) use ($request) {
+                                $w->where('cs.preferred_name', 'LIKE', $request->get('preferred_name') . '%');
                             });
                         }
                         if (!empty($request->get('trading'))) {
@@ -899,10 +1002,10 @@ class DealsController extends Controller
                 // $data = CommissionData::select(DB::raw("commissions_data.id, date_format(commissions_data.settlement_date,'%Y-%m-%d') as settlement_date,commission_types.name as commission_type_name,commissions_data.period,commissions_data.commission,commissions_data.gst,commissions_data.total_paid,commissions_data.payment_no") )->leftJoin('commission_types','commission_types.id','=','commissions_data.commission_type')->where('deal_id',$deal->id);
 
                 $data = DealCommission::select(DB::raw("deal_commissions.id, date_format(deal_commissions.date_statement,'%d-%m-%Y') as date_statement,commission_types.name as commission_type_name,deal_commissions.agg_amount,deal_commissions.broker_amount,deal_commissions.total_amount, deal_commissions.referror_amount"))
-                ->leftJoin('commission_types', 'commission_types.id', '=', 'deal_commissions.type')
-                ->where('type', '!=', 13)
-                ->where('deal_id', $deal->id)
-                ->orderBy('deal_commissions.date_statement', 'desc');
+                    ->leftJoin('commission_types', 'commission_types.id', '=', 'deal_commissions.type')
+                    ->where('type', '!=', 13)
+                    ->where('deal_id', $deal->id)
+                    ->orderBy('deal_commissions.date_statement', 'desc');
 
                 return DataTables::of($data)
                     ->addIndexColumn()

@@ -244,8 +244,6 @@ Deals
 @endpush
 
 @section('modal-section')
-
-
     <div class="modal fade commission-modal" id="commission-modal" tabindex="-1" role="dialog" aria-labelledby="Deal
     Commissions"
          aria-hidden="true">

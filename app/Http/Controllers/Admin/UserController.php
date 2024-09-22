@@ -81,7 +81,7 @@ class UserController extends Controller
                     ->addColumn('action', function($row){
                         $actionBtn = '<a href="javascript:void(0)" data-id="'.$row->id.'" onclick="return editRecord(this)" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-primary" title="Edit"><i title="Edit" class="pe-7s-pen btn-icon-wrapper"></i></a>';
                         if($row->role != 'admin') {
-                            // $actionBtn .= '<a onclick="javascript:deleteRecord(this);" data-url="'.route('admin.user.delete',$row->id).'" href="javascript:void(0);" data-id="'.$row->id.'" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-danger"><i class="pe-7s-trash btn-icon-wrapper"></i></a>';
+                            //$actionBtn .= '<a onclick="javascript:deleteRecord(this);" data-url="'.route('admin.user.delete',$row->id).'" href="javascript:void(0);" data-id="'.$row->id.'" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-danger"><i class="pe-7s-trash btn-icon-wrapper"></i></a>';
                             $actionBtn .= '<a onclick="javascript:return setPermission(this);" href="javascript:void(0);" data-id="'.$row->id.'" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-success"><i class="pe-7s-users btn-icon-wrapper"></i></a>';
                         }
                         return $actionBtn;
