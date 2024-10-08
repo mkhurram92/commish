@@ -247,7 +247,7 @@ class DealsController extends Controller
         }
     }
 
-    /*    public function dealEdit($id)
+        public function dealEdit($id)
     {
         //print_R($id);die;
         $deal = Deal::with(['relations', 'tasks', 'withLoanType'])->find(decrypt($id));
@@ -292,8 +292,8 @@ class DealsController extends Controller
             return redirect()->back()->with('error', 'Deal not found.');
         }
     }
-*/
-    public function dealEdit($id)
+
+/*    public function dealEdit($id)
     {
         $deal = Deal::with(['relations', 'tasks', 'withLoanType'])->find(decrypt($id));
         $data['relations'] = Relationship::all();
@@ -371,7 +371,7 @@ class DealsController extends Controller
         } else {
             return redirect()->back()->with('error', 'Deal not found.');
         }
-    }
+    }*/
 
     public function dealView($id)
     {

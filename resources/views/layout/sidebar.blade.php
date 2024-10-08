@@ -257,6 +257,16 @@
                         </li>
                     @endif
 
+                    @if ($user_is_admin == 1 || in_array('users-permissions-list', $module_permissions))
+                    <li>
+                        <a href="{{ route('admin.user.permissions') }}"
+                            class="slide-item {{ request()->segment(2) == 'users-permissions-list' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            User Permissions
+                        </a>
+                    </li>
+                    @endif
+
                     @if ($user_is_admin == 1 || in_array('relationship-list', $module_permissions))
                         <li>
                             <a href="{{ route('admin.relationship') }}"
