@@ -43,6 +43,12 @@ class PermissionController extends Controller
     {
         $user_id = $request->user_id;
 
+        // Fetch user information (name)
+        $user = DB::table('users')
+            ->select('fname', 'lname') // Assuming your table has fname and lname fields
+            ->where('id', $user_id)
+            ->first();
+
         // Fetch brokers
         $brokers = DB::table('brokers')
             ->select('id', 'surname', 'given_name', 'trading', 'is_individual')
@@ -63,7 +69,7 @@ class PermissionController extends Controller
             ->where('user_id', $user_id)
             ->pluck('contact_id')->toArray();
 
-        // Pass user_id, brokers, existing broker permissions, contacts, and existing contact permissions to the view
-        return view('admin.users.permissions', compact('user_id', 'brokers', 'existingPermissions', 'contacts', 'existingContactPermissions'));
+        // Pass user_id, user name, brokers, existing broker permissions, contacts, and existing contact permissions to the view
+        return view('admin.users.permissions', compact('user_id', 'user', 'brokers', 'existingPermissions', 'contacts', 'existingContactPermissions'));
     }
 }

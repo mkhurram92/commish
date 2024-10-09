@@ -13,7 +13,7 @@
     <div class="page-header">
         <div class="page-leftheader">
             <h4 class="page-title">
-                User Permissions
+                {{ $user->fname }} {{ $user->lname }} Permissions
             </h4>
         </div>
         <div class="page-rightheader ml-auto d-lg-flex d-none">
@@ -41,7 +41,6 @@
 
                         <!-- Hidden field for user_id -->
                         <input type="hidden" name="user_id" value="{{ $user_id }}">
-
                         <!-- Multi-select dropdown for brokers -->
                         <!-- Brokers Dropdown -->
                         <div class="form-group">
