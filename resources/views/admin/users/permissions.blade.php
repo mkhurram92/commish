@@ -43,6 +43,7 @@
                         <input type="hidden" name="user_id" value="{{ $user_id }}">
 
                         <!-- Multi-select dropdown for brokers -->
+                        <!-- Brokers Dropdown -->
                         <div class="form-group">
                             <label for="brokers">Select Brokers:</label>
                             <select name="broker_ids[]" class="form-control select2" multiple required>
@@ -62,12 +63,31 @@
                             </select>
                         </div>
 
-                        <!-- Right-aligned submit button -->
+                        <!-- Contacts Dropdown -->
+                        <div class="form-group">
+                            <label for="contacts">Select Contacts:</label>
+                            <select name="contact_ids[]" class="form-control select2" multiple required>
+                                @foreach ($contacts as $contact)
+                                    @if ($contact->individual == 1)
+                                        <option value="{{ $contact->id }}"
+                                            @if (in_array($contact->id, $existingContactPermissions)) selected @endif>
+                                            {{ $contact->surname }} {{ $contact->first_name }}
+                                        </option>
+                                    @elseif($contact->individual == 2)
+                                        <option value="{{ $contact->id }}"
+                                            @if (in_array($contact->id, $existingContactPermissions)) selected @endif>
+                                            {{ $contact->trading }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
                         <div class="form-group text-right">
                             <button type="submit" class="btn btn-primary mt-2">Save</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
