@@ -82,8 +82,9 @@ class UserController extends Controller
                         $actionBtn = '<a href="javascript:void(0)" data-id="' . $row->id . '" onclick="return editRecord(this)" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-primary" title="Edit"><i title="Edit" class="pe-7s-pen btn-icon-wrapper"></i></a>';
                         if ($row->role != 'admin') {
                             //$actionBtn .= '<a onclick="javascript:deleteRecord(this);" data-url="'.route('admin.user.delete',$row->id).'" href="javascript:void(0);" data-id="'.$row->id.'" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-danger"><i class="pe-7s-trash btn-icon-wrapper"></i></a>';
-                            $actionBtn .= '<a onclick="javascript:return setPermission(this);" href="javascript:void(0);" data-id="' . $row->id . '" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-success"><i class="pe-7s-users btn-icon-wrapper"></i></a>';
-                            $actionBtn .= '<a href="' . route('admin.user.permissions', $row->id) . '" data-id="' . $row->id . '" class="mb-2 mr-2 btn-icon btn-icon-only btn" style="background-color: #007bff; border-color: #007bff;"><i class="pe-7s-user btn-icon-wrapper" style="color: white;"></i></a>';
+                            $actionBtn .= '<a onclick="javascript:return setPermission(this);" href="javascript:void(0);" data-id="' . $row->id . '" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-success" title="Module Permissions"><i class="pe-7s-users btn-icon-wrapper"></i></a>';
+                            $actionBtn .= '<a href="' . route('admin.user.permissions', ['user_id' => $row->id]) . '" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-info" title="Org Permissions"><i class="pe-7s-settings btn-icon-wrapper"></i></a>';
+
                         }
                         return $actionBtn;
                     })
@@ -218,24 +219,5 @@ class UserController extends Controller
         return response()->json(['success' => 'Record updated successfully!']);
     }
 
-    public function permissionsData($user_id)
-    {
-        // Log the incoming user_id
-        Log::info('User ID:', ['user_id' => $user_id]);
-
-        // Fetch brokers
-        $brokers = DB::table('brokers')->select('id', 'surname', 'given_name', 'trading', 'is_individual')->get();
-
-        // Log the brokers fetched from the database
-        Log::info('Brokers:', ['brokers' => $brokers]);
-
-        // Fetch existing permissions for the user
-        $existingPermissions = DB::table('user_brokers')->where('user_id', $user_id)->pluck('broker_id')->toArray();
-
-        // Log the existing permissions for the user
-        Log::info('Existing Permissions:', ['permissions' => $existingPermissions]);
-
-        // Pass user_id, brokers, and existing permissions to the view
-        return view('admin.users.permissions', compact('user_id', 'brokers', 'existingPermissions'));
-    }
+    
 }

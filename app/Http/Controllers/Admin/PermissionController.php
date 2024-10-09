@@ -35,4 +35,27 @@ class PermissionController extends Controller
 
         return redirect()->back()->with('success', 'Permissions updated successfully.');
     }
+
+    //Broker Permissions Data
+    public function permissionsData(Request $request)
+    {
+        $user_id = $request->user_id;
+        // Log the incoming user_id
+        //Log::info('User ID:', ['user_id' => $user_id]);
+
+        // Fetch brokers
+        $brokers = DB::table('brokers')->select('id', 'surname', 'given_name', 'trading', 'is_individual')->get();
+
+        // Log the brokers fetched from the database
+        //Log::info('Brokers:', ['brokers' => $brokers]);
+
+        // Fetch existing permissions for the user
+        $existingPermissions = DB::table('user_brokers')->where('user_id', $user_id)->pluck('broker_id')->toArray();
+
+        // Log the existing permissions for the user
+       // Log::info('Existing Permissions:', ['permissions' => $existingPermissions]);
+
+        // Pass user_id, brokers, and existing permissions to the view
+        return view('admin.users.permissions', compact('user_id', 'brokers', 'existingPermissions'));
+    }
 }

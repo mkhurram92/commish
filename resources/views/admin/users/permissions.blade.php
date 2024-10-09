@@ -38,47 +38,52 @@
                 <div class="form-group">
                     <form action="{{ route('permissions.store') }}" method="POST">
                         @csrf
-                    
+
                         <!-- Hidden field for user_id -->
                         <input type="hidden" name="user_id" value="{{ $user_id }}">
-                    
+
                         <!-- Multi-select dropdown for brokers -->
                         <div class="form-group">
                             <label for="brokers">Select Brokers:</label>
                             <select name="broker_ids[]" class="form-control select2" multiple required>
-                                @foreach($brokers as $broker)
-                                    @if($broker->is_individual == 1)
-                                        <option value="{{ $broker->id }}" 
-                                            @if(in_array($broker->id, $existingPermissions)) selected @endif>
+                                @foreach ($brokers as $broker)
+                                    @if ($broker->is_individual == 1)
+                                        <option value="{{ $broker->id }}"
+                                            @if (in_array($broker->id, $existingPermissions)) selected @endif>
                                             {{ $broker->surname }} {{ $broker->given_name }}
                                         </option>
                                     @elseif($broker->is_individual == 2)
-                                        <option value="{{ $broker->id }}" 
-                                            @if(in_array($broker->id, $existingPermissions)) selected @endif>
+                                        <option value="{{ $broker->id }}"
+                                            @if (in_array($broker->id, $existingPermissions)) selected @endif>
                                             {{ $broker->trading }}
                                         </option>
                                     @endif
                                 @endforeach
                             </select>
                         </div>
-                    
-                        <button type="submit" class="btn btn-primary mt-2">Save Permissions</button>
+
+                        <!-- Right-aligned submit button -->
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-primary mt-2">Save</button>
+                        </div>
                     </form>
-                    
+
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('script-section')
-        <!-- Select2 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                $('.select2').select2({
-                    placeholder: "Select Brokers",
-                    allowClear: true
-                });
+
+@push('script-section')
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select Brokers",
+                allowClear: true
             });
-        </script>
-    @endpush
+        });
+    </script>
+@endpush
