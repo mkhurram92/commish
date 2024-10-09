@@ -56,8 +56,24 @@ class DealsController extends Controller
 
     public function dealAdd()
     {
+        $user = auth()->user(); // Get the logged-in user
+        $userId = $user->id;
+
+        // Query to get brokers
+        $brokersQuery = Broker::select(DB::raw('brokers.id, brokers.is_individual, brokers.trading as display_name, brokers.trading, brokers.trust_name, brokers.surname, brokers.given_name, brokers.entity_name, brokers.parent_broker'))
+            ->where('brokers.parent_broker', 0)
+            ->where('brokers.is_active', 1)
+            ->whereNull('brokers.deleted_at');
+
+        // Apply the user_brokers join and filter only if the user is not an admin
+        if ($user->role != 'admin') {
+            $brokersQuery->join('user_brokers', 'brokers.id', '=', 'user_brokers.broker_id')
+                ->where('user_brokers.user_id', $userId);
+        }
+        $data['brokers'] = $brokersQuery->get();
+
         $data['relations'] = Relationship::all();;
-        $data['brokers'] = Broker::select(DB::raw('id,trading,trust_name,surname,given_name,entity_name,parent_broker,is_individual'))->where('parent_broker', 0)->where('is_active', 1)->whereNull('deleted_at')->get();
+        //$data['brokers'] = Broker::select(DB::raw('id,trading,trust_name,surname,given_name,entity_name,parent_broker,is_individual'))->where('parent_broker', 0)->where('is_active', 1)->whereNull('deleted_at')->get();
         $data['broker_staffs'] = BrokerStaff::select(DB::raw('id,CONCAT_WS(" ",given_name, surname) as display_name,surname,given_name,broker_id'))->orderBy('display_name')->get();
 
         $data['products'] = Products::whereNull('deleted_at')->get();
@@ -89,6 +105,7 @@ class DealsController extends Controller
             ->orderBy('name', 'ASC')->get();
         return view('admin.deal.add_edit', $data);
     }
+
     public function getClients(Request $request)
     {
         $data['clients'] = ContactSearch::select(DB::raw('id, trading, 
@@ -247,7 +264,7 @@ class DealsController extends Controller
         }
     }
 
-        public function dealEdit($id)
+    /* public function dealEdit($id)
     {
         //print_R($id);die;
         $deal = Deal::with(['relations', 'tasks', 'withLoanType'])->find(decrypt($id));
@@ -292,8 +309,8 @@ class DealsController extends Controller
             return redirect()->back()->with('error', 'Deal not found.');
         }
     }
-
-/*    public function dealEdit($id)
+*/
+    public function dealEdit($id)
     {
         $deal = Deal::with(['relations', 'tasks', 'withLoanType'])->find(decrypt($id));
         $data['relations'] = Relationship::all();
@@ -371,7 +388,7 @@ class DealsController extends Controller
         } else {
             return redirect()->back()->with('error', 'Deal not found.');
         }
-    }*/
+    }
 
     public function dealView($id)
     {
