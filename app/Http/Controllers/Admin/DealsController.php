@@ -108,44 +108,58 @@ class DealsController extends Controller
 
     public function getClients(Request $request)
     {
-        $data['clients'] = ContactSearch::select(DB::raw('id, trading, 
-            CASE WHEN individual = 1 THEN CONCAT_WS(" ", surname, preferred_name) 
-                 WHEN individual = 2 THEN trading 
-            END as display_name, surname, preferred_name, individual'))
-            ->whereNull('deleted_at')->where('status', 1)->get();
+        $search = $request->input('search');
+        $user = auth()->user(); // Get the current logged-in user
 
-        $search = $request->search;
-        $clients = ContactSearch::select(DB::raw('id, trading, 
-                CASE WHEN individual = 1 THEN CONCAT_WS(" ", surname, preferred_name) 
-                     WHEN individual = 2 THEN trading 
-                END as display_name, surname, preferred_name, search_for'))
-            ->when(!empty($search), function ($q) use ($search) {
-                $q->where(function ($query) use ($search) {
-                    $query->orWhereRaw("CONCAT_WS(' ', surname, preferred_name) LIKE ?", ["$search%"]);
-                    $query->orWhere('trading', 'like', "$search%");
-                });
-                $q->where('status', 1);
-            })
+        // If user is not an admin, filter contacts based on user_id in user_contacts table
+        $query = ContactSearch::select(DB::raw('id, trading, 
+        CASE 
+            WHEN individual = 1 THEN CONCAT_WS(" ", surname, preferred_name) 
+            WHEN individual = 2 THEN trading 
+        END as display_name'))
             ->whereNull('deleted_at')
-            ->paginate(100, ['*'], 'page', $request->page)
-            ->toArray();
+            ->where('status', 1);
 
-        $response = array();
-        foreach ($clients['data'] as $client) {
-            $response["results"][] = array(
-                "id" => $client['id'],
-                "text" => $client['display_name']
-            );
+        if ($user->role != 'admin') { // Assuming role_id = 1 is for admin
+            $query->whereIn('id', function ($subquery) use ($user) {
+                $subquery->select('contact_id')
+                    ->from('user_contacts')
+                    ->where('user_id', $user->id); // Filter contacts for the logged-in user
+            });
         }
 
+        // Apply search if the term is provided
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw("CONCAT_WS(' ', surname, preferred_name) LIKE ?", ["$search%"])
+                    ->orWhere('trading', 'like', "$search%");
+            });
+        }
+
+        // Paginate the results
+        $clients = $query->paginate(100, ['*'], 'page', $request->input('page', 1))->toArray();
+
+        // Prepare the response for Select2
+        $response = [];
+        foreach ($clients['data'] as $client) {
+            $response['results'][] = [
+                'id' => $client['id'],
+                'text' => $client['display_name'],
+            ];
+        }
+
+        // Handle pagination for Select2
         if ($clients['next_page_url']) {
-            $response['pagination'] = ["more" => true];
+            $response['pagination'] = ['more' => true];
+        } else {
+            $response['pagination'] = ['more' => false];
         }
 
         $response['count_filtered'] = $clients['total'];
 
         return response()->json($response);
     }
+
 
     public function dealPost(Request $request)
     {

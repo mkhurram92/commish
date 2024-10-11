@@ -93,18 +93,18 @@
                                                     </div>
                                                 @endif
                                                 <!--<div class="form-row">
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label class="form-label font-weight-bold">Broker</label>
-                                                                <select name="broker_id" id="broker_id"
-                                                                        class="form-control">
-                                                                    <option value="">Select Broker</option>
-                                                                    @foreach ($brokers as $broker)
+                                                                <div class="col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label font-weight-bold">Broker</label>
+                                                                        <select name="broker_id" id="broker_id"
+                                                                                class="form-control">
+                                                                            <option value="">Select Broker</option>
+                                                                            @foreach ($brokers as $broker)
     <option value="{{ $broker->id }}" {{ isset($deal) && $deal->broker_id == $broker->id ? 'selected="selected"' : '' }}>{{ $broker->trading }}</option>
     @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>-->
+                                                                        </select>
+                                                                    </div>
+                                                                </div>-->
 
                                                 <div class="form-row">
                                                     <div class="col-sm-4">
@@ -113,8 +113,14 @@
                                                             <select name="broker_id" id="broker_id" class="form-control">
                                                                 <option value="">Select Broker</option>
                                                                 @php
-                                                                    $sortedBrokers = $brokers->sortBy(function ($broker) {
-                                                                        return $broker->is_individual == 1 ? $broker->surname . ' ' . $broker->given_name : $broker->trading;
+                                                                    $sortedBrokers = $brokers->sortBy(function (
+                                                                        $broker,
+                                                                    ) {
+                                                                        return $broker->is_individual == 1
+                                                                            ? $broker->surname .
+                                                                                    ' ' .
+                                                                                    $broker->given_name
+                                                                            : $broker->trading;
                                                                     });
                                                                 @endphp
                                                                 @foreach ($sortedBrokers as $broker)
@@ -149,6 +155,10 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
+                                                    @php
+                                                        $isAdmin = auth()->user()->role == 'admin';
+                                                    @endphp
 
                                                     <div class="col-sm-4">
                                                         <div class="form-group">
@@ -952,7 +962,7 @@
 
                 placeholder: "Select Product",
             });
-            initClientSelect($("#contact_id"));
+            //initClientSelect($("#contact_id"));
             initClientSelect($("#relationship_0_linked_to"));
             initClientSelect($(".linked_to_selector"));
             $("#linked_to").select2({
@@ -1012,6 +1022,48 @@
             })
         });
 
+        $(document).ready(function() {
+            // Check if user is admin (based on server-side logic)
+            var isAdmin = {{ $isAdmin ? 'true' : 'false' }};
+
+            // Initialize Select2 differently based on admin status
+            if (isAdmin) {
+                initClientSelect($("#contact_id")); // Search after 3 letters for admin
+            } else {
+                // Non-admin: Show all clients without search
+                $("#contact_id").select2({
+                    ajax: {
+                        url: "{{ route('deals.getClients') }}",
+                        type: "post",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                _token: $("meta[name='csrf-token']").attr('content'),
+                                search: params.term, // Term will be empty initially
+                                page: params.page
+                            };
+                        },
+                        processResults: function(data, params) {
+                            params.page = params.page || 1;
+                            return {
+                                results: data.results,
+                                pagination: {
+                                    more: (params.page * 10) < data.count_filtered
+                                }
+                            };
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.error("AJAX Error: " + textStatus, errorThrown);
+                        }
+                    },
+                    minimumInputLength: 0, // Load all clients immediately
+                    placeholder: "Select Client",
+                });
+            }
+        });
+
+        // Original function for admin search
         function initClientSelect(element) {
             $(element).select2({
                 ajax: {
@@ -1580,7 +1632,7 @@
                     // Revert to the previous value if the initial status is selected
                     $("#status_date").val(
                         '{{ isset($deal) && $deal->status_date != '' ? date('d/m/Y', strtotime($deal->status_date)) : '' }}'
-                        );
+                    );
                 }
             });
         });
