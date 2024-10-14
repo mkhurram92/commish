@@ -15,12 +15,10 @@ class Broker extends Model
         'deleted_at','deleted_by','last_updated_by','created_by'
     ];
 
-
     public function referrors()
     {
         return $this->hasMany('App\Models\BrokerReferror','broker_id');
     }
-
     public function referrorClients()
     {
         return $this->hasMany('App\Models\BrokerReferror','broker_id')->leftJoin('contact_searches','contact_searches.id','=','referror')->select(DB::raw('broker_referrors.*,CONCAT_WS(",",contact_searches.trading,contact_searches.trust_name,CONCAT(contact_searches.surname," ",contact_searches.first_name," ",contact_searches.middle_name),contact_searches.preferred_name,contact_searches.entity_name) as referrors_name'));
@@ -44,4 +42,9 @@ class Broker extends Model
     public function state_info(){
         return $this->belongsTo(State::class,'state','id');
     }
+    public function userBrokers()
+    {
+        return $this->belongsToMany(User::class, 'user_brokers', 'broker_id', 'user_id');
+    }
+
 }

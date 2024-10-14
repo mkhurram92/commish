@@ -28,19 +28,7 @@
                     <h5 class="card-title">Broker Filters</h5>
                     <div class="ml-auto">
                         <select class="form-control" name="report_type" id="report_type">
-                          {{--  <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='broker_certifications'?'selected':'' }} value="broker_certifications">Broker Certifications</option>
-                         
-                            <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='referrer_commission_summary'?'selected':'' }} value="referrer_commission_summary">Broker Commission Summary</option>
-                            --}}
-
                             <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='broker_invoices'?'selected':'' }} value="broker_invoices">Broker Invoices</option>
-
-                            {{-- <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='broker_list'?'selected':'' }} value="broker_list">Broker List</option> 
-
-                            <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='broker_commission_monitoring'?'selected':'' }} value="broker_commission_monitoring">Broker Commission Monitoring</option>--}}
-
-                            {{--<option {{ isset($_GET['report_type'])&&$_GET['report_type']=='broker_staff_expiry'?'selected':'' }} value="broker_staff_expiry">Broker Staff Membership Expiry</option>
-                            <option {{ isset($_GET['report_type'])&&$_GET['report_type']=='performance_report'?'selected':'' }} value="performance_report">Performance Report</option>--}}
                         </select>
                     </div>
                 </div>

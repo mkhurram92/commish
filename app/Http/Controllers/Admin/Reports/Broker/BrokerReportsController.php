@@ -17,35 +17,46 @@ use DateTimeZone;
 
 class BrokerReportsController extends Controller
 {
-    //
     public function index()
     {
         $brokers = array();
         $lenders = array();
         $products = array();
-        //Edited by Mirza on 7/12/2023 - Previous is
-        //$brokers=Broker::where('type',1)->orderBy('trading')->get();
-        $brokers = Broker::where('type', 1)->where('is_active', 1)->orderBy('trading')->get();
-        if (isset($_GET['report_type']) && $_GET['report_type'] == 'performance_report') {
+        $user = auth()->user(); // Get the logged-in user
+
+        if ($user->role == 'admin') {
+            // Admin sees all brokers
+            $brokers = Broker::where('type', 1)
+                ->where('is_active', 1)
+                ->orderBy('trading')
+                ->get();
+        } else {
+            // Regular user sees only brokers linked to their user account via user_brokers table
+            $brokers = Broker::whereHas('userBrokers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('type', 1)
+                ->where('is_active', 1)
+                ->orderBy('trading')
+                ->get();
+        }
+
+        if (request()->get('report_type') == 'performance_report') {
             $lenders = Lenders::all();
             $products = Products::all();
         }
+
         return view('admin.reports.brokers.index', [
-            'Commish| Broker Report',
+            'title' => 'Commish | Broker Report',
             'brokers' => $brokers,
             'lenders' => $lenders,
             'products' => $products,
         ]);
     }
-    public function brokersList()
-    {
-    }
-    public function exportBrokersList()
-    {
-    }
-    public function referrerCommissionSummary()
-    {
-    }
+
+    public function brokersList() {}
+    public function exportBrokersList() {}
+    public function referrerCommissionSummary() {}
     public function getPerformanceRecords(Request $request)
     {
 

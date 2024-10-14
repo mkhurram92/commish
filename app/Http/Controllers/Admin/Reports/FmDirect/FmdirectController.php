@@ -25,12 +25,26 @@ class FmdirectController extends Controller
     public function fmDirect()
     {
 
-        return view('admin.reports.fm_direct.index', ['title' => 'Commish | Reports']);
+        //return view('admin.reports.fm_direct.index', ['title' => 'Commish | Reports']);
+
+        $user = auth()->user(); // Get logged-in user
+
+        if ($user->role == 'admin') {
+            // Admin sees all brokers
+            $brokers = Broker::where('is_active', 1)->get();
+        } else {
+            // Regular user sees only brokers linked to them via user_brokers
+            $brokers = Broker::whereHas('userBrokers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('is_active', 1)
+                ->get();
+        }
+        return view('admin.reports.fm_direct.index', compact('brokers'));
     }
 
     public function dealsSettled()
     {
-
         return view('admin.reports.fm_direct.deals_settled_report', ['header' => 'Commish | Deal Settled Report']);
     }
 
@@ -71,7 +85,7 @@ class FmdirectController extends Controller
         } else {
             $broker_name = 'All';
         }
-        
+
         $pdf = PDF::loadView('admin.reports.fm_direct.deals_settled_report', [
             'deals' => $deal->get(),
             'broker_name' => $broker_name,
@@ -108,7 +122,7 @@ class FmdirectController extends Controller
         if (!empty($request['broker_id'])) {
             $deal->where('broker_id', '=', $request['broker_id']);
         }
-        
+
         if (!empty($request['broker_id'])) {
             $brokers = Broker::where('id', $request['broker_id'])->get();
             if ($brokers->isNotEmpty()) {
@@ -631,7 +645,7 @@ class FmdirectController extends Controller
         return $pdf->download('upfront_outstanding.pdf');
     }
 
-/*    public function getOutstandingCommissionPreview(Request $request)
+    /*    public function getOutstandingCommissionPreview(Request $request)
     {
         $broker_id = $request['broker_id'];
 

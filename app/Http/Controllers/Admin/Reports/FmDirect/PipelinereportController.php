@@ -18,7 +18,20 @@ class PipelinereportController extends Controller
     //
     public function pipeline()
     {
-        return view('admin.reports.fm_direct.pipeline_report', ['header' => 'Commish| Pipeline Report']);
+        $user = auth()->user(); // Get logged-in user
+
+        if ($user->role == 'admin') {
+            // Admin sees all brokers
+            $brokers = Broker::where('is_active', 1)->get();
+        } else {
+            // Regular user sees only brokers linked to them via user_brokers
+            $brokers = Broker::whereHas('userBrokers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('is_active', 1)
+                ->get();
+        }
+        return view('admin.reports.fm_direct.pipeline_report', compact('brokers'));
     }
 
     public function getPreviewPipeline(Request $request)
@@ -124,7 +137,20 @@ class PipelinereportController extends Controller
 
     public function monthlyPipeline()
     {
-        return view('admin.reports.fm_direct.monthly_pipeline_report', ['header' => 'Commish| Monthly Pipeline Report']);
+        $user = auth()->user(); // Get logged-in user
+
+        if ($user->role == 'admin') {
+            // Admin sees all brokers
+            $brokers = Broker::where('is_active', 1)->get();
+        } else {
+            // Regular user sees only brokers linked to them via user_brokers
+            $brokers = Broker::whereHas('userBrokers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('is_active', 1)
+                ->get();
+        }
+        return view('admin.reports.fm_direct.monthly_pipeline_report', compact('brokers'));
     }
     public function getPreviewMonthlyPipeline(Request $request)
     {

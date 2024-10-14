@@ -44,5 +44,8 @@ class User extends Authenticatable
     public function modules() {
       return  $this->belongsToMany(Modules::class,'users_modules','user_id','module_id')->withTimestamps();;
     }
-
+    public function brokers()
+    {
+        return $this->belongsToMany(Broker::class, 'user_brokers', 'user_id', 'broker_id');
+    }
 }

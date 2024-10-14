@@ -16,10 +16,11 @@
         </div>
         <div class="col-sm">
             <div class="form-group">
-                <label for="date_type" class="form-label">Broker</label>
+                <label for="broker_id" class="form-label">Broker</label>
                 <select class="form-control" name="broker_id" id="broker_id">
-                    <option value=""></option>
+                    <option value=""></option> <!-- Empty option for no selection -->
                     @php
+                        // Sorting the brokers by surname or trading name
                         $sortedBrokers = $brokers->sortBy(function ($broker) {
                             return $broker->is_individual == 1 ? $broker->surname : $broker->trading;
                         });
@@ -27,16 +28,18 @@
 
                     @foreach ($sortedBrokers as $broker)
                         @if ($broker->is_individual == 1)
+                            <!-- For individual brokers, show surname and given name -->
                             <option value="{{ $broker->id }}">{{ $broker->surname }} {{ $broker->given_name }}
                             </option>
                         @elseif($broker->is_individual == 2)
+                            <!-- For companies, show trading name -->
                             <option value="{{ $broker->id }}">{{ $broker->trading }}</option>
                         @endif
                     @endforeach
                 </select>
-
             </div>
         </div>
+
     </div>
     <div class="row mt-5">
         <div class="col-md-12 col-sm-12">
@@ -103,7 +106,7 @@
 
         // Attach the input event to format the date as the user types for 'to_date'
         $("#to_date").on('input', function() {
-        formatInputDate($(this));
+            formatInputDate($(this));
         });
     </script>
 @endsection

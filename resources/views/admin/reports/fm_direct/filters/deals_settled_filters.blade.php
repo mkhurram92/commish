@@ -2,39 +2,30 @@
     @csrf
     <input name="export_type" id="export_type" type="hidden">
     <div class="row">
-        <!--<div class="col-md-3 col-sm-12">
-            <div class="form-group">
-                <label for="date_type" class="form-label">Broker</label>
-                <select class="form-control" name="broker_id" id="broker_id">
-                    <option value=""></option>
-                </select>
-            </div>
-        </div>-->
         <div class="col-md-3 col-sm-12">
             <div class="form-group">
-                <?php
-                $brokers = \App\Models\Broker::where('is_active', 1)->get();
-                ?>
                 <label for="broker_id" class="form-label">Broker Name</label>
                 <select class="form-control" name="broker_id" id="broker_id">
-                    <option value=""></option>
+                    <option value=""></option> 
                     @php
+                        // Sort brokers by surname (if individual) or trading name (if company)
                         $sortedBrokers = $brokers->sortBy(function ($broker) {
                             return $broker->is_individual == 1 ? $broker->surname : $broker->trading;
                         });
                     @endphp
-
+        
                     @foreach ($sortedBrokers as $broker)
                         @if ($broker->is_individual == 1)
-                            <option value="{{ $broker->id }}">{{ $broker->surname }} {{ $broker->given_name }}
-                            </option>
+                            <!-- Show surname and given name for individual brokers -->
+                            <option value="{{ $broker->id }}">{{ $broker->surname }} {{ $broker->given_name }}</option>
                         @elseif($broker->is_individual == 2)
+                            <!-- Show trading name for company brokers -->
                             <option value="{{ $broker->id }}">{{ $broker->trading }}</option>
                         @endif
                     @endforeach
                 </select>
             </div>
-        </div>
+        </div>     
 
         <div class="col-md-3 col-sm-12">
             <div class="form-group">
