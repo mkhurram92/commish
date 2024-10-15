@@ -693,14 +693,7 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
 
                 Route::get('/referror_invoice', [ReferrorReportsController::class, 'getReferrerInvoice'])
                     ->name('admin.referrors.referror_invoice');
-
-                //Route::prefix('broker')->group(function () {
-                //    Route::get('/', [BrokerReportsController::class, 'index'])
-                //        ->name('admin.broker.index');
-
-                //    Route::post('/preview-broker-invoice',
-                //        [BrokerReportsController::class, 'getBrokerInvoice'])
-                //        ->name('admin.broker.preview_broker_invoice');
+                    
             });
         });
     });

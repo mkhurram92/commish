@@ -185,6 +185,17 @@ class ContactSearchController extends Controller
             $contact->refferor_note = $request['refferor_note'];
             $contact->created_by = Auth::user()->id;
             $contact->save();
+
+            // Save user_id and contact_id in user_contacts table
+            if ($contact->id > 0) {
+                DB::table('user_contacts')->insert([
+                    'user_id' => Auth::user()->id,
+                    'contact_id' => $contact->id,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+
             if ($contact->id > 0) {
                 if (!empty($request->referrors)) {
                     $tempArr = [];

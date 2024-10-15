@@ -1721,7 +1721,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Script loaded.');
+            //console.log('Script loaded.');
 
             var clientTypeDropdown = document.getElementById('client_type');
             var industryDropdown = document.getElementById('client_industry');
@@ -1733,12 +1733,12 @@
                 companyFieldsInputs.forEach(input => input.disabled = isIndividual);
                 industryDropdown.disabled = isIndividual;
 
-                console.log('Client Type:', clientTypeDropdown.value);
-                console.log('Input fields and Industry dropdown disabled:', isIndividual);
+                //console.log('Client Type:', clientTypeDropdown.value);
+                //console.log('Input fields and Industry dropdown disabled:', isIndividual);
             }
 
             if (clientTypeDropdown && industryDropdown && companyFieldsInputs.length > 0) {
-                console.log('Elements found. Setting up event listener.');
+                //console.log('Elements found. Setting up event listener.');
                 clientTypeDropdown.addEventListener('change', handleClientTypeChange);
 
                 // Call the function on page load
