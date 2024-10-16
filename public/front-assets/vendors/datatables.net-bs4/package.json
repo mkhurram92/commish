@@ -34,7 +34,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "datatables.net": "1.10.23",
+    "datatables.net": "1.13.11",
     "jquery": ">=1.7"
   },
   "deprecated": false,
