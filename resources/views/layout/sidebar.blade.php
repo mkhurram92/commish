@@ -219,6 +219,7 @@
                 in_array('industry-list', $module_permissions) ||
                 in_array('service-list', $module_permissions) ||
                 in_array('processor-list', $module_permissions) ||
+                in_array('expense-types', $module_permissions) ||
                 in_array('entity', $module_permissions))
             <li class="slide {{ request()->segment(2) == 'master' ? 'mm-active' : '' }}">
                 <a href="#" class="side-menu__item" data-toggle="slide">
@@ -303,6 +304,16 @@
                                 class="slide-item {{ request()->segment(2) == 'processor-list' ? 'mm-active' : '' }}">
                                 <i class="metismenu-icon"></i>
                                 Loan Types
+                            </a>
+                        </li>
+                    @endif
+
+                    @if ($user_is_admin == 1 || in_array('expense-types', $module_permissions))
+                        <li>
+                            <a href="{{ route('admin.expensetype') }}"
+                                class="slide-item {{ request()->segment(2) == 'expense-types' ? 'mm-active' : '' }}">
+                                <i class="metismenu-icon"></i>
+                                Expense Types
                             </a>
                         </li>
                     @endif

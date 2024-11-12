@@ -303,7 +303,7 @@
                                 @endif
                             </td>
                             <td>
-                                ${{ number_format($broker_staff_obj->deal->broker_split_agg_brk_sp_trail, 2) }}
+                                {{ number_format($broker_staff_obj->deal->broker_split_agg_brk_sp_trail, 2) }}%
                             </td>
                             <td>${{ number_format($broker_staff_obj->total_amount, 2) }}</td>
                             <td>${{ number_format($broker_staff_obj->agg_amount, 2) }}</td>

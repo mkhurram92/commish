@@ -273,7 +273,7 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
         });
 
         //ExpenseType
-        Route::prefix('expensetype')->group(function () {
+        Route::prefix('expense-types')->group(function () {
             Route::get('/', 'App\Http\Controllers\Admin\ExpenseTypeController@index')->name('admin.expensetype');
             Route::post('/get-records', 'App\Http\Controllers\Admin\ExpenseTypeController@getRecords')->name('admin.expensetype.getrecords');
             Route::post('post', 'App\Http\Controllers\Admin\ExpenseTypeController@saveData')->name('admin.expensetype.post');
