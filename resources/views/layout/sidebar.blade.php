@@ -248,6 +248,16 @@
                         </li>
                     @endif
 
+                    @if ($user_is_admin == 1 || in_array('expense-list', $module_permissions))
+                    <li>
+                        <a href="{{ route('admin.expense.index') }}"
+                            class="slide-item {{ request()->segment(3) == 'expense-list' ? 'mm-active' : '' }}">
+                            <i class="metismenu-icon"></i>
+                            Expenses
+                        </a>
+                    </li>
+                    @endif
+                    
                     @if ($user_is_admin == 1 || in_array('users-list', $module_permissions))
                         <li>
                             <a href="{{ route('admin.user') }}"

@@ -300,7 +300,7 @@ Deals
         </div>
     </div>
     <script>
-            var modalTable = '';
+        var modalTable = '';
         function showCommissions(current)
         {
             var encId = jQuery(current).attr('data-id');

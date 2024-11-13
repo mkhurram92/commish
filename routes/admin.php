@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Reports\FmDirect\FmdirectController;
 use App\Http\Controllers\Admin\Reports\Broker\BrokerReportsController;
 use App\Http\Controllers\Admin\Reports\Referror\ReferrorReportsController;
 use App\Http\Middleware\DatabaseSwitcher;
+use App\Http\Controllers\Admin\ExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -282,7 +283,16 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
             Route::post('delete', 'App\Http\Controllers\Admin\ExpenseTypeController@deleteData')->name('admin.expensetype.delete');
         });
 
-        //ExpenseType
+        //Expenses
+        Route::prefix('expenses')->group(function () {
+            Route::get('/', [ExpenseController::class, 'index'])->name('admin.expense.index');;
+            Route::post('/', [ExpenseController::class, 'create']);
+            Route::get('{id}', [ExpenseController::class, 'show']);
+            Route::put('{id}', [ExpenseController::class, 'update']);
+        });
+        
+
+        //Service
         Route::prefix('service')->group(function () {
             Route::get('/', 'App\Http\Controllers\Admin\ServiceController@index')->name('admin.service');
             Route::post('/get-records', 'App\Http\Controllers\Admin\ServiceController@getRecords')->name('admin.service.getrecords');
