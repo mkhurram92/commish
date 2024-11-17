@@ -86,7 +86,25 @@ class DealsController extends Controller
                 WHEN individual = 2 THEN trading
             END as display_name,
             trading, trust_name, surname, first_name, middle_name, preferred_name, entity_name'
-        ))->where('search_for', 2)->whereNull('deleted_at')->where('status', 1)->get()->sortBy('display_name');
+        ))
+            ->where('search_for', 2) // Ensure it's a referror (search_for = 2)
+            ->whereNull('deleted_at')
+            ->where('status', 1) // Only active referrors
+            ->when(auth()->user()->role !== 'admin', function ($query) {
+                // If the user is not an admin, filter based on their existing referror permissions
+                $user_id = auth()->id(); // Get the current logged-in user's ID
+
+                // Fetch the relevant referror_ids the user has access to
+                $allowed_referror_ids = DB::table('user_referrors')
+                    ->where('user_id', $user_id)
+                    ->pluck('referror_id')
+                    ->toArray();
+
+                // Filter based on allowed referror_ids
+                $query->whereIn('id', $allowed_referror_ids);
+            })
+            ->get()
+            ->sortBy('display_name');
 
         $data['comm_types'] = CommissionType::all()->pluck('name', 'id')->toArray();
         $data['commission_models'] = Commission::all();
