@@ -82,6 +82,26 @@
                             </select>
                         </div>
 
+                        <!-- Referrors Dropdown -->
+                        <div class="form-group">
+                            <label for="referrors">Select Referrors:</label>
+                            <select name="referror_ids[]" class="form-control select2" multiple required>
+                                @foreach ($referrors as $referror)
+                                    @if ($referror->individual == 1)
+                                        <option
+                                            value="{{ $referror->id }}"{{ in_array($referror->id, $existingReferrorPermissions) ? ' selected' : '' }}>
+                                            {{ $referror->surname }} {{ $referror->first_name }}
+                                        </option>
+                                    @elseif($referror->individual == 2)
+                                        <option
+                                            value="{{ $referror->id }}"{{ in_array($referror->id, $existingReferrorPermissions) ? ' selected' : '' }}>
+                                            {{ $referror->trading }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Submit Button -->
                         <div class="form-group text-right">
                             <button type="submit" class="btn btn-primary mt-2">Save</button>
