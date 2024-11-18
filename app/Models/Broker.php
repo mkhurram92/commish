@@ -62,5 +62,4 @@ class Broker extends Model
 
         return 'No Name Available';
     }
-
 }

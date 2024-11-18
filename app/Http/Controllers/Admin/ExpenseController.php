@@ -22,19 +22,27 @@ class ExpenseController extends Controller
 
         $expense = Expense::create($request->all());
 
-        //return response()->json($expense, 201);
         return redirect()->route('admin.expense.index')->with('success', 'Expense created successfully!');
     }
 
-    // Get all Expenses
     public function index()
     {
-        $expenses = Expense::with('broker', 'expenseType')->orderBy('id', 'desc')->get();
-        $brokers = Broker::all();
+        $expenses = Expense::with(['broker', 'expenseType'])
+            ->orderByDesc('id') 
+            ->get();
+
+        $brokers = Broker::where('is_active', 1)
+            ->orderByRaw("CASE 
+                WHEN is_individual = 1 THEN CONCAT_WS(' ', surname, given_name)
+                ELSE trading 
+                END ASC")  
+            ->get();
+
         $expenseTypes = ExpenseType::all();
 
-        return view('admin.expenses.index', compact('expenses', 'expenseTypes', 'brokers'));
+        return view('admin.expenses.index', compact('expenses', 'brokers', 'expenseTypes'));
     }
+
     public function store(Request $request)
     {
         // Validate the incoming request data
