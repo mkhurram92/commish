@@ -106,7 +106,9 @@
                                     <td>{{ $expense->additional_details }}</td>
                                     <td>{{ \Carbon\Carbon::parse($expense->created_at)->format('Y-m-d') }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-warning">Edit</a>
+                                        <a href="javascript:void(0)" data-id="'+value.id+'" onclick="return ' +
+                                    'editRecord(this)" class="mb-2 mr-2 btn-icon btn-icon-only btn btn-primary" ' +
+                                    'title="Edit"><i title="Edit" class="pe-7s-pen btn-icon-wrapper"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
