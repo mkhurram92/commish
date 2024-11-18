@@ -29,7 +29,7 @@ class ExpenseController extends Controller
     // Get all Expenses
     public function index()
     {
-        $expenses = Expense::with('broker', 'expenseType')->get();
+        $expenses = Expense::with('broker', 'expenseType')->orderBy('id', 'desc')->get();
         $brokers = Broker::all();
         $expenseTypes = ExpenseType::all();
 
