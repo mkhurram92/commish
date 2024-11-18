@@ -93,9 +93,9 @@
                                 <div class="d-flex align-items-center justify-content-center mx-auto">
                                     <p class="h6 mb-0" style="color: red;  font-size: 20px;">
                                         @if (session('use_old_database'))
-                                            Currently connected to the archived database.
+                                            <!--Currently connected to the archived database.-->
                                         @else
-                                            Currently connected to the live database.
+                                            <!--Currently connected to the live database.-->
                                         @endif
                                     </p>
                                 </div>
