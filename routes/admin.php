@@ -78,7 +78,6 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
             Route::post('update', 'App\Http\Controllers\Admin\UserController@updateData')->name('admin.user.update');
             Route::post('delete', 'App\Http\Controllers\Admin\UserController@deleteData')->name('admin.user.delete');
             Route::get('/permissions/{user_id}', 'App\Http\Controllers\Admin\PermissionController@permissionsData')->name('admin.user.permissions');
-
         });
 
         // Route for storing the permissions submitted via the form
@@ -285,12 +284,10 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
 
         //Expenses
         Route::prefix('expenses')->group(function () {
-            Route::get('/', [ExpenseController::class, 'index'])->name('admin.expense.index');;
-            Route::post('/', [ExpenseController::class, 'create']);
-            Route::get('{id}', [ExpenseController::class, 'show']);
-            Route::put('{id}', [ExpenseController::class, 'update']);
+            Route::get('/', [ExpenseController::class, 'index'])->name('admin.expense.index');
+            Route::get('/create', [ExpenseController::class, 'create'])->name('admin.expense.create');
+            Route::post('/', [ExpenseController::class, 'store'])->name('admin.expense.store');
         });
-        
 
         //Service
         Route::prefix('service')->group(function () {
@@ -703,7 +700,6 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
 
                 Route::get('/referror_invoice', [ReferrorReportsController::class, 'getReferrerInvoice'])
                     ->name('admin.referrors.referror_invoice');
-                    
             });
         });
     });

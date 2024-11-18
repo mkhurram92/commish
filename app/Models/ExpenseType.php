@@ -9,4 +9,9 @@ class ExpenseType extends Model
 {
     protected $table = 'expense_types';
     use HasFactory;
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

@@ -46,5 +46,21 @@ class Broker extends Model
     {
         return $this->belongsToMany(User::class, 'user_brokers', 'broker_id', 'user_id');
     }
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'broker_id');
+    }
+    public function fullName()
+    {
+        if ($this->is_individual == 1) {
+            // If individual, return surname + given_name
+            return $this->surname . ' ' . $this->given_name;
+        } elseif ($this->is_individual == 2) {
+            // If not an individual, return trading name
+            return $this->trading;
+        }
+
+        return 'No Name Available';
+    }
 
 }
