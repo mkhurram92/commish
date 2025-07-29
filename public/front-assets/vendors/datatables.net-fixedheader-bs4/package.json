@@ -32,7 +32,7 @@
   "bundleDependencies": false,
   "dependencies": {
     "datatables.net-bs4": "^1.10.15",
-    "datatables.net-fixedheader": "3.1.7",
+    "datatables.net-fixedheader": "3.4.1",
     "jquery": ">=1.7"
   },
   "deprecated": false,
