@@ -965,9 +965,16 @@ class DealsController extends Controller
                             }
                             if (!empty($tempRw['commission_type'])) {
                                 $type = explode(' ', $tempRw['commission_type']);
-                                $comm_type = CommissionType::where('name', 'like', $type[0] . '%')->pluck('name');
+                                /*$comm_type = CommissionType::where('name', 'like', $type[0] . '%')->pluck('name');
                                 if (isset($comm_type[0])) {
                                     $tempRw['commission_type'] = $this->comm_types[$comm_type[0]];
+                                } else {
+                                    $tempRw['commission_type'] = 1;
+                                }*/
+
+                                $comm_type_id = CommissionType::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($type[0]) . '%'])->value('id');
+                                if (!empty($comm_type_id)) {
+                                    $tempRw['commission_type'] = $comm_type_id;
                                 } else {
                                     $tempRw['commission_type'] = 1;
                                 }
@@ -1055,12 +1062,12 @@ class DealsController extends Controller
                         }
                         if (!empty($tempRw['commission_type'])) {
                             $type = explode(' ', $tempRw['commission_type']);
-                            $comm_type = CommissionType::where('name', 'like', $type[0] . '%')->pluck('name');
-                            if (isset($comm_type[0])) {
-                                $tempRw['commission_type'] = $this->comm_types[$comm_type[0]];
-                            } else {
-                                $tempRw['commission_type'] = 1;
-                            }
+                            $comm_type_id = CommissionType::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($type[0]) . '%'])->value('id');
+                                if (!empty($comm_type_id)) {
+                                    $tempRw['commission_type'] = $comm_type_id;
+                                } else {
+                                    $tempRw['commission_type'] = 1;
+                                }
                         } else {
                             $fileName = strtolower($request->file('file')->getClientOriginalName());
 
