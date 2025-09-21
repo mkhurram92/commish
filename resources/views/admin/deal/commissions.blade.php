@@ -40,9 +40,10 @@
                     <div class="col-sm-12">
                         <div class="row">
                             <div class="col-sm-4">
-                                <input type="file" name="import_csv" id="import_csv" accept=".csv, application/vnd
-                                .openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,
-                                text/csv" />
+                                <input type="file" 
+                                   name="import_csv" 
+                                   id="import_csv" 
+                                   accept=".csv,.txt,.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" />
                             </div>
                             <div class="col-sm-3">
                                 <button type="submit" id="finish-btn"
@@ -137,10 +138,10 @@
                             icon: "success",
                         });
 
-                        setTimeout(function () {
+                        /*setTimeout(function () {
                             //window.location = "{{route('admin.contact.list')}}"
                             window.location = "{{url('admin/deals/deal-missing')}}";
-                        }, 3000);
+                        }, 3000);*/
 
                         //{{ route('admin.deals.getdealMissingRecords') }}
                     }

@@ -36,6 +36,9 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\Input;
 use Yajra\DataTables\Facades\DataTables;
 
+//Excel Import
+use Maatwebsite\Excel\Facades\Excel;
+
 class DealsController extends Controller
 {
     public $comm_types = [
@@ -732,7 +735,7 @@ class DealsController extends Controller
     public function commissionPost(Request $request)
     {
         $validated = $request->validate([
-            'file' => 'required|mimes:csv,txt'
+            'file' => 'required|mimes:csv,txt,xls,xlsx'
 
         ], [], [
             'file' => 'File'
@@ -754,6 +757,12 @@ class DealsController extends Controller
                 'text/anytext',
                 'application/octet-stream',
                 'application/txt',
+                //Excel Files
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+                'application/vnd.ms-excel', // .xls
+                'application/msexcel',
+                'application/x-msexcel',
+                'application/x-ms-excel',
             );
 
             if (!in_array($mimeType, $csv_mimetypes)) {
@@ -763,31 +772,78 @@ class DealsController extends Controller
             $header = null;
             $data = array();
             $delimiter = ',';
+
+            //header Mapping
+            $headerMapping = [
+                'account_number'   => ['acc_no', 'loan_ref', 'ref_no', 'account_number', 'Loan Number','Loan ID','Account Identifier','LOAN_NUMBER','Acc_no'],
+                'loan_amount'      => ['loan_amount', 'amount', 'loan_amt','Approved Amount','Loan Amount','Commissionable Amount','Loan_Amount','Approved_amount'],
+                'rate'             => ['rate', 'interest_rate', 'roi','Borrowers Rate','Rate'],
+                'funder'           => ['funder','Borrowers Name'],
+                'commission'       => ['commission', 'comm','Upfront %','Commission'],
+                'gst'              => ['gst', 'tax', 'GST','GST Amount','GST_value'],
+                'total_paid'       => ['amount_paid', 'total_fee_value', 'total_paid', 'Loan Amount Paid','Lender Payment','Trailer Loan Balance'],
+                'period'           => ['period', 'commission_period','SUC Payable'],
+                'settlement_date'  => ['settlement_date', 'settle_date', 'Settlement Date','SETTLEMENT_DATE'],
+                'commission_type'  => ['commission_type', 'comm_type', 'type','Product Line','Loan Type'],
+                'client'            => ['Client Name'],
+                'loan_ref'        =>  []
+            ];
+            
+            /*
             $this->comm_types = CommissionType::all()->pluck('id', 'name')->toArray();
 
             if (($handle = fopen($request->file('file')->getRealPath(), 'r')) !== false) {
 
                 while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
 
+                  if (!$header) {
+                    $mappedHeader = [];
+                    $columnIndexes = [];
 
-                    if (!$header) {
-                        $row[] = 'deal_id';
-                        // $row[] = 'broker_id';
-                        // $row[] = 'broker_staff_id';
-                        // $row[] = 'contact_id';
-                        // $row[] = 'product_id';
-                        $header = $row;
-                        $header = array_map('trim', $header);
-                        $header = array_map('cleanString', $header);
-                    } else {
+                    foreach ($row as $index => $col) {
+                        $colLower = strtolower(trim($col)); // trim spaces from CSV header
 
-                        $row = array_map('trim', $row);
-                        $row[] = 0;
-                        // $row[] = 0;
-                        // $row[] = 0;
-                        // $row[] = 0;
-                        // $row[] = 0;
-                        $tempRw = array_combine($header, $row);
+                        foreach ($headerMapping as $standard => $alternatives) {
+                            // also trim all alternatives before comparison
+                            $alternativesLower = array_map(function($alt) {
+                                return strtolower(trim($alt));
+                            }, $alternatives);
+
+                            if (in_array($colLower, $alternativesLower)) {
+                                $mappedHeader[$standard] = $standard; // store with key
+                                $columnIndexes[$standard] = $index;   // map index for later use
+                                break; // found a mapping, stop checking further
+                            }
+                        }
+                    }
+
+                    // Now force add *all* required fields
+                    foreach ($headerMapping as $standard => $alternatives) {
+                        if (!isset($mappedHeader[$standard])) {
+                            $mappedHeader[$standard] = $standard;
+                            $columnIndexes[$standard] = null; // no column in CSV, will stay empty
+                        }
+                    }
+
+                    // Add extra fields always
+                    $mappedHeader['deal_id'] = 'deal_id';
+                    $mappedHeader['period']  = 'period';
+
+                    // reindex values
+                    $header = array_values($mappedHeader);
+                } else {
+                        // Only include values that match mapped headers
+                        $filteredRow = [];
+                        foreach ($columnIndexes as $index) {
+                            $filteredRow[] = isset($row[$index]) ? trim($row[$index]) : null;
+                        }
+
+                        $filteredRow[] = 0; // deal_id
+                      
+                        $tempRw = array_combine($header, $filteredRow);
+                       
+                        //print_r($tempRw ); exit;
+
                         if ($tempRw['account_number'] != '') {
                             $tempRw['account_number'] = trim(str_replace('#', '', $tempRw['account_number']));
                         }
@@ -831,6 +887,195 @@ class DealsController extends Controller
                 }
                 fclose($handle);
             }
+            */
+
+            $file      = $request->file('file');
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            $data   = [];
+            $header = null;
+            $columnIndexes = [];
+
+            // --- CASE 1: CSV/TXT ---
+            if (in_array($extension, ['csv','txt'])) {
+                if (($handle = fopen($file->getRealPath(), 'r')) !== false) {
+                    while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+
+                        if (!$header) {
+                            $mappedHeader = [];
+                            foreach ($row as $index => $col) {
+                                $colLower = strtolower(trim($col));
+                                foreach ($headerMapping as $standard => $alternatives) {
+                                    $alternativesLower = array_map(fn($alt) => strtolower(trim($alt)), $alternatives);
+                                    if (in_array($colLower, $alternativesLower)) {
+                                        $mappedHeader[$standard] = $standard;
+                                        $columnIndexes[$standard] = $index;
+                                        break;
+                                    }
+                                }
+                            }
+                            // force add all required fields
+                            foreach ($headerMapping as $standard => $alts) {
+                                if (!isset($mappedHeader[$standard])) {
+                                    $mappedHeader[$standard] = $standard;
+                                    $columnIndexes[$standard] = null;
+                                }
+                            }
+                            // add extra fields
+                            $mappedHeader['deal_id'] = 'deal_id';
+                            $mappedHeader['period']  = 'period';
+
+                            $header = array_values($mappedHeader);
+
+                        } else {
+                            $filteredRow = [];
+                            foreach ($columnIndexes as $index) {
+                                $filteredRow[] = $index !== null && isset($row[$index]) ? trim($row[$index]) : null;
+                            }
+                            $filteredRow[] = 0; // deal_id
+
+                            $tempRw = array_combine($header, $filteredRow);
+
+                            $tempRw = array_map('trim', $tempRw); // trim all values first
+
+                            // --- your transformations ---
+                            if ($tempRw['account_number'] != '') {
+                                $tempRw['account_number'] = trim(str_replace('#', '', $tempRw['account_number']));
+                            }
+                            if ($tempRw['loan_amount'] != '') {
+                                $tempRw['loan_amount'] = trim(number_format(str_replace(['$', ','], '', $tempRw['loan_amount']), 2, '.', ''));
+                            }
+                            if ($tempRw['rate'] != '') {
+                                $tempRw['rate'] = trim(number_format(str_replace(['$', '%', ','], '', $tempRw['rate']), 2, '.', ''));
+                            }
+                            if ($tempRw['commission'] != '') {
+                                $tempRw['commission'] = trim(number_format(str_replace(['$', ','], '', $tempRw['commission']), 2, '.', ''));
+                            }
+                            if ($tempRw['gst'] != '') {
+                                $tempRw['gst'] = trim(number_format(str_replace(['$', ','], '', $tempRw['gst']), 2, '.', ''));
+                            }
+                            if ($tempRw['total_paid'] != '') {
+                                $tempRw['total_paid'] = trim(number_format(str_replace(['$', ','], '', $tempRw['total_paid']), 2, '.', ''));
+                            }
+                            if ($tempRw['period'] != '') {
+                                $tempRw['period'] = date('Y-m', strtotime($tempRw['period']));
+                            }
+                            if ($tempRw['settlement_date'] != '') {
+                                $tempRw['settlement_date'] = date('Y-m-d', strtotime($tempRw['settlement_date']));
+                            }
+                            if (!empty($tempRw['commission_type'])) {
+                                $type = explode(' ', $tempRw['commission_type']);
+                                $comm_type = CommissionType::where('name', 'like', $type[0] . '%')->pluck('name');
+                                if (isset($comm_type[0])) {
+                                    $tempRw['commission_type'] = $this->comm_types[$comm_type[0]];
+                                } else {
+                                    $tempRw['commission_type'] = 1;
+                                }
+                            } else {
+                                $fileName = strtolower($request->file('file')->getClientOriginalName());
+
+                                if (strpos(strtolower($fileName), 'trail') !== false) { 
+                                   $tempRw['commission_type'] = 12;
+                                   
+                                } else {
+                                    // Default if no match in file name
+                                    $tempRw['commission_type'] = 1;
+                                }
+                            }
+                            
+
+                            $data[] = $tempRw;
+                        }
+                    }
+                    fclose($handle);
+                }
+
+            // --- CASE 2: Excel (xls/xlsx) ---
+            } elseif (in_array($extension, ['xls','xlsx'])) {
+                $rows = Excel::toArray([], $file);
+                foreach ($rows[0] as $rowIndex => $row) {
+                    if ($rowIndex === 0) {
+                        // same header mapping logic as CSV
+                        $mappedHeader = [];
+                        foreach ($row as $index => $col) {
+                            $colLower = strtolower(trim($col));
+                            foreach ($headerMapping as $standard => $alternatives) {
+                                $altsLower = array_map(fn($alt) => strtolower(trim($alt)), $alternatives);
+                                if (in_array($colLower, $altsLower)) {
+                                    $mappedHeader[$standard] = $standard;
+                                    $columnIndexes[$standard] = $index;
+                                    break;
+                                }
+                            }
+                        }
+                        foreach ($headerMapping as $standard => $alts) {
+                            if (!isset($mappedHeader[$standard])) {
+                                $mappedHeader[$standard] = $standard;
+                                $columnIndexes[$standard] = null;
+                            }
+                        }
+                        $mappedHeader['deal_id'] = 'deal_id';
+                        $mappedHeader['period']  = 'period';
+
+                        $header = array_values($mappedHeader);
+
+                    } else {
+                        $filteredRow = [];
+                        foreach ($columnIndexes as $index) {
+                            $filteredRow[] = $index !== null && isset($row[$index]) ? trim($row[$index]) : null;
+                        }
+                        $filteredRow[] = 0; // deal_id
+
+                        $tempRw = array_combine($header, $filteredRow);
+
+                        $tempRw = array_map('trim', $tempRw); // trim all values first
+                        if ($tempRw['account_number'] != '') {
+                            $tempRw['account_number'] = trim(str_replace('#', '', $tempRw['account_number']));
+                        }
+                        if ($tempRw['loan_amount'] != '') {
+                            $tempRw['loan_amount'] = trim(number_format(str_replace(['$', ','], '', $tempRw['loan_amount']), 2, '.', ''));
+                        }
+                        if ($tempRw['rate'] != '') {
+                            $tempRw['rate'] = trim(number_format(str_replace(['$', '%', ','], '', $tempRw['rate']), 2, '.', ''));
+                        }
+                        if ($tempRw['commission'] != '') {
+                            $tempRw['commission'] = trim(number_format(str_replace(['$', ','], '', $tempRw['commission']), 2, '.', ''));
+                        }
+                        if ($tempRw['gst'] != '') {
+                            $tempRw['gst'] = trim(number_format(str_replace(['$', ','], '', $tempRw['gst']), 2, '.', ''));
+                        }
+                        if ($tempRw['total_paid'] != '') {
+                            $tempRw['total_paid'] = trim(number_format(str_replace(['$', ','], '', $tempRw['total_paid']), 2, '.', ''));
+                        }
+                        if ($tempRw['period'] != '') {
+                            $tempRw['period'] = date('Y-m', strtotime($tempRw['period']));
+                        }
+                        if ($tempRw['settlement_date'] != '') {
+                            $tempRw['settlement_date'] = date('Y-m-d', strtotime($tempRw['settlement_date']));
+                        }
+                        if (!empty($tempRw['commission_type'])) {
+                            $type = explode(' ', $tempRw['commission_type']);
+                            $comm_type = CommissionType::where('name', 'like', $type[0] . '%')->pluck('name');
+                            if (isset($comm_type[0])) {
+                                $tempRw['commission_type'] = $this->comm_types[$comm_type[0]];
+                            } else {
+                                $tempRw['commission_type'] = 1;
+                            }
+                        } else {
+                            $fileName = strtolower($request->file('file')->getClientOriginalName());
+
+                           if (strpos(strtolower($fileName), 'trail') !== false) { 
+                               $tempRw['commission_type'] = 12;
+                            } else {
+                                // Default if no match in file name
+                                $tempRw['commission_type'] = 1;
+                            }
+                        }
+
+                        $data[] = $tempRw;
+                    }
+                }
+            }
 
             if (!empty($data)) {
 
@@ -854,12 +1099,7 @@ class DealsController extends Controller
                 foreach ($data as $key => $row) {
                     // print_R($row);
 
-                    /*if($row['account_number'] == '')
-                    {
-                       // print_R($row);
-                        //$message = 'Some missing ref. No found - Please visit missing import records page for more information';
-                        $message ='2';
-                    }*/
+                    
 
                     if ($deals &&  array_key_exists($row['account_number'], $deals)) {
                         $row['deal_id'] = $deals[$row['account_number']]['id'];
@@ -895,6 +1135,12 @@ class DealsController extends Controller
 
                         $message = '2';
                     }
+                    $acc_no = $row['account_number'];
+                    if(!$acc_no)
+                    {
+                        $acc_no = 0;
+                    }
+                    $row['loan_ref'] = $acc_no;
                     unset($row['account_number']);
                     unset($row['line_of_business']);
                     unset($row['loan_writer']);
@@ -908,10 +1154,14 @@ class DealsController extends Controller
                     $masterAmount = 0;
                     $variance = 0;
 
+
                     if ($row['commission_type'] == 12) {
-                        $brokerAmount = ($trail * $row['total_paid']) / 100;
-                        $masterAmount = $totalPaid - $brokerAmount;
-                        if ($actual_trail != 0) $variance = round(($totalPaid / $actual_trail) * 100, 2);
+                        if(!empty($trail) &&  !empty($row['total_paid']))
+                        {
+                            $brokerAmount = ((float)$trail * (float)$row['total_paid']) / 100;
+                            $masterAmount = $totalPaid - $brokerAmount;
+                            if ($actual_trail != 0) $variance = round(($totalPaid / $actual_trail) * 100, 2);
+                        }
                     } else if ($row['commission_type'] == 13) {
                         $brokerAmount = ($upfront * $row['total_paid']) / 100;
                         $masterAmount = $totalPaid - $brokerAmount;
@@ -996,7 +1246,7 @@ class DealsController extends Controller
             if ($request->ajax()) {
                 $data = CommissionData::select(DB::raw("commissions_data.*, date_format(commissions_data.updated_at,'%d-%m-%Y')
                 date_sattled, date_format(commissions_data.settlement_date,'%d-%m-%Y')
-                settlement_date,commission_types.name as commission_type_name, lenders.name as bank"))->leftJoin('commission_types', 'commission_types.id', '=', 'commissions_data.commission_type')->leftJoin('lenders', 'lenders.id', 'commissions_data.funder');
+                settlement_date,commission_types.name as commission_type_name, lenders.name as bank"))->leftJoin('commission_types', 'commission_types.id', '=', 'commissions_data.commission_type')->leftJoin('lenders', 'lenders.id', 'commissions_data.funder')->where('commissions_data.deal_id', '!=', 0);
 
                 return DataTables::of($data)
                     ->addIndexColumn()->editColumn('commission_type', function ($row) {
@@ -1189,12 +1439,26 @@ class DealsController extends Controller
 
     public function updateProgress($id)
     {
-        $deal = DealMissing::find($id);
-        $next_status = $deal->status;
-        $deal->status = $next_status + 1;
-        $deal->status_date = now();
-        $deal->save();
-        return redirect()->back();
+        $dealMiss = DealMissing::find($id);
+
+        if($dealMiss->loan_ref)
+        {
+            $deal = Deal::where('loan_ref', $dealMiss->loan_ref)->first();
+
+            if ($deal) {
+
+               CommissionData::where('loan_ref', $deal->loan_ref)->update(['deal_id' => $deal->id]);
+                $next_status = $dealMiss->status;
+                $dealMiss->status = 2;
+                $dealMiss->status_date = now();
+                $dealMiss->save();
+                return redirect()->back()->with('success', 'Commission Data is updated successfully');
+            }
+            return redirect()->back()->with('error', 'Deal is not found with the Loan Ref.');
+            
+        }
+        return redirect()->back()->with('error', 'Loan Ref is not present.');
+        
     }
     public function dealMissingList()
     {
