@@ -253,7 +253,7 @@
                 targets: 5, // column index for percentage
                 render: function (data, type, row) {
                     if (type === 'display' || type === 'filter') {
-                        return data + '%';
+                        return '$' + parseFloat(data).toFixed(2);
                     }
                     return data;
                 }
@@ -265,6 +265,25 @@
                         return '$' + parseFloat(data).toFixed(2);
                     }
                     return data;
+                }
+            },
+            {
+                targets: 7, // your date column index
+                render: function (data, type, row) {
+                    if (!data || data === '00-00-0000') {
+                        return ''; // show empty string instead of 0000-00-00
+                    }
+                    // Optional: format the date nicely
+                    //let date = new Date(data);
+                    //return data;
+                    // Optional: format the date nicely
+
+                    let parts = data.split('-'); // assuming YYYY-MM-DD
+                    if (parts.length === 3) {
+                        return parts[2] + '-' + parts[1] + '-' + parts[0]; // DD-MM-YYYY
+                    }
+
+                    return data; // fallback, just in case
                 }
             }
         ]

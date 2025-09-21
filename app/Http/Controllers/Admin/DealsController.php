@@ -1845,4 +1845,50 @@ class DealsController extends Controller
         $relationship->update($data);
         return response()->json(['success' => "Relationship added successfully"]);
     }
+
+
+    public function cloneDeals($num, $id)
+    {
+        //echo "$num";echo "-----$id";
+        $deal = Deal::find($id);
+        if(empty($deal))
+        {
+            return redirect()->back()->with('error', 'Deal not found.');
+        }
+
+        for($i = 1; $i <= $num; $i++)
+        {
+            // Clone it
+            $newDeal = $deal->replicate();
+            $newDeal->save();
+            
+            $newDealId = $newDeal->id;
+
+
+
+            //Clone the commission Table
+            $commissions = DealCommission::where('deal_id', $id)->get();
+
+            foreach ($commissions as $commission) {
+                $newCommission = $commission->replicate(); // duplicate attributes
+                $newCommission->deal_id = $newDealId;      // point to the new deal
+                $newCommission->created_at = now();
+                $newCommission->updated_at = now();
+                $newCommission->save();
+            }
+
+             //Clone the Status Table
+            $dealStaus = DealStatusUpdate::where('deal_id', $id)->get();
+
+            foreach ($dealStaus as $dealState) {
+                $newStatus = $dealState->replicate(); // duplicate attributes
+                $newStatus->deal_id = $newDealId;      // point to the new deal
+                $newStatus->created_at = now();
+                $newStatus->save();
+            }
+        }
+
+         return redirect()->back()->with('success', 'Deal is cloned successfully.');
+    }
+
 }

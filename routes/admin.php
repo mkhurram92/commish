@@ -153,6 +153,7 @@ Route::group(['middleware' => ['admin', DatabaseSwitcher::class]], function () {
             Route::get('delete/{id}', 'App\Http\Controllers\Admin\DealsController@dealDelete')->name('admin.deals.delete');
             Route::get('commissions', 'App\Http\Controllers\Admin\DealsController@commissions')->name('admin.deals.commissions');
             Route::post('importcommission', 'App\Http\Controllers\Admin\DealsController@commissionPost')->name('admin.deals.importcommission');
+            Route::get('clone-deals/{num}/{id}', 'App\Http\Controllers\Admin\DealsController@cloneDeals')->name('admin.deals.clonedeals');
             Route::post('addactual/{id}', 'App\Http\Controllers\Admin\DealsController@addActual')->name('admin.deals.addactual');
             Route::get('getdealdata/{id}', 'App\Http\Controllers\Admin\DealsController@getDealData')->name('admin.deals.getdealdata');
             Route::get('get-commissions', 'App\Http\Controllers\Admin\DealsController@getCommissions')->name('admin.deals.getcommissions');

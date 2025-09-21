@@ -72,6 +72,23 @@
                                                 <span>Deal Info</span>
                                             </a>
                                         </li>
+                                        <?php
+
+                                        if (isset($deal) && !empty($deal))
+                                        {
+                                        ?>
+                                        <li class="nav-item ml-auto">
+                                            <a role="tab" class="nav-link active" id="tab-1" >
+                                              <span>Clone Deal</span>
+                                            </a>
+                                          </li>
+
+
+                                    <?php
+
+                                        }
+                                            
+                                        ?>
                                     </ul>
                                 </div>
                             </div>
@@ -798,6 +815,38 @@
 @endsection
 
 @push('script-section')
+
+<script type="text/javascript">
+    // Attach click handler
+document.getElementById('tab-1').addEventListener('click', function (e) {
+  e.preventDefault(); // stop default tab behavior
+
+  Swal.fire({
+    title: 'Enter number of deals to clone',
+    input: 'number',
+    inputAttributes: {
+      min: 1,
+      step: 1,
+      max: 30
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Go',
+    preConfirm: (value) => {
+      if (!value || value <= 0) {
+        Swal.showValidationMessage('Please enter a valid number');
+      }
+      return value;
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Redirect with the number
+      let numDeals = result.value;
+      window.location.href = '/admin/deals/clone-deals/' + encodeURIComponent(numDeals)+'/<?php echo $deal->id; ?>';
+    }
+  });
+});
+</script>
+</script>
     <script type="text/javascript"
         src="{{ asset('front-assets/vendors/@chenfengyuan/datepicker/dist/datepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('front-assets/vendors/daterangepicker/daterangepicker.js') }}"></script>
