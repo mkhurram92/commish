@@ -244,7 +244,7 @@
                 targets: 4, // column index for percentage
                 render: function (data, type, row) {
                     if (type === 'display' || type === 'filter') {
-                        return data + '%';
+                        return '$' + parseFloat(data).toFixed(2);
                     }
                     return data;
                 }
