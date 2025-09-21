@@ -1086,6 +1086,22 @@ class DealsController extends Controller
 
             if (!empty($data)) {
 
+                $data = array_filter($data, function($row) {
+                    // remove keys you don't want to check (they always have values)
+                    $ignoreKeys = ['commission_type', 'deal_id'];
+
+                    // filter out ignored keys and check if all remaining are empty
+                    foreach ($row as $key => $value) {
+                        if (in_array($key, $ignoreKeys)) {
+                            continue;
+                        }
+                        if (!empty($value)) {
+                            return true; // keep this row
+                        }
+                    }
+                    return false; // drop it
+                });
+
                 //$message = 'Record uploaded successfully!';
                 $message = '1';
 
@@ -1103,12 +1119,10 @@ class DealsController extends Controller
                 $actual_upfront = 0;
                 $trail = 0;
 
+
                 foreach ($data as $key => $row) {
-                    // print_R($row);
-
                     
-
-                    if ($deals &&  array_key_exists($row['account_number'], $deals)) {
+                    /*if ($deals &&  array_key_exists($row['loan_ref'], $deals)) {
                         $row['deal_id'] = $deals[$row['account_number']]['id'];
                         // $row['broker_id'] = isset($deals[$row['account_number']]['broker_id']) && $deals[$row['account_number']]['broker_id'] > 0 ? $deals[$row['account_number']]['broker_id'] : 0 ;
                         // $row['broker_staff_id'] = isset($deals[$row['account_number']]['broker_staff_id']) &&
@@ -1140,6 +1154,40 @@ class DealsController extends Controller
                         }
 
 
+                        $message = '2';
+                    }*/
+                    $deal_single = Deal::where('loan_ref', $row['account_number'])->first();
+
+                    //print_r($deal_single->id ); exit;
+                    if (!empty($deal_single) ) {
+                        $row['deal_id'] = $deal_single->id;
+                        $upfront =  $deal_single->broker_split_agg_brk_sp_upfrt;
+                        $trail =  $deal_single->broker_split_agg_brk_sp_trail;
+
+                        $actual_trail = $deal_single->broker_est_trail;
+                        $actual_upfront = $deal_single->account_number;
+                        $message = '1';
+                        // echo "One";
+                    } else {
+
+                        $missing_data =
+                            [
+                                'loan_ref' => $row['account_number'],
+                                'funder' => $row['funder'],
+                                'client' => $row['client'],
+                                'created_by' => Auth::user()->id,
+                                'created_at' => Carbon::now('utc')->toDateTimeString(),
+                                'updated_at' => Carbon::now('utc')->toDateTimeString(),
+                            ];
+
+                        if ($dealMissing &&  array_key_exists($row['account_number'], $dealMissing)) {
+                        } else {
+                            if (!empty($row['account_number'])) {
+                                DealMissing::insert($missing_data);
+                            }
+                        }
+
+                        //echo "Second";
                         $message = '2';
                     }
                     $acc_no = $row['account_number'];
@@ -1196,6 +1244,7 @@ class DealsController extends Controller
                         $row['funder'] = $funder->id;
                     }
                     $sql[] = '("' . implode('","', $row) . '")';
+                
                 }
                 $chunckedArray = array_chunk($sql, 50);
                 $query = [];
