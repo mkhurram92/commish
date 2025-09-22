@@ -254,6 +254,7 @@ class DealsController extends Controller
                     foreach ($request->actuals_comm as $actual_com) {
                         $com_data[] = [
                             'deal_id' => $contact->id,
+                            'loan_ref' => $request['loan_ref'],
                             'order' => 1,
                             'type' => isset($actual_com['commission_type']) && $actual_com['commission_type'] > 0 ?
                                 $actual_com['commission_type'] : 0,
@@ -551,6 +552,7 @@ class DealsController extends Controller
                             $com_data[] = [
                                 'deal_id' => $contact->id,
                                 'order' => 1,
+                                'loan_ref' => $request['loan_ref'],
                                 'type' => isset($actual_com['commission_type']) && $actual_com['commission_type'] > 0 ?
                                     $actual_com['commission_type'] : 0,
                                 'total_amount' => $actual_com['total_amount'],
@@ -1226,6 +1228,7 @@ class DealsController extends Controller
                         [
                             'deal_id' => $row['deal_id'],
                             'order' => 1,
+                            'loan_ref'  => $acc_no,
                             'type' => isset($row['commission_type']) && $row['commission_type'] > 0 ?
                                 $row['commission_type'] : 0,
                             'total_amount' =>  $totalPaid,
@@ -1503,7 +1506,9 @@ class DealsController extends Controller
 
             if ($deal) {
 
-               CommissionData::where('loan_ref', $deal->loan_ref)->update(['deal_id' => $deal->id]);
+                CommissionData::where('loan_ref', $deal->loan_ref)->update(['deal_id' => $deal->id]);
+
+                DealCommission::where('loan_ref', $deal->loan_ref)->update(['deal_id' => $deal->id]);
                 $next_status = $dealMiss->status;
                 $dealMiss->status = 2;
                 $dealMiss->status_date = now();
