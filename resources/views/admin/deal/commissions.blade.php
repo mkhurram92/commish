@@ -74,6 +74,25 @@
                                 <th>#</th>
                                 <th>Commission Type</th>
                                 <th>Funder</th>
+                                <th>Loan Ref</th>
+                                <th>Commission</th>
+                                <th>GST</th>
+                                <th>Total Paid</th>
+                                <th>Sattlement Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- <div class="table-responsive">
+                    <table class="table table-bordered data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Commission Type</th>
+                                <th>Funder</th>
                                 <th>Period</th>
                                 <th>Rate</th>
                                 <th>Commission</th>
@@ -88,7 +107,7 @@
                         <tbody>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -170,7 +189,7 @@
     }
 
     var table = '';
-    jQuery(document).ready(function(){
+    /*jQuery(document).ready(function(){
         table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
@@ -195,6 +214,79 @@
                 {data: 'payment_no', name: 'payment_no'}
 
             ]
+        });
+    });*/
+
+
+    jQuery(document).ready(function(){
+        table = $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('admin.deals.getcommissions') }}",
+                data: function (d) {
+
+                }
+            },
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'commission_type', name: 'commission_type'},
+                {data: 'funder', name: 'funder'},
+                {data: 'loan_ref', name: 'loan_ref'},
+                {data: 'commission', name: 'commission'},
+                {data: 'gst', name: 'gst'},
+                {data: 'total_paid', name: 'total_paid'},
+                {data: 'settlement_date', name: 'settlement_date'}
+
+            ],
+            columnDefs: [
+            {
+                targets: 4, // column index for percentage
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return '$' + parseFloat(data).toFixed(2);
+                    }
+                    return data;
+                }
+            },
+            {
+                targets: 5, // column index for percentage
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return '$' + parseFloat(data).toFixed(2);
+                    }
+                    return data;
+                }
+            },
+            {
+                targets: 6, // column index for dollar amount
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return '$' + parseFloat(data).toFixed(2);
+                    }
+                    return data;
+                }
+            },
+            {
+                targets: 7, // your date column index
+                render: function (data, type, row) {
+                    if (!data || data === '00-00-0000') {
+                        return ''; // show empty string instead of 0000-00-00
+                    }
+                    // Optional: format the date nicely
+                    //let date = new Date(data);
+                    //return data;
+                    // Optional: format the date nicely
+
+                    let parts = data.split('-'); // assuming YYYY-MM-DD
+                    if (parts.length === 3) {
+                        return parts[2] + '-' + parts[1] + '-' + parts[0]; // DD-MM-YYYY
+                    }
+
+                    return data; // fallback, just in case
+                }
+            }
+        ]
         });
     });
 
