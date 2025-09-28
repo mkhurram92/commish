@@ -777,13 +777,13 @@ class DealsController extends Controller
 
             //header Mapping
             $headerMapping = [
-                'account_number'   => ['acc_no', 'loan_ref', 'ref_no', 'account_number', 'Loan Number','Loan ID','Account Identifier','LOAN_NUMBER','Acc_no'],
+                'account_number'   => ['ACCOUNT_NUMBER','acc_no', 'loan_ref', 'ref_no', 'account_number', 'Loan Number','Loan ID','Account Identifier','Legacy_Loan_Number','Acc_no','Account Number'],
                 'loan_amount'      => ['loan_amount', 'amount', 'loan_amt','Approved Amount','Loan Amount','Commissionable Amount','Loan_Amount','Approved_amount'],
                 'rate'             => ['rate', 'interest_rate', 'roi','Borrowers Rate','Rate'],
                 'funder'           => ['funder','Borrowers Name'],
-                'commission'       => ['Fee_value','commission', 'comm','Upfront %','Commission'],
+                'commission'       => ['Total','Fee_value','commission', 'comm','Upfront %','Commission', 'Commission Amount Ex GST','COMMISSION','Trailer'],
                 'gst'              => ['gst', 'tax', 'GST','GST Amount','GST_value'],
-                'total_paid'       => ['Total Fee_value','amount_paid', 'total_fee_value', 'total_paid', 'Loan Amount Paid','Lender Payment','Trailer Loan Balance'],
+                'total_paid'       => ['Commission GST Inclusive','Total inc GST','TOTAL_PAID','Total Fee_value','amount_paid', 'total_fee_value', 'total_paid', 'Loan Amount Paid','Lender Payment','Trailer Loan Balance'],
                 'period'           => ['period', 'commission_period','SUC Payable'],
                 'settlement_date'  => ['settlement_date', 'settle_date', 'Settlement Date','SETTLEMENT_DATE'],
                 'commission_type'  => ['commission_type', 'comm_type', 'type','Product Line','Loan Type'],
