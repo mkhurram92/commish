@@ -14,7 +14,10 @@ class Deal extends Model
     use HasFactory;
     use SoftDeletes;
     protected $hidden = [
-        'deleted_at', 'deleted_by', 'updated_by', 'created_by'
+        'deleted_at',
+        'deleted_by',
+        'updated_by',
+        'created_by'
     ];
 
     public function getStatusDateAttribute($value)
@@ -34,7 +37,7 @@ class Deal extends Model
     {
         return $this->belongsTo(Broker::class, "broker_id");
     }
-    public function referrerDeals($date_from = null, $date_to = null, $referror_split_referror)
+    public function referrerDeals($date_from = null, $date_to = null, $referror_split_referror, $broker_id = null)
     {
         $deals = Deal::select("*")
             ->where(function ($query) {
@@ -48,6 +51,9 @@ class Deal extends Model
                     ->where('status', 4);
             })
             ->where("referror_split_referror", $referror_split_referror);
+        if ($broker_id) {
+            $deals->where('broker_id', $broker_id);
+        }
         if (!empty($date_from)) {
             $deals->where('status_date', '>=', date('Y-m-d H:i:s', strtotime($date_from)));
         }
@@ -57,6 +63,7 @@ class Deal extends Model
         $deals = $deals->get();
         return $deals;
     }
+
     public function deal_commission()
     {
         return $this->hasMany(DealCommission::class, 'deal_id', 'id');

@@ -467,7 +467,9 @@ class FmdirectController extends Controller
         if (!empty($request['to_date'])) {
             $deals->where('d.status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
         }
-
+        if (!empty($request['broker_id'])) {
+            $deals->where('d.broker_id', $request['broker_id']);
+        }
         $deals = $deals->get();
 
         //$deals = $deals->orderBY('SumOfdea_UpfrontEst_ABP', 'desc')->get();
