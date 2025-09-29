@@ -415,7 +415,9 @@ class FmdirectController extends Controller
         if (!empty($request['to_date'])) {
             $deals->where('d.status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
         }
-
+        if (!empty($request['broker_id'])) {
+            $deals->where('d.broker_id', $request['broker_id']);
+        }
         $deals = $deals->get();
 
         //$deals = $deals->orderBY('SumOfdea_UpfrontEst_ABP', 'desc')->get();
@@ -423,7 +425,8 @@ class FmdirectController extends Controller
         return view('admin.reports.fm_direct.referrer_commission_rating_preview_records', [
             'deals' => $deals,
             'date_from' => date('Y-m-d', strtotime($request['from_date'])),
-            'date_to' => date('Y-m-d', strtotime($request['to_date']))
+            'date_to' => date('Y-m-d', strtotime($request['to_date'])),
+            'broker_id' => $request['broker_id'] ?? null
         ]);
     }
     public function getReferrerCommissionRatingPreview(Request $request)
