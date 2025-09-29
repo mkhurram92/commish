@@ -111,7 +111,9 @@
                                                 <tbody>
                                                     @php
                                                         $dealInstance = new App\Models\Deal();
-                                                        $subDeals = $dealInstance->referrerDeals($date_from, $date_to, $deal->referror_split_referror);
+                                                        //$subDeals = $dealInstance->referrerDeals($date_from, $date_to, $deal->referror_split_referror);
+                                                        $subDeals = $dealInstance->referrerDeals($date_from, $date_to, $deal->referror_split_referror, $broker_id);
+
                                                     @endphp
                                                     @if ($subDeals->isNotEmpty())
                                                         @forelse ($subDeals->where('status', 4)->sortBy('lender.code') as $subDeal)

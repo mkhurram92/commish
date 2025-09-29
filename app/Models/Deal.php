@@ -51,14 +51,14 @@ class Deal extends Model
                     ->where('status', 4);
             })
             ->where("referror_split_referror", $referror_split_referror);
-        if ($broker_id) {
-            $deals->where('broker_id', $broker_id);
-        }
         if (!empty($date_from)) {
             $deals->where('status_date', '>=', date('Y-m-d H:i:s', strtotime($date_from)));
         }
         if (!empty($date_to)) {
             $deals->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($date_to)));
+        }
+        if (!empty($broker_id)) {
+            $deals->where('broker_id', $broker_id);
         }
         $deals = $deals->get();
         return $deals;
