@@ -505,11 +505,15 @@ class FmdirectController extends Controller
         if (!empty($request['to_date'])) {
             $deals->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
         }
+        if (!empty($request['broker_id'])) {
+            $deals->where('broker_id', $request['broker_id']);
+        }
         $deals = $deals->get();
         $pdf = PDF::loadView('admin.reports.fm_direct.referrer_commission_rating', [
             'deals' => $deals,
             'date_from' => $request['from_date'],
-            'date_to' => $request['to_date']
+            'date_to' => $request['to_date'],
+            'broker_id' => $request['broker_id']
         ])->setPaper('a4', 'portrait')
             ->setOption('footer-left', getCurrentDateTimeFormatted())
             ->setOption("footer-right", "Page [page] of [topage]")
