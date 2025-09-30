@@ -512,8 +512,7 @@ class FmdirectController extends Controller
         $pdf = PDF::loadView('admin.reports.fm_direct.referrer_commission_rating', [
             'deals' => $deals,
             'date_from' => $request['from_date'],
-            'date_to' => $request['to_date'],
-            'broker_id' => $request['broker_id']
+            'date_to' => $request['to_date']
         ])->setPaper('a4', 'portrait')
             ->setOption('footer-left', getCurrentDateTimeFormatted())
             ->setOption("footer-right", "Page [page] of [topage]")
