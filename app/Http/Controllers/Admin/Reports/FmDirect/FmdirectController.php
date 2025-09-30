@@ -377,19 +377,6 @@ class FmdirectController extends Controller
 
     public function getReferrerCommissionRatingPreviewRecords(Request $request)
     {
-        /**$deals = Deal::select(\DB::raw('
-            Sum(If(`broker_est_upfront`>0 Or `broker_est_brokerage`>0,1,0)) AS NumberOfLoansUpfront,
-            Sum(If(`broker_est_upfront`>0 Or `broker_est_brokerage`>0,`broker_est_loan_amt`,0)) AS SumOfLoansUpfront,
-            Sum(broker_est_upfront) AS SumOfdea_UpfrontEst_ABP,
-            Sum(broker_est_brokerage) AS SumOfdea_BrokerageEst_ABP,
-            Sum(`referror_split_agg_brk_sp_upfrt`*`broker_est_upfront`) AS ReferrorUpfront,referror_split_referror'))
-            ->join('deals_commission', 'deals.id', '=', 'deals_commission.deal_id')
-            ->where(function ($query) {
-                $query->where('referror_split_referror', '>', 0);
-            })
-            ->where('status', 4)
-            ->with('referrer')->groupBy('referror_split_referror');**/
-
         $deals = DB::table('deals as d')
             ->join('contact_searches as cs', 'd.referror_split_referror', '=', 'cs.id')
             ->selectRaw("
@@ -431,18 +418,6 @@ class FmdirectController extends Controller
     }
     public function getReferrerCommissionRatingPreview(Request $request)
     {
-        /**$deals = Deal::select(\DB::raw('
-            Sum(If(`broker_est_upfront`>0 Or `broker_est_brokerage`>0,1,0)) AS NumberOfLoansUpfront,
-            Sum(If(`broker_est_upfront`>0 Or `broker_est_brokerage`>0,`broker_est_loan_amt`,0)) AS SumOfLoansUpfront,
-            Sum(broker_est_upfront) AS SumOfdea_UpfrontEst_ABP,
-            Sum(broker_est_brokerage) AS SumOfdea_BrokerageEst_ABP,
-            Sum(`referror_split_agg_brk_sp_upfrt`*`broker_est_upfront`) AS ReferrorUpfront,referror_split_referror'))
-            ->where(function ($query) {
-                $query->where('broker_est_upfront', '>', 0)->orWhere('broker_est_loan_amt', '>', 0);
-            })
-            ->where('status', 4)
-            ->with('referrer')->groupBy('referror_split_referror');**/
-
         $deals = DB::table('deals as d')
             ->join('contact_searches as cs', 'd.referror_split_referror', '=', 'cs.id')
             ->selectRaw("
@@ -488,27 +463,39 @@ class FmdirectController extends Controller
 
     public function exportReferrerCommissionRating(Request $request)
     {
-        $deals = Deal::select(\DB::raw('
-            Sum(If(`broker_est_upfront`>0 Or `broker_est_brokerage`>0,1,0)) AS NumberOfLoansUpfront,
-            Sum(If(`broker_est_upfront`>0 Or `broker_est_brokerage`>0,`broker_est_loan_amt`,0)) AS SumOfLoansUpfront,
-            Sum(broker_est_upfront) AS SumOfdea_UpfrontEst_ABP,
-            Sum(broker_est_brokerage) AS SumOfdea_BrokerageEst_ABP,
-            Sum(`referror_split_agg_brk_sp_upfrt`*`broker_est_upfront`) AS ReferrorUpfront,referror_split_referror'))->whereStatus(4)
-            ->where(function ($query) {
-                $query->where('broker_est_upfront', '>', 0)->orWhere('broker_est_loan_amt', '>', 0);
-            })
-            ->where('status', 4)
-            ->with('referrer')->groupBy('referror_split_referror');
+        $deals = DB::table('deals as d')
+            ->join('contact_searches as cs', 'd.referror_split_referror', '=', 'cs.id')
+            ->selectRaw("
+                        CASE
+                            WHEN cs.individual = 1 THEN CONCAT(cs.surname, ', ', cs.preferred_name)
+                            WHEN cs.individual = 2 THEN cs.trading
+                            ELSE 'No Referror Records'
+                        END as Result,
+                        COUNT(d.id) as NumberOfLoansUpfront,
+                        SUM(d.broker_est_loan_amt) as SumOfLoansUpfront,
+                        SUM(d.broker_est_upfront) as SumOfdea_UpfrontEst_ABP,
+                        d.referror_split_agg_brk_sp_upfrt,
+                        d.referror_split_referror as referror_split_referror
+                    ")
+            ->where('d.status', 4)
+            ->where('d.broker_est_upfront', '>', 0)
+            ->groupBy('referror_split_referror')
+            ->orderByDesc('SumOfLoansUpfront');
+
         if (!empty($request['from_date'])) {
-            $deals->where('status_date', '>=', date('Y-m-d H:i:s', strtotime($request['from_date'])));
+            $deals->where('d.status_date', '>=', date('Y-m-d H:i:s', strtotime($request['from_date'])));
         }
+
         if (!empty($request['to_date'])) {
-            $deals->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
+            $deals->where('d.status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
         }
+
         if (!empty($request['broker_id'])) {
-            $deals->where('broker_id', $request['broker_id']);
+            $deals->where('d.broker_id', $request['broker_id']);
         }
+
         $deals = $deals->get();
+
         $pdf = PDF::loadView('admin.reports.fm_direct.referrer_commission_rating', [
             'deals' => $deals,
             'date_from' => $request['from_date'],
@@ -518,73 +505,8 @@ class FmdirectController extends Controller
             ->setOption("footer-right", "Page [page] of [topage]")
             ->setOption('footer-font-size', '8')
             ->setWarnings(false);
+
         return $pdf->download('referrer_commission_rating.pdf');
-    }
-
-    public function getUpfrontOutstandingPreview(Request $request)
-    {
-        $deals = Deal::select('*')->whereStatus(4)
-            ->where(function ($query) {
-                $query->where('broker_est_upfront', '>', 0)->orWhere('broker_est_loan_amt', '>', 0);
-            });
-        if (!empty($request['from_date'])) {
-            $deals->where('status_date', '>=', date('Y-m-d H:i:s', strtotime($request['from_date'])));
-        }
-        if (!empty($request['to_date'])) {
-            $deals->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
-        }
-        if ($request['group_by'] == 'BrokerStaff') {
-            $deals->groupBy('broker_staff_id');
-        } else if ($request['group_by'] === 'Status') {
-            $deals->groupBy('status');
-        } else {
-            $deals->groupBy('lender_id');
-        }
-        $deals = $deals->get();
-        $pdf = PDF::loadView('admin.reports.fm_direct.upfront_outstanding_report', [
-            'deals' => $deals,
-            'group_by' => $request['group_by'],
-            'date_from' => $request['from_date'],
-            'date_to' => $request['to_date']
-        ])->setPaper('a4', 'portrait')
-            ->setOption('footer-left', getCurrentDateTimeFormatted())
-            ->setOption("footer-right", "Page [page] of [topage]")
-            ->setOption('footer-font-size', '8')
-            ->setWarnings(false);
-        return $pdf->stream('upfront_outstanding.pdf');
-    }
-
-    public function exportUpfrontOutstanding(Request $request)
-    {
-        $deals = Deal::select('*')->whereStatus(4)
-            ->where(function ($query) {
-                $query->where('broker_est_upfront', '>', 0)->orWhere('broker_est_loan_amt', '>', 0);
-            });
-        if (!empty($request['from_date'])) {
-            $deals->where('status_date', '>=', date('Y-m-d H:i:s', strtotime($request['from_date'])));
-        }
-        if (!empty($request['to_date'])) {
-            $deals->where('status_date', '<=', date('Y-m-d H:i:s', strtotime($request['to_date'])));
-        }
-        if ($request['group_by'] == 'BrokerStaff') {
-            $deals->groupBy('broker_staff_id');
-        } else if ($request['group_by'] === 'Status') {
-            $deals->groupBy('status');
-        } else {
-            $deals->groupBy('lender_id');
-        }
-        $deals = $deals->get();
-        $pdf = PDF::loadView('admin.reports.fm_direct.upfront_outstanding_report', [
-            'deals' => $deals,
-            'group_by' => $request['group_by'],
-            'date_from' => $request['from_date'],
-            'date_to' => $request['to_date']
-        ])->setPaper('a4', 'portrait')
-            ->setOption('footer-left', getCurrentDateTimeFormatted())
-            ->setOption("footer-right", "Page [page] of [topage]")
-            ->setOption('footer-font-size', '8')
-            ->setWarnings(false);
-        return $pdf->download('upfront_outstanding.pdf');
     }
 
     public function getTrailOutstandingPreview(Request $request)
